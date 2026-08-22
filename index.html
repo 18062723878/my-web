@@ -3,118 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>项目详情</title>
+<title>我的个人网站</title>
 <style>
 :root{
   --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
   --color-bg-primary:#FFFFFF;--color-bg-secondary:#F5F5F7;--color-accent:#0071E3;
   --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
   --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
-  --space-unit:8px;--space-section:96px;--space-block:64px;--space-element:24px;--space-inline:12px;
-  --duration-fast:200ms;--duration-slow:700ms;--ease-default:cubic-bezier(0.25,0.1,0.25,1);
+  --space-unit:8px;--space-section:120px;--space-block:64px;--space-element:24px;--space-inline:12px;
+  --duration-fast:200ms;--duration-normal:400ms;--duration-slow:700ms;
+  --ease-default:cubic-bezier(0.25,0.1,0.25,1);
   --radius-button:980px;--radius-card:18px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{font-family:var(--font-text);color:var(--color-text-primary);background:var(--color-bg-primary);-webkit-font-smoothing:antialiased}
-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
-header .back{color:var(--color-accent);text-decoration:none;font-size:14px}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
 header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
-.wrap{max-width:860px;margin:0 auto;padding:var(--space-section) var(--space-element) var(--space-block)}
-.d-hero{text-align:center;margin-bottom:var(--space-block)}
-.d-crumb{font-size:12px;color:var(--color-text-tertiary);margin-bottom:var(--space-inline);letter-spacing:.02em}
-.d-hero h1{font-family:var(--font-display);font-size:48px;line-height:1.1;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-inline)}
-.d-hero .d-sub{font-size:19px;color:var(--color-text-secondary);max-width:600px;margin:0 auto var(--space-element)}
-.d-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:var(--space-element)}
-.tag{background:var(--color-bg-secondary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
-.d-actions{display:flex;justify-content:center;gap:var(--space-inline)}
-.btn{display:inline-block;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px}
-.btn.ghost{background:transparent;color:var(--color-accent);border:1px solid var(--color-accent)}
-.d-sec{margin-bottom:var(--space-block)}
-.d-sec h2{font-family:var(--font-display);font-size:28px;font-weight:600;margin-bottom:var(--space-element)}
-.prose p{margin-bottom:var(--space-element);font-size:17px;line-height:1.6;color:var(--color-text-secondary)}
-.codebox{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)}
-.code-head{display:flex;align-items:center;justify-content:space-between;background:#2d2d30;color:#9a9a9f;padding:8px 16px;font-size:12px}
-.copy-btn{background:#3a3a3d;color:#e5e5e7;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer}
-.codebox pre{background:#1e1e1e;color:#d4d4d4;padding:16px 0;overflow:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}
-.cl{display:flex;padding:0 16px}
-.ln{flex:0 0 40px;color:#6e6e73;text-align:right;padding-right:14px;user-select:none}
-.lc{white-space:pre}
-.tk-c{color:#6A9955}.tk-s{color:#CE9178}.tk-k{color:#569CD6}.tk-n{color:#B5CEA8}
-.missing{text-align:center;padding:var(--space-section) 20px}
-.missing h1{font-size:40px;margin-bottom:var(--space-element)}
-.missing p{color:var(--color-text-secondary);margin-bottom:var(--space-element)}
+header nav{margin-left:auto;display:flex;gap:var(--space-element)}
+header nav a{color:var(--color-text-secondary);text-decoration:none;font-size:14px;transition:color var(--duration-fast) var(--ease-default)}
+header nav a:hover{color:var(--color-text-primary)}
+.hero{text-align:center;padding:var(--space-section) var(--space-element);background:var(--color-bg-secondary)}
+.hero h1{font-family:var(--font-display);font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-element)}
+.hero p{font-size:21px;line-height:1.4;color:var(--color-text-secondary);max-width:620px;margin:0 auto}
+section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-element)}
+.section-head{text-align:center;margin-bottom:var(--space-block)}
+.section-head h2{font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-.01em;margin-bottom:var(--space-inline)}
+.section-head p{font-size:19px;color:var(--color-text-secondary)}
+/* 时间线 + 项目卡片 */
+.tl{position:relative;max-width:900px;margin:0 auto}
+.tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--color-accent),rgba(0,113,227,.12))}
+.tl-item{position:relative;padding-left:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:var(--space-element) var(--space-block);padding-bottom:var(--space-block)}
+.tl-item.solo{grid-template-columns:1fr}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--color-accent);border:3px solid #fff;box-shadow:0 0 0 2px var(--color-accent)}
+.tl-date{font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px;letter-spacing:.02em}
+.tl-left h3{font-family:var(--font-display);font-size:24px;font-weight:600;margin-bottom:6px}
+.tl-left p{font-size:17px;line-height:1.47;color:var(--color-text-secondary)}
+.p-card{display:block;background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);text-decoration:none;color:inherit;transition:transform var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal) var(--ease-default)}
+.p-card:hover{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+.p-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-inline);margin-bottom:6px}
+.p-top h4{font-family:var(--font-display);font-size:21px;font-weight:600}
+.p-more{color:var(--color-accent);font-size:14px;white-space:nowrap}
+.p-desc{font-size:15px;line-height:1.47;color:var(--color-text-secondary)}
+.p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-inline)}
+.tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
+/* 联系 */
+.contact-box{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-inline);max-width:760px;margin:0 auto}
+.c-item{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);font-size:17px;text-align:center;transition:transform var(--duration-fast) var(--ease-default)}
+.c-item:hover{transform:translateY(-3px)}
+.c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px}
+.c-item a{color:var(--color-text-primary);text-decoration:none}
+.c-item a:hover{color:var(--color-accent)}
 footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px}
-@media(max-width:734px){.d-hero h1{font-size:34px}.wrap{padding-top:var(--space-block)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:734px){
+  .hero{padding:var(--space-block) var(--space-element)}
+  .hero h1{font-size:40px}
+  section{padding:var(--space-block) var(--space-element)}
+  .section-head h2{font-size:32px}
+  .tl-item{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <header>
-  <a class="back" href="/">← 返回</a>
   <span class="logo" id="siteName">我的个人网站</span>
+  <nav><a href="#timelineSec">经历</a><a href="#contact">联系</a></nav>
 </header>
-<div class="wrap" id="app"><p style="color:#86868B">加载中…</p></div>
+
+<div class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p></div>
+
+<section id="timelineSec">
+  <div class="section-head reveal"><h2>我的经历</h2><p>每一个节点，都对应一个作品</p></div>
+  <div class="tl" id="tlBox"></div>
+</section>
+
+<section id="contact">
+  <div class="section-head reveal"><h2>联系我</h2><p>欢迎随时找我聊聊</p></div>
+  <div class="contact-box" id="contactBox"></div>
+</section>
+
 <footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
+
 <script>
 const $=id=>document.getElementById(id);
-$("year").textContent=new Date().getFullYear();
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function hl(src){
-  var s=src.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  var re=/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|&lt;!--[\s\S]*?--&gt;)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(const|let|var|function|return|if|else|for|while|import|from|export|default|class|new|async|await|try|catch|throw|switch|case|break|continue|typeof|true|false|null|undefined|this)\b|(\b\d+(?:\.\d+)?\b)/g;
-  return s.replace(re,function(m,c,st,k,n){
-    if(c)return '<span class="tk-c">'+c+'</span>';
-    if(st)return '<span class="tk-s">'+st+'</span>';
-    if(k)return '<span class="tk-k">'+k+'</span>';
-    if(n)return '<span class="tk-n">'+n+'</span>';
-    return m;
-  });
-}
-var RAW_CODE="";
-const q=new URLSearchParams(location.search).get("id");
+$("year").textContent=new Date().getFullYear();
 
 fetch("/api/data").then(r=>r.json()).then(d=>{
-  if(d.site&&d.site.name)$("siteName").textContent=d.site.name;
-  var node=null;
-  (d.timeline||[]).forEach(t=>{if(t.project&&String(t.project.id)===String(q))node=t});
-  if(!node){
-    $("app").innerHTML='<div class="missing"><h1>😅 项目不存在</h1><p>它可能已被删除或链接已失效。</p><a class="btn" href="/">返回首页</a></div>';
-    return;
-  }
-  const p=node.project;
-  document.title=(p.title||"项目详情")+" · "+(d.site&&d.site.name||"");
-  const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
-    .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
-  const paras=(p.detail||"").split(/\n{2,}/).filter(b=>b.trim())
-    .map(b=>"<p>"+esc(b).replace(/\n/g,"<br>")+"</p>").join("");
+  const site=d.site||{};
+  if(site.name){document.title=site.name;$("siteName").textContent=site.name}
+  $("heroTitle").textContent=site.heroTitle||"";
+  $("heroSub").textContent=site.heroSub||"";
 
-  let html='<div class="d-hero">'+
-    '<div class="d-crumb">'+esc(node.date)+' · '+esc(node.title)+'</div>'+
-    '<h1>'+esc(p.title)+'</h1>'+
-    (p.summary?'<p class="d-sub">'+esc(p.summary)+'</p>':'')+
-    (tags?'<div class="d-tags">'+tags+'</div>':'')+
-    '<div class="d-actions">'+
-      (p.link?'<a class="btn" href="'+esc(p.link)+'" target="_blank">访问项目</a>':'')+
-      '<a class="btn ghost" href="/">返回首页</a>'+
-    '</div></div>';
+  const ts=(d.timeline||[]).filter(t=>t.title||t.date);
+  if(!ts.length)$("timelineSec").style.display="none";
+  ts.forEach(t=>{
+    const p=t.project;
+    const hasP=p&&(p.title||p.summary);
+    const item=document.createElement("div");
+    item.className="tl-item reveal"+(hasP?"":" solo");
+    let right="";
+    if(hasP){
+      const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
+        .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
+      right='<a class="p-card" href="project.html?id='+encodeURIComponent(p.id||"")+'">'+
+        '<div class="p-top"><h4>'+esc(p.title)+'</h4><span class="p-more">查看详情 ›</span></div>'+
+        '<p class="p-desc">'+esc(p.summary)+'</p>'+
+        (tags?'<div class="p-tags">'+tags+'</div>':'')+'</a>';
+    }
+    item.innerHTML='<div class="tl-dot"></div>'+
+      '<div class="tl-left"><div class="tl-date">'+esc(t.date)+'</div><h3>'+esc(t.title)+'</h3>'+(t.desc?'<p>'+esc(t.desc)+'</p>':'')+'</div>'+
+      '<div class="tl-right">'+right+'</div>';
+    $("tlBox").appendChild(item);
+  });
 
-  if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
+  const c=d.contact||{};const items=[];
+  if(c.email)items.push(["邮箱",c.email,"mailto:"+c.email]);
+  if(c.phone)items.push(["电话",c.phone,"tel:"+c.phone]);
+  if(c.wechat)items.push(["微信",c.wechat,null]);
+  if(c.qq)items.push(["QQ",c.qq,null]);
+  if(c.github)items.push(["GitHub",c.github,c.github]);
+  if(c.blog)items.push(["博客",c.blog,c.blog]);
+  if(!items.length)$("contact").style.display="none";
+  items.forEach(it=>{
+    const div=document.createElement("div");div.className="c-item reveal";
+    div.innerHTML='<span class="c-label">'+it[0]+'</span>'+(it[2]?'<a href="'+esc(it[2])+'" target="_blank">'+esc(it[1])+'</a>':esc(it[1]));
+    $("contactBox").appendChild(div);
+  });
 
-  if(p.code&&p.code.trim()){
-    RAW_CODE=p.code;
-    const lines=p.code.replace(/\n$/,"").split("\n");
-    const body=lines.map((l,i)=>'<div class="cl"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>').join("");
-    html+='<div class="d-sec"><h2>代码展示</h2><div class="codebox">'+
-      '<div class="code-head"><span>'+esc(p.codeLang||"code")+'</span><button class="copy-btn" onclick="copyCode(this)">复制代码</button></div>'+
-      '<pre>'+body+'</pre></div></div>';
-  }
-  $("app").innerHTML=html;
-}).catch(e=>{
-  $("app").innerHTML='<div class="missing"><h1>⚠️ 加载失败</h1><p>'+esc(String(e))+'</p><a class="btn" href="/">返回首页</a></div>';
-});
-
-function copyCode(btn){
-  navigator.clipboard.writeText(RAW_CODE).then(()=>{btn.textContent="已复制 ✓";setTimeout(()=>btn.textContent="复制代码",1500)});
-}
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+}).catch(e=>console.error(e));
 </script>
 </body>
 </html>

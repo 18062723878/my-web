@@ -70,50 +70,17 @@ function hl(src){
   });
 }
 var RAW_CODE="";
-
-// 取出 URL 里的 id（兼容各种写法）
-function getParam(name){
-  try{
-    var sp=new URLSearchParams(window.location.search);
-    if(sp.has(name))return sp.get(name);
-  }catch(e){}
-  // 兜底：手动解析
-  var m=window.location.search.match(new RegExp("[?&]"+name+"=([^&]*)"));
-  return m?decodeURIComponent(m[1]):"";
-}
-const q=(getParam("id")||"").trim();
+const q=new URLSearchParams(location.search).get("id");
 
 fetch("/api/data").then(r=>r.json()).then(d=>{
   if(d.site&&d.site.name)$("siteName").textContent=d.site.name;
-
-  // 收集所有项目，建立 id -> {project, node} 映射
-  var map={};
-  var list=[];
-  (d.timeline||[]).forEach(t=>{
-    if(t.project){
-      list.push({node:t,project:t.project});
-      if(t.project.id!=null&&t.project.id!==""){
-        map[String(t.project.id)]={node:t,project:t.project};
-      }
-    }
-  });
-
-  var found=null;
-  if(q&&map[q])found=map[q];
-  // 兜底：如果 id 没匹配上但有项目，且只有一个有效项目，直接显示它
-  if(!found){
-    var valid=list.filter(x=>x.project.title||x.project.summary);
-    if(valid.length===1)found=valid[0];
-  }
-
-  if(!found){
-    $("app").innerHTML='<div class="missing"><h1>😅 项目不存在</h1>'+
-      '<p>请求的 ID：'+esc(q||"(空)")+'</p>'+
-      '<p>它可能已被删除或链接已失效。</p><a class="btn" href="/">返回首页</a></div>';
+  var node=null;
+  (d.timeline||[]).forEach(t=>{if(t.project&&String(t.project.id)===String(q))node=t});
+  if(!node){
+    $("app").innerHTML='<div class="missing"><h1>😅 项目不存在</h1><p>它可能已被删除或链接已失效。</p><a class="btn" href="/">返回首页</a></div>';
     return;
   }
-
-  const node=found.node, p=found.project;
+  const p=node.project;
   document.title=(p.title||"项目详情")+" · "+(d.site&&d.site.name||"");
   const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
     .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
@@ -126,8 +93,7 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
     (p.summary?'<p class="d-sub">'+esc(p.summary)+'</p>':'')+
     (tags?'<div class="d-tags">'+tags+'</div>':'')+
     '<div class="d-actions">'+
-      (p.link?'<a class="btn" href="'+esc(p.link)+'" target="_blank">访问项目</a>':'')+
-      '<a class="btn ghost" href="/">返回首页</a>'+
+    '<a class="btn ghost" href="/">返回首页</a>'+
     '</div></div>';
 
   if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';

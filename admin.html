@@ -10,24 +10,29 @@ body{background:#f5f5f7;padding:20px}
 .login{max-width:360px;margin:100px auto;background:#fff;padding:40px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
 .login h2{margin-bottom:20px;text-align:center}
 .login input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px;font-size:14px}
-.login button{width:100%;padding:12px;background:#007aff;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer}
-.admin{max-width:900px;margin:0 auto;display:none}
+.login button{width:100%;padding:12px;background:#0071E3;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer}
+.admin{max-width:960px;margin:0 auto;display:none}
 .topbar{display:flex;align-items:center;margin-bottom:16px}
 .topbar h2{flex:1}
-.topbar a{color:#007aff;text-decoration:none;font-size:14px}
+.topbar a{color:#0071E3;text-decoration:none;font-size:14px}
 .section{background:#fff;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.section h3{margin-bottom:16px;font-size:16px;border-left:4px solid #007aff;padding-left:10px}
+.section h3{margin-bottom:16px;font-size:16px;border-left:4px solid #0071E3;padding-left:10px}
 .field{margin-bottom:12px}
 .field label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:#555}
 .field input,.field textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px}
 .field textarea{min-height:70px;resize:vertical}
+textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:200px;line-height:1.6}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .card{border:1px solid #e5e5e5;border-radius:10px;padding:16px;margin-bottom:14px;background:#fafafa}
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:700;font-size:14px}
 .card-head .spacer{flex:1}
 .mini-btn{padding:4px 10px;border:1px solid #ddd;background:#fff;border-radius:6px;cursor:pointer;font-size:12px}
 .mini-btn.del{color:#e64340;border-color:#e64340}
-.add-btn{padding:10px 18px;background:#007aff;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px}
+.add-btn{padding:10px 18px;background:#0071E3;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px}
+.check{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin:6px 0 12px;cursor:pointer}
+.check input{width:auto}
+.proj-fields{border-top:1px dashed #ccc;margin-top:4px;padding-top:14px;background:#fff;border-radius:8px;padding:14px}
+.badge{display:inline-block;background:#eef4ff;color:#0071E3;font-size:11px;padding:2px 8px;border-radius:99px;margin-left:6px;font-weight:400}
 .tip{font-size:12px;color:#999;margin-top:8px}
 .save-bar{position:sticky;bottom:10px;text-align:center;padding:10px 0}
 .save-btn{padding:14px 44px;background:#34c759;color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer;box-shadow:0 4px 12px rgba(52,199,89,.4)}
@@ -47,10 +52,7 @@ body{background:#f5f5f7;padding:20px}
 </div>
 
 <div class="admin" id="adminBox">
-  <div class="topbar">
-    <h2>✏️ 内容管理</h2>
-    <a href="/" target="_blank">预览前台 ↗</a>
-  </div>
+  <div class="topbar"><h2>✏️ 内容管理</h2><a href="/" target="_blank">预览前台 ↗</a></div>
 
   <div class="section">
     <h3>🏠 站点信息</h3>
@@ -60,17 +62,10 @@ body{background:#f5f5f7;padding:20px}
   </div>
 
   <div class="section">
-    <h3>📁 项目管理</h3>
-    <div id="projectList"></div>
-    <button class="add-btn" onclick="addProject()">＋ 添加项目</button>
-    <div class="tip">可添加任意多个；↑↓ 调整顺序；删除即从前台移除。</div>
-  </div>
-
-  <div class="section">
-    <h3>🕐 时间线</h3>
+    <h3>🕐 时间线 + 项目</h3>
     <div id="timelineList"></div>
     <button class="add-btn" onclick="addTimeline()">＋ 添加时间节点</button>
-    <div class="tip">添加几个节点，时间线就有几段，长度你说了算。</div>
+    <div class="tip">勾选「挂一个项目卡片」后，该节点旁边就会显示项目卡片；点卡片进入详情页，展示详细介绍和代码。节点加几个，时间线就多长。</div>
   </div>
 
   <div class="section">
@@ -92,40 +87,36 @@ body{background:#f5f5f7;padding:20px}
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-let DATA = {};
-
+const $=id=>document.getElementById(id);
+let DATA={};
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+function genId(){return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function showMsg(id,text,type){const el=$(id);el.className="msg "+type;el.textContent=text}
 
 function doLogin(){
   const pwd=$("pwd").value;
   fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:pwd})})
   .then(r=>r.json()).then(j=>{
-    if(j.ok){sessionStorage.setItem("admin_pwd",pwd);enter();}
+    if(j.ok){sessionStorage.setItem("admin_pwd",pwd);enter()}
     else showMsg("loginMsg","密码错误","err");
   }).catch(()=>showMsg("loginMsg","网络错误","err"));
 }
-
-function enter(){
-  $("loginBox").style.display="none";
-  $("adminBox").style.display="block";
-  loadData();
-}
+function enter(){$("loginBox").style.display="none";$("adminBox").style.display="block";loadData()}
 
 async function loadData(){
   try{
-    const r=await fetch("/api/data");
-    const d=await r.json();
+    const r=await fetch("/api/data");const d=await r.json();
+    let tl=Array.isArray(d.timeline)?d.timeline:[];
+    // 兼容旧数据：把旧的独立项目自动转成“时间线节点+项目卡片”
+    if(Array.isArray(d.projects)&&d.projects.length){
+      d.projects.forEach(p=>{tl.push({date:p.time||"",title:p.title||"",desc:"",project:{id:genId(),title:p.title||"",tags:p.tags||"",summary:p.desc||"",detail:"",codeLang:"",code:"",link:p.link||""}})});
+    }
     DATA={
       site:Object.assign({name:"",heroTitle:"",heroSub:""},d.site||{}),
-      projects:Array.isArray(d.projects)?d.projects:[],
-      timeline:Array.isArray(d.timeline)?d.timeline:[],
+      timeline:tl,
       contact:Object.assign({email:"",phone:"",wechat:"",qq:"",github:"",blog:""},d.contact||{})
     };
-  }catch(e){
-    DATA={site:{},projects:[],timeline:[],contact:{}};
-  }
+  }catch(e){DATA={site:{},timeline:[],contact:{}}}
   renderAll();
 }
 
@@ -139,71 +130,64 @@ function renderAll(){
   $("c_qq").value=DATA.contact.qq||"";
   $("c_github").value=DATA.contact.github||"";
   $("c_blog").value=DATA.contact.blog||"";
-  renderProjects();
   renderTimeline();
-}
-
-function renderProjects(){
-  const box=$("projectList");box.innerHTML="";
-  DATA.projects.forEach((p,i)=>{
-    const div=document.createElement("div");div.className="card";
-    div.innerHTML=`
-      <div class="card-head">📁 项目 ${i+1}<span class="spacer"></span>
-        <button class="mini-btn" onclick="moveItem('projects',${i},-1)">↑</button>
-        <button class="mini-btn" onclick="moveItem('projects',${i},1)">↓</button>
-        <button class="mini-btn del" onclick="delItem('projects',${i})">删除</button>
-      </div>
-      <div class="field"><label>项目名称</label><input data-k="title" value="${esc(p.title)}" placeholder="例如：个人博客系统"></div>
-      <div class="row2">
-        <div class="field"><label>时间段</label><input data-k="time" value="${esc(p.time)}" placeholder="例如：2024.01 - 2024.06"></div>
-        <div class="field"><label>技术标签（逗号分隔）</label><input data-k="tags" value="${esc(p.tags)}" placeholder="例如：Vue, Node.js"></div>
-      </div>
-      <div class="field"><label>项目描述</label><textarea data-k="desc" placeholder="介绍这个项目做了什么、有什么亮点">${esc(p.desc)}</textarea></div>
-      <div class="field"><label>项目链接（可不填）</label><input data-k="link" value="${esc(p.link)}" placeholder="https://..."></div>`;
-    box.appendChild(div);
-  });
 }
 
 function renderTimeline(){
   const box=$("timelineList");box.innerHTML="";
   DATA.timeline.forEach((t,i)=>{
+    const p=t.project||null;
     const div=document.createElement("div");div.className="card";
-    div.innerHTML=`
-      <div class="card-head">🕐 节点 ${i+1}<span class="spacer"></span>
-        <button class="mini-btn" onclick="moveItem('timeline',${i},-1)">↑</button>
-        <button class="mini-btn" onclick="moveItem('timeline',${i},1)">↓</button>
-        <button class="mini-btn del" onclick="delItem('timeline',${i})">删除</button>
-      </div>
-      <div class="row2">
-        <div class="field"><label>日期</label><input data-k="date" value="${esc(t.date)}" placeholder="例如：2024.06"></div>
-        <div class="field"><label>标题</label><input data-k="title" value="${esc(t.title)}" placeholder="例如：上线个人网站"></div>
-      </div>
-      <div class="field"><label>描述（可不填）</label><textarea data-k="desc">${esc(t.desc)}</textarea></div>`;
+    if(p&&p.id)div.dataset.pid=p.id;
+    div.innerHTML=
+      '<div class="card-head">🕐 节点 '+(i+1)+'<span class="spacer"></span>'+
+      '<button class="mini-btn" onclick="moveItem('+i+',-1)">↑</button>'+
+      '<button class="mini-btn" onclick="moveItem('+i+',1)">↓</button>'+
+      '<button class="mini-btn del" onclick="delItem('+i+')">删除</button></div>'+
+      '<div class="row2">'+
+        '<div class="field"><label>日期</label><input data-k="date" value="'+esc(t.date)+'" placeholder="例如：2026.08"></div>'+
+        '<div class="field"><label>节点标题</label><input data-k="title" value="'+esc(t.title)+'" placeholder="例如：上线个人网站"></div>'+
+      '</div>'+
+      '<div class="field"><label>节点描述（可不填）</label><textarea data-k="desc">'+esc(t.desc)+'</textarea></div>'+
+      '<label class="check"><input type="checkbox" data-k="hasProject" '+(p?"checked":"")+' onchange="toggleProj(this)"> 📁 在这个节点旁挂一个项目卡片</label>'+
+      '<div class="proj-fields" style="'+(p?"":"display:none")+'">'+
+        '<div class="field"><label>项目名称<span class="badge">卡片 + 详情页标题</span></label><input data-k="p_title" value="'+esc(p&&p.title)+'" placeholder="例如：个人作品集网站"></div>'+
+        '<div class="row2">'+
+          '<div class="field"><label>技术标签（逗号分隔）</label><input data-k="p_tags" value="'+esc(p&&p.tags)+'" placeholder="例如：HTML, CSS, JS"></div>'+
+          '<div class="field"><label>项目链接（可不填）</label><input data-k="p_link" value="'+esc(p&&p.link)+'" placeholder="https://..."></div>'+
+        '</div>'+
+        '<div class="field"><label>卡片简介<span class="badge">显示在时间线旁的卡片上</span></label><textarea data-k="p_summary">'+esc(p&&p.summary)+'</textarea></div>'+
+        '<div class="field"><label>详细介绍<span class="badge">详情页展示，空行分段</span></label><textarea data-k="p_detail" style="min-height:120px">'+esc(p&&p.detail)+'</textarea></div>'+
+        '<div class="field"><label>代码语言标签</label><input data-k="p_lang" value="'+esc(p&&p.codeLang)+'" placeholder="例如：html / javascript / css"></div>'+
+        '<div class="field"><label>代码内容<span class="badge">详情页代码区展示，可不填</span></label><textarea class="mono" data-k="p_code">'+esc(p&&p.code)+'</textarea></div>'+
+      '</div>';
     box.appendChild(div);
   });
 }
+
+function toggleProj(cb){cb.closest(".card").querySelector(".proj-fields").style.display=cb.checked?"block":"none"}
 
 function collectAll(){
   DATA.site.name=$("f_name").value;
   DATA.site.heroTitle=$("f_heroTitle").value;
   DATA.site.heroSub=$("f_heroSub").value;
-  DATA.projects=[];
-  document.querySelectorAll("#projectList .card").forEach(card=>{
-    const g=k=>card.querySelector('[data-k="'+k+'"]').value;
-    DATA.projects.push({title:g("title"),time:g("time"),tags:g("tags"),desc:g("desc"),link:g("link")});
-  });
   DATA.timeline=[];
   document.querySelectorAll("#timelineList .card").forEach(card=>{
     const g=k=>card.querySelector('[data-k="'+k+'"]').value;
-    DATA.timeline.push({date:g("date"),title:g("title"),desc:g("desc")});
+    const node={date:g("date"),title:g("title"),desc:g("desc")};
+    if(card.querySelector('[data-k="hasProject"]').checked){
+      const id=card.dataset.pid||genId();
+      card.dataset.pid=id;
+      node.project={id:id,title:g("p_title"),tags:g("p_tags"),link:g("p_link"),summary:g("p_summary"),detail:g("p_detail"),codeLang:g("p_lang"),code:g("p_code")};
+    }
+    DATA.timeline.push(node);
   });
   DATA.contact={email:$("c_email").value,phone:$("c_phone").value,wechat:$("c_wechat").value,qq:$("c_qq").value,github:$("c_github").value,blog:$("c_blog").value};
 }
 
-function addProject(){collectAll();DATA.projects.push({title:"",time:"",tags:"",desc:"",link:""});renderProjects()}
 function addTimeline(){collectAll();DATA.timeline.push({date:"",title:"",desc:""});renderTimeline()}
-function delItem(list,i){collectAll();if(!confirm("确定删除这一项吗？"))return;DATA[list].splice(i,1);list==="projects"?renderProjects():renderTimeline()}
-function moveItem(list,i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA[list].length)return;const tmp=DATA[list][i];DATA[list][i]=DATA[list][j];DATA[list][j]=tmp;list==="projects"?renderProjects():renderTimeline()}
+function delItem(i){collectAll();if(!confirm("确定删除节点 "+(i+1)+" 吗？挂着的项目也会一起删除。"))return;DATA.timeline.splice(i,1);renderTimeline()}
+function moveItem(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.timeline.length)return;const t=DATA.timeline[i];DATA.timeline[i]=DATA.timeline[j];DATA.timeline[j]=t;renderTimeline()}
 
 async function saveAll(){
   collectAll();
@@ -211,11 +195,11 @@ async function saveAll(){
   try{
     const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json","Authorization":"Bearer "+pwd},body:JSON.stringify(DATA)});
     const j=await r.json();
-    showMsg("saveMsg",j.ok?"✅ 保存成功！去前台刷新即可看到效果":"❌ "+(j.error||"保存失败"),j.ok?"ok":"err");
+    showMsg("saveMsg",j.ok?"✅ 保存成功！前台刷新即可看到":"❌ "+(j.error||"保存失败"),j.ok?"ok":"err");
   }catch(e){showMsg("saveMsg","❌ 网络错误："+e.message,"err")}
 }
 
-if(sessionStorage.getItem("admin_pwd")) enter();
+if(sessionStorage.getItem("admin_pwd"))enter();
 </script>
 </body>
 </html>

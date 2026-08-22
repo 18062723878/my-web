@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>后台管理</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif}
+  body{background:#f5f5f7;padding:20px}
+  .login{max-width:360px;margin:100px auto;background:#fff;padding:40px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .login h2{margin-bottom:20px;text-align:center}
+  .login input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px;font-size:14px}
+  .login button{width:100%;padding:12px;background:#007aff;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer}
+  .admin{max-width:800px;margin:0 auto;background:#fff;padding:30px;border-radius:12px;display:none}
+  .admin h2{margin-bottom:20px}
+  .field{margin-bottom:16px}
+  .field label{display:block;margin-bottom:6px;font-weight:600;font-size:14px}
+  .field input,.field textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px}
+  .field textarea{min-height:80px;resize:vertical}
+  .save-btn{padding:12px 24px;background:#34c759;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer}
+  .msg{margin-top:12px;padding:10px;border-radius:8px;display:none}
+  .msg.ok{background:#d4edda;color:#155724;display:block}
+  .msg.err{background:#f8d7da;color:#721c24;display:block}
+</style>
+</head>
+<body>
+
+<div class="login" id="loginBox">
+  <h2>🔒 后台登录</h2>
+  <input type="password" id="pwd" placeholder="请输入管理密码">
+  <button onclick="doLogin()">登录</button>
+  <div class="msg" id="loginMsg"></div>
+</div>
+
+<div class="admin" id="adminBox">
+  <h2>✏️ 内容管理</h2>
+  <div class="field"><label>站点名称</label><input id="f_name"></div>
+  <div class="field"><label>Hero 标题</label><input id="f_heroTitle"></div>
+  <div class="field"><label>Hero 副标题</label><textarea id="f_heroSub"></textarea></div>
+  <button class="save-btn" onclick="saveAll()">💾 保存修改</button>
+  <div class="msg" id="saveMsg"></div>
+</div>
+
+<script>
+let DATA = {};
+
+async function loadData(){
+  try{
+    const r = await fetch("/api/data");
+    DATA = await r.json();
+    document.getElementById("f_name").value = DATA.site?.name || "";
+    document.getElementById("f_heroTitle").value = DATA.site?.heroTitle || "";
+    document.getElementById("f_heroSub").value = DATA.site?.heroSub || "";
+  }catch(e){
+    showMsg("saveMsg","加载失败："+e.message,"err");
+  }
+}
+
+function doLogin(){
+  const pwd = document.getElementById("pwd").value;
+  fetch("/api/auth",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({password:pwd})
+  }).then(r=>r.json()).then(j=>{
+    if(j.ok){
+      sessionStorage.setItem("admin_pwd", pwd);
+      document.getElementById("loginBox").style.display="none";
+      document.getElementById("adminBox").style.display="block";
+      loadData();
+    }else{
+      showMsg("loginMsg","密码错误","err");
+    }
+  }).catch(e=>showMsg("loginMsg","网络错误","err"));
+}
+
+async function saveAll(){
+  DATA.site.name = document.getElementById("f_name").value;
+  DATA.site.heroTitle = document.getElementById("f_heroTitle").value;
+  DATA.site.heroSub = document.getElementById("f_heroSub").value;
+  const pwd = sessionStorage.getItem("admin_pwd");
+  try{
+    const r = await fetch("/api/data",{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer "+pwd
+      },
+      body:JSON.stringify(DATA)
+    });
+    const j = await r.json();
+    showMsg("saveMsg", j.ok?"✅ 保存成功":"❌ "+(j.error||"保存失败"), j.ok?"ok":"err");
+  }catch(e){
+    showMsg("saveMsg","❌ 网络错误："+e.message,"err");
+  }
+}
+
+function showMsg(id,text,type){
+  const el = document.getElementById(id);
+  el.className = "msg "+type;
+  el.textContent = text;
+}
+</script>
+</body>
+</html>

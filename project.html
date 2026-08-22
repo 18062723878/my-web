@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>项目详情</title>
+<style>
+:root{
+  --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
+  --color-bg-primary:#FFFFFF;--color-bg-secondary:#F5F5F7;--color-accent:#0071E3;
+  --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
+  --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
+  --space-unit:8px;--space-section:96px;--space-block:64px;--space-element:24px;--space-inline:12px;
+  --duration-fast:200ms;--duration-slow:700ms;--ease-default:cubic-bezier(0.25,0.1,0.25,1);
+  --radius-button:980px;--radius-card:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-text);color:var(--color-text-primary);background:var(--color-bg-primary);-webkit-font-smoothing:antialiased}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
+header .back{color:var(--color-accent);text-decoration:none;font-size:14px}
+header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
+.wrap{max-width:860px;margin:0 auto;padding:var(--space-section) var(--space-element) var(--space-block)}
+.d-hero{text-align:center;margin-bottom:var(--space-block)}
+.d-crumb{font-size:12px;color:var(--color-text-tertiary);margin-bottom:var(--space-inline);letter-spacing:.02em}
+.d-hero h1{font-family:var(--font-display);font-size:48px;line-height:1.1;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-inline)}
+.d-hero .d-sub{font-size:19px;color:var(--color-text-secondary);max-width:600px;margin:0 auto var(--space-element)}
+.d-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:var(--space-element)}
+.tag{background:var(--color-bg-secondary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
+.d-actions{display:flex;justify-content:center;gap:var(--space-inline)}
+.btn{display:inline-block;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px}
+.btn.ghost{background:transparent;color:var(--color-accent);border:1px solid var(--color-accent)}
+.d-sec{margin-bottom:var(--space-block)}
+.d-sec h2{font-family:var(--font-display);font-size:28px;font-weight:600;margin-bottom:var(--space-element)}
+.prose p{margin-bottom:var(--space-element);font-size:17px;line-height:1.6;color:var(--color-text-secondary)}
+.codebox{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+.code-head{display:flex;align-items:center;justify-content:space-between;background:#2d2d30;color:#9a9a9f;padding:8px 16px;font-size:12px}
+.copy-btn{background:#3a3a3d;color:#e5e5e7;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer}
+.codebox pre{background:#1e1e1e;color:#d4d4d4;padding:16px 0;overflow:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}
+.cl{display:flex;padding:0 16px}
+.ln{flex:0 0 40px;color:#6e6e73;text-align:right;padding-right:14px;user-select:none}
+.lc{white-space:pre}
+.tk-c{color:#6A9955}.tk-s{color:#CE9178}.tk-k{color:#569CD6}.tk-n{color:#B5CEA8}
+.missing{text-align:center;padding:var(--space-section) 20px}
+.missing h1{font-size:40px;margin-bottom:var(--space-element)}
+.missing p{color:var(--color-text-secondary);margin-bottom:var(--space-element)}
+footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px}
+@media(max-width:734px){.d-hero h1{font-size:34px}.wrap{padding-top:var(--space-block)}}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="/">← 返回</a>
+  <span class="logo" id="siteName">我的个人网站</span>
+</header>
+<div class="wrap" id="app"><p style="color:#86868B">加载中…</p></div>
+<footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
+<script>
+const $=id=>document.getElementById(id);
+$("year").textContent=new Date().getFullYear();
+function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function hl(src){
+  var s=src.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  var re=/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|&lt;!--[\s\S]*?--&gt;)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(const|let|var|function|return|if|else|for|while|import|from|export|default|class|new|async|await|try|catch|throw|switch|case|break|continue|typeof|true|false|null|undefined|this)\b|(\b\d+(?:\.\d+)?\b)/g;
+  return s.replace(re,function(m,c,st,k,n){
+    if(c)return '<span class="tk-c">'+c+'</span>';
+    if(st)return '<span class="tk-s">'+st+'</span>';
+    if(k)return '<span class="tk-k">'+k+'</span>';
+    if(n)return '<span class="tk-n">'+n+'</span>';
+    return m;
+  });
+}
+var RAW_CODE="";
+
+// 取出 URL 里的 id（兼容各种写法）
+function getParam(name){
+  try{
+    var sp=new URLSearchParams(window.location.search);
+    if(sp.has(name))return sp.get(name);
+  }catch(e){}
+  // 兜底：手动解析
+  var m=window.location.search.match(new RegExp("[?&]"+name+"=([^&]*)"));
+  return m?decodeURIComponent(m[1]):"";
+}
+const q=(getParam("id")||"").trim();
+
+fetch("/api/data").then(r=>r.json()).then(d=>{
+  if(d.site&&d.site.name)$("siteName").textContent=d.site.name;
+
+  // 收集所有项目，建立 id -> {project, node} 映射
+  var map={};
+  var list=[];
+  (d.timeline||[]).forEach(t=>{
+    if(t.project){
+      list.push({node:t,project:t.project});
+      if(t.project.id!=null&&t.project.id!==""){
+        map[String(t.project.id)]={node:t,project:t.project};
+      }
+    }
+  });
+
+  var found=null;
+  if(q&&map[q])found=map[q];
+  // 兜底：如果 id 没匹配上但有项目，且只有一个有效项目，直接显示它
+  if(!found){
+    var valid=list.filter(x=>x.project.title||x.project.summary);
+    if(valid.length===1)found=valid[0];
+  }
+
+  if(!found){
+    $("app").innerHTML='<div class="missing"><h1>😅 项目不存在</h1>'+
+      '<p>请求的 ID：'+esc(q||"(空)")+'</p>'+
+      '<p>它可能已被删除或链接已失效。</p><a class="btn" href="/">返回首页</a></div>';
+    return;
+  }
+
+  const node=found.node, p=found.project;
+  document.title=(p.title||"项目详情")+" · "+(d.site&&d.site.name||"");
+  const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
+    .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
+  const paras=(p.detail||"").split(/\n{2,}/).filter(b=>b.trim())
+    .map(b=>"<p>"+esc(b).replace(/\n/g,"<br>")+"</p>").join("");
+
+  let html='<div class="d-hero">'+
+    '<div class="d-crumb">'+esc(node.date)+' · '+esc(node.title)+'</div>'+
+    '<h1>'+esc(p.title)+'</h1>'+
+    (p.summary?'<p class="d-sub">'+esc(p.summary)+'</p>':'')+
+    (tags?'<div class="d-tags">'+tags+'</div>':'')+
+    '<div class="d-actions">'+
+      (p.link?'<a class="btn" href="'+esc(p.link)+'" target="_blank">访问项目</a>':'')+
+      '<a class="btn ghost" href="/">返回首页</a>'+
+    '</div></div>';
+
+  if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
+
+  if(p.code&&p.code.trim()){
+    RAW_CODE=p.code;
+    const lines=p.code.replace(/\n$/,"").split("\n");
+    const body=lines.map((l,i)=>'<div class="cl"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>').join("");
+    html+='<div class="d-sec"><h2>代码展示</h2><div class="codebox">'+
+      '<div class="code-head"><span>'+esc(p.codeLang||"code")+'</span><button class="copy-btn" onclick="copyCode(this)">复制代码</button></div>'+
+      '<pre>'+body+'</pre></div></div>';
+  }
+  $("app").innerHTML=html;
+}).catch(e=>{
+  $("app").innerHTML='<div class="missing"><h1>⚠️ 加载失败</h1><p>'+esc(String(e))+'</p><a class="btn" href="/">返回首页</a></div>';
+});
+
+function copyCode(btn){
+  navigator.clipboard.writeText(RAW_CODE).then(()=>{btn.textContent="已复制 ✓";setTimeout(()=>btn.textContent="复制代码",1500)});
+}
+</script>
+</body>
+</html>

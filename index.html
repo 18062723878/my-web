@@ -5,45 +5,169 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>我的个人网站</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-body{background:#f7f8fa;color:#222}
-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:20px;padding:14px 24px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(0,0,0,.06)}
-header .logo{font-weight:800;font-size:17px}
-header nav{margin-left:auto;display:flex;gap:18px}
-header nav a{color:#555;text-decoration:none;font-size:14px}
-.hero{padding:90px 20px;text-align:center;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
-.hero h1{font-size:40px;margin-bottom:14px}
-.hero p{font-size:17px;opacity:.92;max-width:640px;margin:0 auto;line-height:1.7}
-section{max-width:960px;margin:0 auto;padding:56px 20px 20px}
-section h2{font-size:24px;margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.p-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:10px}
-.p-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.p-top h3{font-size:17px}
-.p-time{font-size:12px;color:#888;white-space:nowrap}
-.p-desc{font-size:14px;color:#555;line-height:1.7}
-.p-tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{background:#eef2ff;color:#4f6ef7;font-size:12px;padding:3px 10px;border-radius:99px}
-.p-link{color:#4f6ef7;text-decoration:none;font-size:14px;font-weight:600}
-.tl{border-left:3px solid #dfe3ea;margin-left:8px;padding-left:26px;display:flex;flex-direction:column;gap:24px}
-.tl-item{position:relative}
-.tl-dot{position:absolute;left:-34px;top:4px;width:13px;height:13px;border-radius:50%;background:#4f6ef7;border:3px solid #fff;box-shadow:0 0 0 2px #4f6ef7}
-.tl-date{font-size:13px;color:#888;margin-bottom:4px}
-.tl-item h3{font-size:16px;margin-bottom:4px}
-.tl-item p{font-size:14px;color:#555;line-height:1.6}
-.contact-box{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.c-item{background:#fff;border-radius:10px;padding:14px 16px;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.c-item a{color:#222;text-decoration:none}
-.c-item a:hover{color:#4f6ef7}
-footer{text-align:center;padding:36px;color:#999;font-size:13px}
+:root{
+  --color-text-primary:#1D1D1F;
+  --color-text-secondary:#6E6E73;
+  --color-text-tertiary:#86868B;
+  --color-bg-primary:#FFFFFF;
+  --color-bg-secondary:#F5F5F7;
+  --color-bg-dark:#000000;
+  --color-accent:#0071E3;
+  --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
+  --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
+  --space-unit:8px;
+  --space-section:120px;
+  --space-block:64px;
+  --space-element:24px;
+  --space-inline:12px;
+  --duration-fast:200ms;
+  --duration-normal:400ms;
+  --duration-slow:700ms;
+  --ease-default:cubic-bezier(0.25,0.1,0.25,1);
+  --radius-button:980px;
+  --radius-card:18px;
+  --radius-image:28px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-text);
+  color:var(--color-text-primary);
+  background:var(--color-bg-primary);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 导航 */
+header{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:var(--space-element);
+  padding:0 var(--space-element);height:52px;
+  background:rgba(255,255,255,.8);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+header .logo{font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:-.01em}
+header nav{margin-left:auto;display:flex;gap:var(--space-element)}
+header nav a{
+  color:var(--color-text-secondary);text-decoration:none;
+  font-size:14px;transition:color var(--duration-fast) var(--ease-default);
+}
+header nav a:hover{color:var(--color-text-primary)}
+
+/* Hero */
+.hero{
+  text-align:center;
+  padding:var(--space-section) var(--space-element);
+  background:var(--color-bg-secondary);
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:56px;line-height:1.05;font-weight:700;
+  letter-spacing:-.02em;
+  margin-bottom:var(--space-element);
+}
+.hero p{
+  font-size:21px;line-height:1.4;color:var(--color-text-secondary);
+  max-width:620px;margin:0 auto;font-weight:400;
+}
+
+/* 通用区块 */
+section{
+  max-width:980px;margin:0 auto;
+  padding:var(--space-section) var(--space-element);
+}
+.section-head{text-align:center;margin-bottom:var(--space-block)}
+.section-head h2{
+  font-family:var(--font-display);
+  font-size:40px;line-height:1.1;font-weight:600;
+  letter-spacing:-.01em;margin-bottom:var(--space-inline);
+}
+.section-head p{font-size:19px;color:var(--color-text-secondary)}
+
+/* 项目卡片 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-element)}
+.p-card{
+  background:var(--color-bg-secondary);
+  border-radius:var(--radius-card);
+  padding:var(--space-block) var(--space-element);
+  display:flex;flex-direction:column;gap:var(--space-inline);
+  transition:transform var(--duration-normal) var(--ease-default),
+             box-shadow var(--duration-normal) var(--ease-default);
+}
+.p-card:hover{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+.p-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-inline)}
+.p-top h3{font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:-.01em}
+.p-time{font-size:12px;color:var(--color-text-tertiary);white-space:nowrap}
+.p-desc{font-size:17px;line-height:1.47;color:var(--color-text-secondary)}
+.p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-unit)}
+.tag{
+  background:var(--color-bg-primary);color:var(--color-accent);
+  font-size:12px;padding:4px 12px;border-radius:var(--radius-button);
+}
+.p-link{
+  margin-top:var(--space-unit);color:var(--color-accent);
+  text-decoration:none;font-size:17px;font-weight:400;
+}
+.p-link:hover{text-decoration:underline}
+
+/* 时间线 */
+.tl{position:relative;max-width:680px;margin:0 auto;padding-left:var(--space-element)}
+.tl::before{
+  content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(var(--color-accent),rgba(0,113,227,.15));
+}
+.tl-item{position:relative;padding:0 0 var(--space-block) var(--space-block)}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{
+  position:absolute;left:-2px;top:4px;width:14px;height:14px;border-radius:50%;
+  background:var(--color-accent);border:3px solid var(--color-bg-primary);
+  box-shadow:0 0 0 2px var(--color-accent);
+}
+.tl-date{font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px;letter-spacing:.02em}
+.tl-item h3{font-family:var(--font-display);font-size:21px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em}
+.tl-item p{font-size:17px;line-height:1.47;color:var(--color-text-secondary)}
+
+/* 联系方式 */
+.contact-box{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-inline);max-width:760px;margin:0 auto}
+.c-item{
+  background:var(--color-bg-secondary);border-radius:var(--radius-card);
+  padding:var(--space-element);font-size:17px;text-align:center;
+  transition:transform var(--duration-fast) var(--ease-default);
+}
+.c-item:hover{transform:translateY(-3px)}
+.c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px}
+.c-item a{color:var(--color-text-primary);text-decoration:none}
+.c-item a:hover{color:var(--color-accent)}
+
+/* 页脚 */
+footer{
+  text-align:center;padding:var(--space-block) var(--space-element);
+  background:var(--color-bg-secondary);
+  color:var(--color-text-tertiary);font-size:12px;line-height:1.33;
+}
+
+/* 滚动淡入 */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
+.reveal.in{opacity:1;transform:none}
+
+/* 响应式 */
+@media(max-width:734px){
+  .hero{padding:var(--space-block) var(--space-element)}
+  .hero h1{font-size:40px}
+  .hero p{font-size:19px}
+  section{padding:var(--space-block) var(--space-element)}
+  .section-head h2{font-size:32px}
+}
 </style>
 </head>
 <body>
+
 <header>
   <span class="logo" id="siteName">我的个人网站</span>
   <nav>
     <a href="#projects">项目</a>
-    <a href="#timelineSec">时间线</a>
+    <a href="#timelineSec">经历</a>
     <a href="#contact">联系</a>
   </nav>
 </header>
@@ -53,9 +177,22 @@ footer{text-align:center;padding:36px;color:#999;font-size:13px}
   <p id="heroSub"></p>
 </div>
 
-<section id="projects"><h2>📁 我的项目</h2><div class="grid" id="projectGrid"></div></section>
-<section id="timelineSec"><h2>🕐 我的经历</h2><div class="tl" id="tlBox"></div></section>
-<section id="contact"><h2>📮 联系我</h2><div class="contact-box" id="contactBox"></div></section>
+<section id="projects">
+  <div class="section-head reveal"><h2>我的项目</h2><p>我做过的一些东西</p></div>
+  <div class="grid" id="projectGrid"></div>
+</section>
+
+<section id="timelineSec" style="background:var(--color-bg-secondary);max-width:none">
+  <div style="max-width:980px;margin:0 auto">
+    <div class="section-head reveal"><h2>我的经历</h2><p>一路走来的脚印</p></div>
+    <div class="tl" id="tlBox"></div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-head reveal"><h2>联系我</h2><p>欢迎随时找我聊聊</p></div>
+  <div class="contact-box" id="contactBox"></div>
+</section>
 
 <footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
 
@@ -70,41 +207,50 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   $("heroTitle").textContent=site.heroTitle||"";
   $("heroSub").textContent=site.heroSub||"";
 
+  // 项目
   const ps=(d.projects||[]).filter(p=>p.title||p.desc);
   if(!ps.length)$("projects").style.display="none";
   ps.forEach(p=>{
     const tags=(p.tags||"").split(/[,，]/).map(t=>t.trim()).filter(Boolean)
       .map(t=>'<span class="tag">'+esc(t)+'</span>').join("");
-    const card=document.createElement("div");card.className="p-card";
+    const card=document.createElement("div");card.className="p-card reveal";
     card.innerHTML=
       '<div class="p-top"><h3>'+esc(p.title)+'</h3><span class="p-time">'+esc(p.time)+'</span></div>'+
       '<p class="p-desc">'+esc(p.desc)+'</p>'+
       (tags?'<div class="p-tags">'+tags+'</div>':'')+
-      (p.link?'<a class="p-link" href="'+esc(p.link)+'" target="_blank">查看项目 →</a>':'');
+      (p.link?'<a class="p-link" href="'+esc(p.link)+'" target="_blank">查看项目 ›</a>':'');
     $("projectGrid").appendChild(card);
   });
 
+  // 时间线
   const ts=(d.timeline||[]).filter(t=>t.title||t.date);
   if(!ts.length)$("timelineSec").style.display="none";
   ts.forEach(t=>{
-    const item=document.createElement("div");item.className="tl-item";
+    const item=document.createElement("div");item.className="tl-item reveal";
     item.innerHTML='<div class="tl-dot"></div><div class="tl-date">'+esc(t.date)+'</div><h3>'+esc(t.title)+'</h3>'+(t.desc?'<p>'+esc(t.desc)+'</p>':'');
     $("tlBox").appendChild(item);
   });
 
+  // 联系方式
   const c=d.contact||{};const items=[];
-  if(c.email)items.push(["📧","邮箱",c.email,"mailto:"+c.email]);
-  if(c.phone)items.push(["📱","电话",c.phone,"tel:"+c.phone]);
-  if(c.wechat)items.push(["💬","微信",c.wechat,null]);
-  if(c.qq)items.push(["🐧","QQ",c.qq,null]);
-  if(c.github)items.push(["🐙","GitHub",c.github,c.github]);
-  if(c.blog)items.push(["🌐","博客",c.blog,c.blog]);
+  if(c.email)items.push(["邮箱",c.email,"mailto:"+c.email]);
+  if(c.phone)items.push(["电话",c.phone,"tel:"+c.phone]);
+  if(c.wechat)items.push(["微信",c.wechat,null]);
+  if(c.qq)items.push(["QQ",c.qq,null]);
+  if(c.github)items.push(["GitHub",c.github,c.github]);
+  if(c.blog)items.push(["博客",c.blog,c.blog]);
   if(!items.length)$("contact").style.display="none";
   items.forEach(it=>{
-    const div=document.createElement("div");div.className="c-item";
-    div.innerHTML=it[3]?'<a href="'+esc(it[3])+'" target="_blank">'+it[0]+' '+it[1]+'：'+esc(it[2])+'</a>':it[0]+' '+it[1]+'：'+esc(it[2]);
+    const div=document.createElement("div");div.className="c-item reveal";
+    div.innerHTML='<span class="c-label">'+it[0]+'</span>'+(it[2]?'<a href="'+esc(it[2])+'" target="_blank">'+esc(it[1])+'</a>':esc(it[1]));
     $("contactBox").appendChild(div);
   });
+
+  // 滚动淡入
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}});
+  },{threshold:.12});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 }).catch(e=>console.error(e));
 </script>
 </body>

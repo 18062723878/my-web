@@ -39,6 +39,7 @@ body{background:var(--bg-page);color:var(--text-main);padding:20px;transition:ba
 .field textarea{min-height:70px;resize:vertical}
 textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:140px;line-height:1.6}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px}
 .card{border:1px solid var(--border-card);border-radius:10px;padding:16px;margin-bottom:14px;background:var(--bg-subcard)}
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:700;font-size:14px}
 .card-head .spacer{flex:1}
@@ -51,7 +52,6 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
 .badge{display:inline-block;background:var(--badge-bg);color:var(--badge-color);font-size:11px;padding:2px 8px;border-radius:99px;margin-left:6px;font-weight:400}
 .tip{font-size:12px;color:var(--text-tip);margin-top:8px}
 
-/* 多代码板块区域 */
 .code-blocks-wrap{margin-top:16px;border:1px solid var(--border-color);padding:14px;border-radius:8px;background:var(--bg-subcard)}
 .code-block-card{background:var(--bg-card);border:1px solid var(--border-card);border-radius:8px;padding:12px;margin-bottom:12px}
 .code-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:600}
@@ -66,7 +66,7 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
   .msg.ok{background:#1b3922;color:#75d58d}
   .msg.err{background:#44191d;color:#ff858d}
 }
-@media(max-width:640px){.row2{grid-template-columns:1fr}}
+@media(max-width:640px){.row2,.row3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -86,6 +86,7 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
     <div class="field"><label>站点名称</label><input id="f_name"></div>
     <div class="field"><label>首页大标题</label><input id="f_heroTitle"></div>
     <div class="field"><label>首页副标题</label><textarea id="f_heroSub"></textarea></div>
+    <div class="field"><label>📄 个人简历链接<span class="badge">PDF外链或在线文档地址，留空则首页不显示按钮</span></label><input id="f_resumeUrl" placeholder="例如：https://.../resume.pdf"></div>
   </div>
 
   <div class="section">
@@ -95,10 +96,17 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
   </div>
 
   <div class="section">
+    <h3>🛠️ 技能与工具 (Bento Grid)</h3>
+    <div id="skillsList"></div>
+    <button class="add-btn" onclick="addSkill()">＋ 添加技能卡片</button>
+    <div class="tip">会在首页展示为便当盒式的技能与工具卡片。支持随时调整顺序与删除。</div>
+  </div>
+
+  <div class="section">
     <h3>🕐 时间线 + 项目</h3>
     <div id="timelineList"></div>
     <button class="add-btn" onclick="addTimeline()">＋ 添加时间节点</button>
-    <div class="tip">勾选「挂一个项目卡片」后，该节点旁边就会显示项目卡片；支持为每个项目添加多个代码展示板块。</div>
+    <div class="tip">勾选「挂一个项目卡片」后可添加详细图文、在线试玩 Demo 与多段代码展示。</div>
   </div>
 
   <div class="section">
@@ -141,11 +149,15 @@ async function loadData(){
     const r=await fetch("/api/data");const d=await r.json();
     let tl=Array.isArray(d.timeline)?d.timeline:[];
     DATA={
-      site:Object.assign({name:"",heroTitle:"",heroSub:"",aboutSub:"",about:""},d.site||{}),
+      site:Object.assign({name:"",heroTitle:"",heroSub:"",aboutSub:"",about:"",resumeUrl:""},d.site||{}),
+      skills:Array.isArray(d.skills)?d.skills:[
+        { cat:"前端开发", name:"HTML / CSS / JavaScript", desc:"原生现代 Web 标准与响应式设计" },
+        { cat:"基础设施", name:"Cloudflare Pages & KV", desc:"边缘无服务器架构部署与全栈实践" }
+      ],
       timeline:tl,
       contact:Object.assign({email:"",phone:"",wechat:"",qq:"",github:"",blog:""},d.contact||{})
     };
-  }catch(e){DATA={site:{},timeline:[],contact:{}}}
+  }catch(e){DATA={site:{},skills:[],timeline:[],contact:{}}}
   renderAll();
 }
 
@@ -153,6 +165,7 @@ function renderAll(){
   $("f_name").value=DATA.site.name||"";
   $("f_heroTitle").value=DATA.site.heroTitle||"";
   $("f_heroSub").value=DATA.site.heroSub||"";
+  $("f_resumeUrl").value=DATA.site.resumeUrl||"";
   $("f_aboutSub").value=DATA.site.aboutSub||"";
   $("f_about").value=DATA.site.about||DATA.site.bio||"";
   $("c_email").value=DATA.contact.email||"";
@@ -161,8 +174,31 @@ function renderAll(){
   $("c_qq").value=DATA.contact.qq||"";
   $("c_github").value=DATA.contact.github||"";
   $("c_blog").value=DATA.contact.blog||"";
+  renderSkills();
   renderTimeline();
 }
+
+function renderSkills(){
+  const box=$("skillsList");box.innerHTML="";
+  DATA.skills.forEach((s,i)=>{
+    const div=document.createElement("div");div.className="card";
+    div.innerHTML=
+      '<div class="card-head">🛠️ 技能 '+(i+1)+'<span class="spacer"></span>'+
+      '<button class="mini-btn" onclick="moveSkill('+i+',-1)">↑</button>'+
+      '<button class="mini-btn" onclick="moveSkill('+i+',1)">↓</button>'+
+      '<button class="mini-btn del" onclick="delSkill('+i+')">删除</button></div>'+
+      '<div class="row3">'+
+        '<div class="field"><label>类别/领域</label><input data-sk="cat" value="'+esc(s.cat)+'" placeholder="如：前端 / 语言 / 工具"></div>'+
+        '<div class="field"><label>技能/工具名称</label><input data-sk="name" value="'+esc(s.name)+'" placeholder="如：JavaScript"></div>'+
+        '<div class="field"><label>熟练度简述</label><input data-sk="desc" value="'+esc(s.desc)+'" placeholder="如：日常开发与性能调优"></div>'+
+      '</div>';
+    box.appendChild(div);
+  });
+}
+
+function addSkill(){collectAll();DATA.skills.push({cat:"",name:"",desc:""});renderSkills()}
+function delSkill(i){collectAll();DATA.skills.splice(i,1);renderSkills()}
+function moveSkill(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.skills.length)return;const t=DATA.skills[i];DATA.skills[i]=DATA.skills[j];DATA.skills[j]=t;renderSkills()}
 
 function renderTimeline(){
   const box=$("timelineList");box.innerHTML="";
@@ -171,7 +207,6 @@ function renderTimeline(){
     const div=document.createElement("div");div.className="card";
     if(p&&p.id)div.dataset.pid=p.id;
 
-    // 格式化代码板块
     let blocks = [];
     if(p){
       if(Array.isArray(p.codeBlocks)) blocks = p.codeBlocks;
@@ -210,8 +245,9 @@ function renderTimeline(){
         '<div class="field"><label>项目名称<span class="badge">卡片 + 详情页标题</span></label><input data-k="p_title" value="'+esc(p&&p.title)+'" placeholder="例如：个人作品集网站"></div>'+
         '<div class="row2">'+
           '<div class="field"><label>技术标签（逗号分隔）</label><input data-k="p_tags" value="'+esc(p&&p.tags)+'" placeholder="例如：HTML, CSS, JS"></div>'+
-          '<div class="field"><label>项目链接（可不填）</label><input data-k="p_link" value="'+esc(p&&p.link)+'" placeholder="https://..."></div>'+
+          '<div class="field"><label>项目外链（可不填）</label><input data-k="p_link" value="'+esc(p&&p.link)+'" placeholder="https://..."></div>'+
         '</div>'+
+        '<div class="field"><label>🎮 在线试玩 / Live Demo 演示链接<span class="badge">详情页内嵌试玩沙盒，可不填</span></label><input data-k="p_demo" value="'+esc(p&&p.demoUrl)+'" placeholder="例如：https://demo.example.com"></div>'+
         '<div class="field"><label>卡片简介<span class="badge">显示在时间线旁的卡片上</span></label><textarea data-k="p_summary">'+esc(p&&p.summary)+'</textarea></div>'+
         '<div class="field"><label>详细介绍<span class="badge">详情页展示，空行分段</span></label><textarea data-k="p_detail" style="min-height:100px">'+esc(p&&p.detail)+'</textarea></div>'+
         '<div class="code-blocks-wrap">'+
@@ -232,8 +268,19 @@ function collectAll(){
   DATA.site.name=$("f_name").value;
   DATA.site.heroTitle=$("f_heroTitle").value;
   DATA.site.heroSub=$("f_heroSub").value;
+  DATA.site.resumeUrl=$("f_resumeUrl").value;
   DATA.site.aboutSub=$("f_aboutSub").value;
   DATA.site.about=$("f_about").value;
+
+  DATA.skills=[];
+  document.querySelectorAll("#skillsList .card").forEach(c=>{
+    DATA.skills.push({
+      cat: c.querySelector('[data-sk="cat"]').value,
+      name: c.querySelector('[data-sk="name"]').value,
+      desc: c.querySelector('[data-sk="desc"]').value
+    });
+  });
+
   DATA.timeline=[];
   document.querySelectorAll("#timelineList .card").forEach(card=>{
     const g=k=>card.querySelector('[data-k="'+k+'"]').value;
@@ -242,7 +289,6 @@ function collectAll(){
       const id=card.dataset.pid||genId();
       card.dataset.pid=id;
       
-      // 收集多个代码板块
       const codeBlocks = [];
       card.querySelectorAll(".code-block-card").forEach(cbCard=>{
         codeBlocks.push({
@@ -257,10 +303,10 @@ function collectAll(){
         title:g("p_title"),
         tags:g("p_tags"),
         link:g("p_link"),
+        demoUrl:g("p_demo"),
         summary:g("p_summary"),
         detail:g("p_detail"),
         codeBlocks: codeBlocks,
-        // 兼容单代码字段回退
         codeLang: codeBlocks.length ? codeBlocks[0].lang : "",
         code: codeBlocks.length ? codeBlocks[0].code : ""
       };
@@ -274,7 +320,6 @@ function addTimeline(){collectAll();DATA.timeline.push({date:"",title:"",desc:""
 function delItem(i){collectAll();if(!confirm("确定删除节点 "+(i+1)+" 吗？挂着的项目也会一起删除。"))return;DATA.timeline.splice(i,1);renderTimeline()}
 function moveItem(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.timeline.length)return;const t=DATA.timeline[i];DATA.timeline[i]=DATA.timeline[j];DATA.timeline[j]=t;renderTimeline()}
 
-// 添加/删除代码板块
 function addCodeBlock(timelineIdx){
   collectAll();
   const proj = DATA.timeline[timelineIdx].project;

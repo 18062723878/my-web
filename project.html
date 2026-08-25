@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>项目详情</title>
+<!-- 引入 html2canvas 实现纯前端一键整页高清截图 -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{
   --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
@@ -34,15 +36,24 @@ header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 .d-hero .d-sub{font-size:19px;color:var(--color-text-secondary);max-width:600px;margin:0 auto var(--space-element)}
 .d-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:var(--space-element)}
 .tag{background:var(--color-bg-secondary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
-.d-actions{display:flex;justify-content:center;gap:var(--space-inline)}
-.btn{display:inline-block;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px}
+.d-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-inline)}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px;cursor:pointer;border:none;transition:transform var(--duration-fast) var(--ease-default),opacity var(--duration-fast)}
+.btn:active{transform:scale(0.98)}
 .btn.ghost{background:transparent;color:var(--color-accent);border:1px solid var(--color-accent)}
+.btn.secondary{background:var(--color-bg-secondary);color:var(--color-text-primary)}
 .d-sec{margin-bottom:var(--space-block)}
 .d-sec h2{font-family:var(--font-display);font-size:28px;font-weight:600;margin-bottom:var(--space-element)}
+.d-sec h3.sub-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin:24px 0 10px;color:var(--color-text-primary)}
 .prose p{margin-bottom:var(--space-element);font-size:17px;line-height:1.6;color:var(--color-text-secondary)}
+.code-item{margin-bottom:28px}
+.code-item:last-child{margin-bottom:0}
 .codebox{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)}
-.code-head{display:flex;align-items:center;justify-content:space-between;background:#2d2d30;color:#9a9a9f;padding:8px 16px;font-size:12px}
-.copy-btn{background:#3a3a3d;color:#e5e5e7;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer}
+.code-head{display:flex;align-items:center;justify-content:space-between;background:#2d2d30;color:#9a9a9f;padding:10px 16px;font-size:13px}
+.code-head .left{display:flex;align-items:center;gap:10px}
+.code-head .b-name{color:#fff;font-weight:600}
+.code-head .b-lang{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-size:11px}
+.copy-btn{background:#3a3a3d;color:#e5e5e7;border:none;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer}
+.copy-btn:hover{background:#4a4a4e}
 .codebox pre{background:#1e1e1e;color:#d4d4d4;padding:16px 0;overflow:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}
 .cl{display:flex;padding:0 16px}
 .ln{flex:0 0 40px;color:#6e6e73;text-align:right;padding-right:14px;user-select:none}
@@ -62,10 +73,12 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 </header>
 <div class="wrap" id="app"><p style="color:#86868B">加载中…</p></div>
 <footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
+
 <script>
 const $=id=>document.getElementById(id);
 $("year").textContent=new Date().getFullYear();
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+
 function hl(src){
   var s=src.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   var re=/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|&lt;!--[\s\S]*?--&gt;)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(const|let|var|function|return|if|else|for|while|import|from|export|default|class|new|async|await|try|catch|throw|switch|case|break|continue|typeof|true|false|null|undefined|this)\b|(\b\d+(?:\.\d+)?\b)/g;
@@ -77,7 +90,9 @@ function hl(src){
     return m;
   });
 }
-var RAW_CODE="";
+
+let CURRENT_PROJECT_TITLE = "项目详情";
+let CODE_CACHE = [];
 const q=new URLSearchParams(location.search).get("id");
 
 fetch("/api/data").then(r=>r.json()).then(d=>{
@@ -89,11 +104,20 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
     return;
   }
   const p=node.project;
-  document.title=(p.title||"项目详情")+" · "+(d.site&&d.site.name||"");
+  CURRENT_PROJECT_TITLE = p.title || "项目详情";
+  document.title=CURRENT_PROJECT_TITLE+" · "+(d.site&&d.site.name||"");
+  
   const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
     .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
   const paras=(p.detail||"").split(/\n{2,}/).filter(b=>b.trim())
     .map(b=>"<p>"+esc(b).replace(/\n/g,"<br>")+"</p>").join("");
+
+  // 整理代码板块数据（兼容旧的单个 code 结构与新的 codeBlocks 数组）
+  let blocks = Array.isArray(p.codeBlocks) ? p.codeBlocks.filter(b=>b.code&&b.code.trim()) : [];
+  if(!blocks.length && p.code && p.code.trim()){
+    blocks = [{ title:"核心实现", lang: p.codeLang||"code", code: p.code }];
+  }
+  CODE_CACHE = blocks.map(b=>b.code);
 
   let html='<div class="d-hero">'+
     '<div class="d-crumb">'+esc(node.date)+' · '+esc(node.title)+'</div>'+
@@ -101,26 +125,73 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
     (p.summary?'<p class="d-sub">'+esc(p.summary)+'</p>':'')+
     (tags?'<div class="d-tags">'+tags+'</div>':'')+
     '<div class="d-actions">'+
-    '<a class="btn ghost" href="/">返回首页</a>'+
+      (p.link?'<a class="btn" href="'+esc(p.link)+'" target="_blank">访问项目 ↗</a>':'')+
+      '<button class="btn secondary" id="snapBtn" onclick="takeScreenshot()">📸 保存为长图</button>'+
+      '<a class="btn ghost" href="/">返回首页</a>'+
     '</div></div>';
 
   if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
 
-  if(p.code&&p.code.trim()){
-    RAW_CODE=p.code;
-    const lines=p.code.replace(/\n$/,"").split("\n");
-    const body=lines.map((l,i)=>'<div class="cl"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>').join("");
-    html+='<div class="d-sec"><h2>代码展示</h2><div class="codebox">'+
-      '<div class="code-head"><span>'+esc(p.codeLang||"code")+'</span><button class="copy-btn" onclick="copyCode(this)">复制代码</button></div>'+
-      '<pre>'+body+'</pre></div></div>';
+  if(blocks.length){
+    html+='<div class="d-sec"><h2>代码展示</h2>';
+    blocks.forEach((b,idx)=>{
+      const lines=b.code.replace(/\n$/,"").split("\n");
+      const body=lines.map((l,i)=>'<div class="cl"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>').join("");
+      const blockTitle = b.title || ("板块 " + (idx+1));
+      html+=
+        '<div class="code-item">'+
+          '<h3 class="sub-title">'+esc(blockTitle)+'</h3>'+
+          '<div class="codebox">'+
+            '<div class="code-head">'+
+              '<div class="left"><span class="b-name">'+esc(blockTitle)+'</span><span class="b-lang">'+esc(b.lang||"code")+'</span></div>'+
+              '<button class="copy-btn" onclick="copyBlock('+idx+', this)">复制代码</button>'+
+            '</div>'+
+            '<pre>'+body+'</pre>'+
+          '</div>'+
+        '</div>';
+    });
+    html+='</div>';
   }
+
   $("app").innerHTML=html;
 }).catch(e=>{
   $("app").innerHTML='<div class="missing"><h1>⚠️ 加载失败</h1><p>'+esc(String(e))+'</p><a class="btn" href="/">返回首页</a></div>';
 });
 
-function copyCode(btn){
-  navigator.clipboard.writeText(RAW_CODE).then(()=>{btn.textContent="已复制 ✓";setTimeout(()=>btn.textContent="复制代码",1500)});
+function copyBlock(idx, btn){
+  const code = CODE_CACHE[idx] || "";
+  navigator.clipboard.writeText(code).then(()=>{
+    btn.textContent="已复制 ✓";
+    setTimeout(()=>btn.textContent="复制代码",1500);
+  });
+}
+
+// 截取全页面为高清长图并下载
+function takeScreenshot(){
+  const btn = document.getElementById("snapBtn");
+  const origText = btn ? btn.textContent : "";
+  if(btn) btn.textContent = "生成中…";
+
+  // 获取当前主题实际背景色
+  const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const bgColor = isDark ? "#000000" : "#FFFFFF";
+
+  html2canvas(document.body, {
+    scale: 2, // 2倍清晰度输出
+    useCORS: true,
+    backgroundColor: bgColor,
+    windowWidth: document.body.scrollWidth,
+    windowHeight: document.body.scrollHeight
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = (CURRENT_PROJECT_TITLE || "项目详情") + "-展示长图.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    if(btn) btn.textContent = origText;
+  }).catch(err => {
+    alert("生成长图失败：" + err);
+    if(btn) btn.textContent = origText;
+  });
 }
 </script>
 </body>

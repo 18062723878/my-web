@@ -1,444 +1,209 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>项目详情</title>
-<!-- 引入 html2canvas 实现长图导出 -->
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<style>
-:root{
-  --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
-  --color-bg-primary:#FFFFFF;--color-bg-secondary:#F5F5F7;--color-accent:#0071E3;
-  --header-bg:rgba(255,255,255,.8);--header-border:rgba(0,0,0,.06);
-  --border-subtle:rgba(0,0,0,.08);--shadow-card:rgba(0,0,0,.1);
-  --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
-  --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
-  --space-unit:8px;--space-section:96px;--space-block:64px;--space-element:24px;--space-inline:12px;
-  --duration-fast:200ms;--duration-slow:700ms;--ease-default:cubic-bezier(0.25,0.1,0.25,1);
-  --radius-button:980px;--radius-card:18px;
-}
-@media(prefers-color-scheme:dark){
-  :root{
-    --color-text-primary:#F5F5F7;--color-text-secondary:#A1A1A6;--color-text-tertiary:#86868B;
-    --color-bg-primary:#000000;--color-bg-secondary:#161617;--color-accent:#2997FF;
-    --header-bg:rgba(0,0,0,.75);--header-border:rgba(255,255,255,.1);
-    --border-subtle:rgba(255,255,255,.12);--shadow-card:rgba(0,0,0,.5);
-  }
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font-text);color:var(--color-text-primary);background:var(--color-bg-primary);-webkit-font-smoothing:antialiased;transition:background-color var(--duration-fast),color var(--duration-fast)}
-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:var(--header-bg);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--header-border)}
-header .back{color:var(--color-accent);text-decoration:none;font-size:14px}
-header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
-.wrap{max-width:880px;margin:0 auto;padding:var(--space-section) var(--space-element) var(--space-block)}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线代码编辑器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.d-hero{text-align:center;margin-bottom:var(--space-block)}
-.d-crumb{font-size:12px;color:var(--color-text-tertiary);margin-bottom:var(--space-inline);letter-spacing:.02em}
-.d-hero h1{font-family:var(--font-display);font-size:48px;line-height:1.1;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-inline)}
-.d-hero .d-sub{font-size:19px;color:var(--color-text-secondary);max-width:600px;margin:0 auto var(--space-element)}
-.d-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:var(--space-element)}
-.tag{background:var(--color-bg-secondary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
-.d-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-inline)}
-.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px;cursor:pointer;border:none;transition:transform var(--duration-fast) var(--ease-default),opacity var(--duration-fast)}
-.btn:active{transform:scale(0.98)}
-.btn.ghost{background:transparent;color:var(--color-accent);border:1px solid var(--color-accent)}
-.btn.secondary{background:var(--color-bg-secondary);color:var(--color-text-primary)}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #1e1e2e;
+            color: #cdd6f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-.d-sec{margin-bottom:var(--space-block)}
-.d-sec h2{font-family:var(--font-display);font-size:28px;font-weight:600;margin-bottom:var(--space-element)}
-.d-sec h3.sub-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin:28px 0 12px;color:var(--color-text-primary)}
-.prose p{margin-bottom:var(--space-element);font-size:17px;line-height:1.6;color:var(--color-text-secondary)}
+        .editor-card {
+            width: 100%;
+            max-width: 800px;
+            background: #181825;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #313244;
+        }
 
-/* 独立的外链试玩沙盒 */
-.demo-box{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 12px 40px var(--shadow-card);border:1px solid var(--border-subtle);background:var(--color-bg-secondary)}
-.demo-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(128,128,128,0.08);border-bottom:1px solid rgba(128,128,128,0.15)}
-.demo-dots{display:flex;gap:6px}
-.demo-dot{width:11px;height:11px;border-radius:50%}
-.demo-dot.red{background:#ff5f56}.demo-dot.yellow{background:#ffbd2e}.demo-dot.green{background:#27c93f}
-.demo-url-title{font-size:12px;color:var(--color-text-tertiary);font-family:ui-monospace,sans-serif}
-.demo-link-btn{font-size:12px;color:var(--color-accent);text-decoration:none}
-.demo-frame{width:100%;height:460px;border:none;background:#ffffff;display:block}
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #11111b;
+            border-bottom: 1px solid #313244;
+        }
 
-/* 代码分块展示区 */
-.code-item{margin-bottom:36px}
-.code-item:last-child{margin-bottom:0}
-.codebox{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 8px 30px var(--shadow-card);border:1px solid var(--border-subtle);background:#1e1e1e}
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-/* 顶部操作条 */
-.code-head{display:flex;align-items:center;justify-content:space-between;background:#2d2d30;color:#9a9a9f;padding:8px 14px;font-size:13px;gap:10px;flex-wrap:wrap}
-.code-head .left{display:flex;align-items:center;gap:8px}
-.code-head .b-name{color:#fff;font-weight:600}
-.code-head .b-lang{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-size:11px}
-.code-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+        select {
+            background: #313244;
+            color: #cdd6f4;
+            border: 1px solid #45475a;
+            padding: 6px 12px;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+        }
 
-/* 搜索框 */
-.code-search-box{display:flex;align-items:center;background:#1e1e1e;border-radius:6px;padding:2px 8px;border:1px solid rgba(255,255,255,0.1)}
-.code-search-box input{background:transparent;border:none;outline:none;color:#fff;font-size:12px;width:90px;transition:width var(--duration-fast)}
-.code-search-box input:focus{width:140px}
-.code-search-box input::placeholder{color:#6e6e73}
+        .run-btn {
+            background-color: #a6e3a1;
+            color: #11111b;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
 
-/* 操作小按钮 */
-.ctrl-btn{background:#3a3a3d;color:#e5e5e7;border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:background var(--duration-fast)}
-.ctrl-btn:hover{background:#4a4a4e}
-.ctrl-btn.active{background:var(--color-accent);color:#fff}
+        .run-btn:hover {
+            opacity: 0.9;
+        }
 
-/* 代码容器与折叠 */
-.code-wrap{position:relative;overflow:hidden;transition:max-height var(--duration-slow) var(--ease-default)}
-.code-wrap.collapsed{max-height:360px}
-.code-wrap.collapsed::after{content:"";position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(transparent,#1e1e1e);pointer-events:none}
-.codebox pre{background:#1e1e1e;color:#d4d4d4;padding:16px 0 24px;overflow-x:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;margin:0}
-.cl{display:flex;padding:0 16px}
-.cl.highlight-line{background:rgba(255,255,255,0.06)}
-.ln{flex:0 0 40px;color:#6e6e73;text-align:right;padding-right:14px;user-select:none}
-.lc{white-space:pre}
+        .run-btn:active {
+            transform: scale(0.98);
+        }
 
-/* 语法与搜索高亮 */
-.tk-c{color:#6A9955}.tk-s{color:#CE9178}.tk-k{color:#569CD6}.tk-n{color:#B5CEA8}
-.match-hit{background:#e5a50a;color:#000;border-radius:2px;padding:0 2px;font-weight:700}
+        /* 隐藏运行按钮的样式类 */
+        .hidden {
+            display: none !important;
+        }
 
-/* 折叠/展开控制底栏 */
-.code-footer-bar{background:#252528;border-top:1px solid rgba(255,255,255,0.08);text-align:center;padding:8px}
-.expand-toggle{background:none;border:none;color:var(--color-accent);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:4px}
-.expand-toggle:hover{background:rgba(255,255,255,0.06)}
+        .status-tip {
+            font-size: 13px;
+            color: #f38ba8;
+        }
 
-/* 内置即时代码试玩沙盒 (Runner) */
-.inline-sandbox{display:none;background:#121212;border-top:1px solid rgba(255,255,255,0.1);padding:14px}
-.inline-sandbox.open{display:block}
-.sandbox-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:12px;color:#86868B}
-.sandbox-view{width:100%;height:320px;background:#ffffff;border-radius:8px;border:none;box-shadow:inset 0 0 8px rgba(0,0,0,0.1)}
+        textarea {
+            width: 100%;
+            height: 350px;
+            background: #181825;
+            color: #cdd6f4;
+            border: none;
+            padding: 16px;
+            font-family: "Fira Code", Consolas, Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
 
-.missing{text-align:center;padding:var(--space-section) 20px}
-.missing h1{font-size:40px;margin-bottom:var(--space-element)}
-.missing p{color:var(--color-text-secondary);margin-bottom:var(--space-element)}
-footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px}
-@media(max-width:734px){
-  .d-hero h1{font-size:34px}
-  .wrap{padding-top:var(--space-block)}
-  .demo-frame{height:340px}
-  .code-search-box input{width:60px}
-  .code-search-box input:focus{width:100px}
-}
-</style>
+        .output-panel {
+            padding: 12px 16px;
+            background: #11111b;
+            border-top: 1px solid #313244;
+            font-family: monospace;
+            font-size: 13px;
+            min-height: 60px;
+            color: #bac2de;
+        }
+    </style>
 </head>
 <body>
-<header>
-  <a class="back" href="/">← 返回</a>
-  <span class="logo" id="siteName">我的个人网站</span>
-</header>
-<div class="wrap" id="app"><p style="color:#86868B">加载中…</p></div>
-<footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
+
+<div class="editor-card">
+    <div class="toolbar">
+        <div class="controls">
+            <label for="languageSelect">语言环境：</label>
+            <select id="languageSelect">
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="c">C 语言</option>
+            </select>
+            <span id="langNotice" class="status-tip"></span>
+        </div>
+        <button id="runBtn" class="run-btn">运行代码</button>
+    </div>
+
+    <textarea id="codeEditor" spellcheck="false" placeholder="在此输入代码..."></textarea>
+    
+    <div class="output-panel" id="outputPanel">
+        控制台输出区域...
+    </div>
+</div>
 
 <script>
-const $=id=>document.getElementById(id);
-$("year").textContent=new Date().getFullYear();
-function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+    const codeEditor = document.getElementById('codeEditor');
+    const languageSelect = document.getElementById('languageSelect');
+    const runBtn = document.getElementById('runBtn');
+    const langNotice = document.getElementById('langNotice');
+    const outputPanel = document.getElementById('outputPanel');
 
-// 简易语法高亮
-function hl(src){
-  var s=src.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  var re=/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|&lt;!--[\s\S]*?--&gt;)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|\b(const|let|var|function|return|if|else|for|while|import|from|export|default|class|new|async|await|try|catch|throw|switch|case|break|continue|typeof|true|false|null|undefined|this)\b|(\b\d+(?:\.\d+)?\b)/g;
-  return s.replace(re,function(m,c,st,k,n){
-    if(c)return '<span class="tk-c">'+c+'</span>';
-    if(st)return '<span class="tk-s">'+st+'</span>';
-    if(k)return '<span class="tk-k">'+k+'</span>';
-    if(n)return '<span class="tk-n">'+n+'</span>';
-    return m;
-  });
-}
+    // 默认示例模板
+    const templates = {
+        python: 'name = "World"\nprint(f"Hello, {name}!")',
+        javascript: 'const name = "World";\nconsole.log(`Hello, ${name}!`);',
+        c: '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}'
+    };
 
-let CURRENT_PROJECT_TITLE = "项目详情";
-let CODE_BLOCKS_DATA = [];
-const q = new URLSearchParams(location.search).get("id");
+    // 初始化默认代码
+    codeEditor.value = templates[languageSelect.value];
 
-fetch("/api/data").then(r=>r.json()).then(d=>{
-  if(d.site&&d.site.name)$("siteName").textContent=d.site.name;
-  var node=null;
-  (d.timeline||[]).forEach(t=>{if(t.project&&String(t.project.id)===String(q))node=t});
-  if(!node){
-    $("app").innerHTML='<div class="missing"><h1>😅 项目不存在</h1><p>它可能已被删除或链接已失效。</p><a class="btn" href="/">返回首页</a></div>';
-    return;
-  }
-  const p=node.project;
-  CURRENT_PROJECT_TITLE = p.title || "项目详情";
-  document.title=CURRENT_PROJECT_TITLE+" · "+(d.site&&d.site.name||"");
-  
-  const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
-    .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
-  const paras=(p.detail||"").split(/\n{2,}/).filter(b=>b.trim())
-    .map(b=>"<p>"+esc(b).replace(/\n/g,"<br>")+"</p>").join("");
+    // 检测语言并更新按钮状态
+    function updateRunnerVisibility() {
+        const selectedLang = languageSelect.value;
+        const codeText = codeEditor.value;
 
-  let blocks = Array.isArray(p.codeBlocks) ? p.codeBlocks.filter(b=>b.code&&b.code.trim()) : [];
-  if(!blocks.length && p.code && p.code.trim()){
-    blocks = [{ title:"核心实现", lang: p.codeLang||"code", code: p.code }];
-  }
-  CODE_BLOCKS_DATA = blocks;
+        // 判定条件：选择器选中 C 语言，或者代码中包含典型 C 语言特征
+        const isCBySelection = (selectedLang === 'c');
+        const isCByContent = /#include\s*<stdio\.h>|int\s+main\s*\(/.test(codeText);
 
-  let html='<div class="d-hero">'+
-    '<div class="d-crumb">'+esc(node.date)+' · '+esc(node.title)+'</div>'+
-    '<h1>'+esc(p.title)+'</h1>'+
-    (p.summary?'<p class="d-sub">'+esc(p.summary)+'</p>':'')+
-    (tags?'<div class="d-tags">'+tags+'</div>':'')+
-    '<div class="d-actions">'+
-      (p.link?'<a class="btn" href="'+esc(p.link)+'" target="_blank">访问项目 ↗</a>':'')+
-      '<button class="btn secondary" id="snapBtn" onclick="takeScreenshot()">📸 保存为长图</button>'+
-      '<a class="btn ghost" href="/">返回首页</a>'+
-    '</div></div>';
-
-  if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
-
-  // 独立全页试玩演示（若后台配置了demoUrl）
-  if(p.demoUrl && p.demoUrl.trim()){
-    let dUrl = p.demoUrl.trim();
-    if(!dUrl.startsWith("http") && !dUrl.startsWith("/")) dUrl = "https://" + dUrl;
-    html+=
-      '<div class="d-sec">'+
-        '<h2>🎮 在线试玩演示</h2>'+
-        '<div class="demo-box">'+
-          '<div class="demo-bar">'+
-            '<div class="demo-dots"><span class="demo-dot red"></span><span class="demo-dot yellow"></span><span class="demo-dot green"></span></div>'+
-            '<span class="demo-url-title">Live Sandbox</span>'+
-            '<a class="demo-link-btn" href="'+esc(dUrl)+'" target="_blank">新标签页打开 ↗</a>'+
-          '</div>'+
-          '<iframe class="demo-frame" src="'+esc(dUrl)+'" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>'+
-        '</div>'+
-      '</div>';
-  }
-
-  // 多代码板块渲染
-  if(blocks.length){
-    html+='<div class="d-sec"><h2>代码展示</h2>';
-    blocks.forEach((b,idx)=>{
-      const lines = b.code.replace(/\n$/,"").split("\n");
-      const blockTitle = b.title || ("代码板块 " + (idx+1));
-      const isLongCode = lines.length > 15;
-
-      const codeLinesHtml = lines.map((l,i)=>
-        '<div class="cl" data-ln="'+(i+1)+'"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>'
-      ).join("");
-
-      html+=
-        '<div class="code-item" id="code-item-'+idx+'">'+
-          '<h3 class="sub-title">'+esc(blockTitle)+'</h3>'+
-          '<div class="codebox">'+
-            '<div class="code-head">'+
-              '<div class="left">'+
-                '<span class="b-name">'+esc(blockTitle)+'</span>'+
-                '<span class="b-lang">'+esc(b.lang||"code")+'</span>'+
-              '</div>'+
-              '<div class="code-actions">'+
-                '<div class="code-search-box">'+
-                  '<input type="text" placeholder="🔍 搜索代码..." oninput="searchInBlock('+idx+', this.value)">'+
-                '</div>'+
-                '<button class="ctrl-btn" id="run-btn-'+idx+'" onclick="toggleRunCode('+idx+')">▶ 运行沙盒</button>'+
-                '<button class="ctrl-btn" onclick="copyBlock('+idx+', this)">复制代码</button>'+
-              '</div>'+
-            '</div>'+
-
-            '<div class="code-wrap '+(isLongCode?'collapsed':'')+'" id="code-wrap-'+idx+'">'+
-              '<pre><code id="code-content-'+idx+'">'+codeLinesHtml+'</code></pre>'+
-            '</div>'+
-
-            (isLongCode ? 
-              '<div class="code-footer-bar">'+
-                '<button class="expand-toggle" id="expand-btn-'+idx+'" onclick="toggleExpand('+idx+')">展开全部代码 ('+lines.length+'行) ▾</button>'+
-              '</div>' : ''
-            )+
-
-            '<div class="inline-sandbox" id="sandbox-'+idx+'">'+
-              '<div class="sandbox-top">'+
-                '<span>⚡ 即时运行预览 (Live Sandbox)</span>'+
-                '<button class="ctrl-btn" style="padding:2px 8px" onclick="refreshSandbox('+idx+')">重新加载 ↻</button>'+
-              '</div>'+
-              '<iframe class="sandbox-view" id="sandbox-frame-'+idx+'" sandbox="allow-scripts allow-modals"></iframe>'+
-            '</div>'+
-
-          '</div>'+
-        '</div>';
-    });
-    html+='</div>';
-  }
-
-  $("app").innerHTML=html;
-}).catch(e=>{
-  $("app").innerHTML='<div class="missing"><h1>⚠️ 加载失败</h1><p>'+esc(String(e))+'</p><a class="btn" href="/">返回首页</a></div>';
-});
-
-// 1. 复制代码
-function copyBlock(idx, btn){
-  const b = CODE_BLOCKS_DATA[idx];
-  if(!b) return;
-  navigator.clipboard.writeText(b.code).then(()=>{
-    btn.textContent="已复制 ✓";
-    setTimeout(()=>btn.textContent="复制代码",1500);
-  });
-}
-
-// 2. 展开与收起代码
-function toggleExpand(idx){
-  const wrap = $("code-wrap-" + idx);
-  const btn = $("expand-btn-" + idx);
-  if(!wrap) return;
-  const isCollapsed = wrap.classList.contains("collapsed");
-  if(isCollapsed){
-    wrap.classList.remove("collapsed");
-    if(btn) btn.innerHTML = "收起代码 ▴";
-  } else {
-    wrap.classList.add("collapsed");
-    const count = (CODE_BLOCKS_DATA[idx]?.code.split("\n").length)||0;
-    if(btn) btn.innerHTML = "展开全部代码 ("+count+"行) ▾";
-  }
-}
-
-// 3. 代码内即时搜索与高亮
-function searchInBlock(idx, query){
-  const b = CODE_BLOCKS_DATA[idx];
-  const container = $("code-content-" + idx);
-  if(!b || !container) return;
-
-  const lines = b.code.replace(/\n$/,"").split("\n");
-  const qLower = query.trim().toLowerCase();
-
-  const rendered = lines.map((line, i)=>{
-    const highlightedCode = hl(line);
-    let finalCode = highlightedCode;
-    let isHit = false;
-
-    if(qLower){
-      const plainLower = line.toLowerCase();
-      if(plainLower.includes(qLower)){
-        isHit = true;
-        // 标记匹配词
-        const regex = new RegExp("("+qLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+")", "gi");
-        finalCode = highlightedCode.replace(regex, '<span class="match-hit">$1</span>');
-      }
+        if (isCBySelection || isCByContent) {
+            runBtn.classList.add('hidden');
+            langNotice.textContent = '检测到 C 语言，当前环境不支持直接运行';
+        } else {
+            runBtn.classList.remove('hidden');
+            langNotice.textContent = '';
+        }
     }
-    return '<div class="cl '+(isHit?'highlight-line':'')+'" data-ln="'+(i+1)+'"><span class="ln">'+(i+1)+'</span><span class="lc">'+finalCode+'</span></div>';
-  }).join("");
 
-  container.innerHTML = rendered;
+    // 切换下拉菜单
+    languageSelect.addEventListener('change', () => {
+        codeEditor.value = templates[languageSelect.value] || '';
+        updateRunnerVisibility();
+        outputPanel.textContent = '控制台输出区域...';
+    });
 
-  // 搜索时若处于折叠状态，自动临时展开以便查看全部搜索结果
-  const wrap = $("code-wrap-" + idx);
-  if(qLower && wrap && wrap.classList.contains("collapsed")){
-    toggleExpand(idx);
-  }
-}
+    // 实时监听输入，自动识别 C 语言特征
+    codeEditor.addEventListener('input', updateRunnerVisibility);
 
-// 4. 即时沙盒运行器
-function toggleRunCode(idx){
-  const box = $("sandbox-" + idx);
-  const btn = $("run-btn-" + idx);
-  if(!box) return;
+    // 模拟运行动作（针对 JS / Python）
+    runBtn.addEventListener('click', () => {
+        const lang = languageSelect.value;
+        outputPanel.textContent = `[系统] 正在执行 ${lang.toUpperCase()} 代码...\n`;
 
-  const isOpen = box.classList.contains("open");
-  if(isOpen){
-    box.classList.remove("open");
-    if(btn) btn.classList.remove("active");
-  } else {
-    box.classList.add("open");
-    if(btn) btn.classList.add("active");
-    refreshSandbox(idx);
-  }
-}
+        if (lang === 'javascript') {
+            try {
+                // 仅作为简易本地模拟演示
+                const originalLog = console.log;
+                let logs = [];
+                console.log = (...args) => logs.push(args.join(' '));
+                new Function(codeEditor.value)();
+                console.log = originalLog;
+                outputPanel.textContent = logs.join('\n') || '[执行完毕，无输出]';
+            } catch (err) {
+                outputPanel.textContent = `执行错误: ${err.message}`;
+            }
+        } else {
+            outputPanel.textContent = `[提示] 当前处于 ${lang} 运行模式。`;
+        }
+    });
 
-function refreshSandbox(idx){
-  const frame = $("sandbox-frame-" + idx);
-  const b = CODE_BLOCKS_DATA[idx];
-  if(!frame || !b) return;
-
-  const raw = b.code || "";
-  const lang = (b.lang || "").toLowerCase().trim();
-
-  let payload = "";
-  if(lang === "html" || raw.includes("<html") || raw.includes("<div") || raw.includes("<body")){
-    payload = raw;
-  } else if(lang === "javascript" || lang === "js"){
-    payload = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body{font-family:-apple-system,sans-serif;padding:16px;background:#fff;color:#1d1d1f;margin:0}
-          #console-log{background:#f5f5f7;border-radius:6px;padding:12px;font-family:monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;border:1px solid #ddd}
-          .tag{color:#0071E3;font-weight:600;margin-bottom:8px;font-size:12px}
-        </style>
-      </head>
-      <body>
-        <div class="tag">Console 输出:</div>
-        <div id="console-log"></div>
-        <script>
-          const out = document.getElementById("console-log");
-          const log = (...args) => { out.textContent += args.map(a => typeof a === "object" ? JSON.stringify(a, null, 2) : a).join(" ") + "\\n"; };
-          console.log = log;
-          console.error = (...args) => { out.textContent += "[Error] " + args.join(" ") + "\\n"; };
-          try {
-            ${raw}
-          } catch(e) {
-            console.error(e.message);
-          }
-        <\/script>
-      </body>
-      </html>
-    `;
-  } else if(lang === "css"){
-    payload = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>${raw}</style>
-      </head>
-      <body style="font-family:-apple-system,sans-serif;padding:20px;text-align:center">
-        <h2>CSS 样式预览窗口</h2>
-        <p>样式已加载并生效至当前沙盒环境中。</p>
-        <button style="padding:10px 20px;border-radius:6px">示例按钮</button>
-      </body>
-      </html>
-    `;
-  } else {
-    // 通用文本 / 脚本
-    payload = `
-      <!DOCTYPE html>
-      <html>
-      <body style="font-family:-apple-system,sans-serif;padding:20px;color:#333">
-        <h3>代码预览 (${esc(lang || "通用")})</h3>
-        <pre style="background:#f5f5f7;padding:12px;border-radius:8px">${esc(raw)}</pre>
-      </body>
-      </html>
-    `;
-  }
-
-  frame.srcdoc = payload;
-}
-
-// 5. 保存整页为长图
-function takeScreenshot(){
-  const btn = $("snapBtn");
-  const origText = btn ? btn.textContent : "";
-  if(btn) btn.textContent = "生成中…";
-
-  const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const bgColor = isDark ? "#000000" : "#FFFFFF";
-
-  html2canvas(document.body, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: bgColor,
-    windowWidth: document.body.scrollWidth,
-    windowHeight: document.body.scrollHeight
-  }).then(canvas => {
-    const link = document.createElement("a");
-    link.download = (CURRENT_PROJECT_TITLE || "项目详情") + "-展示长图.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-    if(btn) btn.textContent = origText;
-  }).catch(err => {
-    alert("生成长图失败：" + err);
-    if(btn) btn.textContent = origText;
-  });
-}
+    // 页面初次加载时检查状态
+    updateRunnerVisibility();
 </script>
+
 </body>
 </html>

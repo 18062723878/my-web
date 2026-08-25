@@ -64,13 +64,15 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 .p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-inline)}
 .tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button);transition:background-color var(--duration-fast)}
 
-/* 联系 */
-.contact-box{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-inline);max-width:760px;margin:0 auto}
-.c-item{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);font-size:17px;text-align:center;transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default)}
+/* 联系卡片 */
+.contact-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-inline);max-width:840px;margin:0 auto}
+.c-item{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:20px var(--space-element);font-size:16px;text-align:center;overflow:hidden;transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default)}
 .c-item:hover{transform:translateY(-3px)}
-.c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px}
-.c-item a{color:var(--color-text-primary);text-decoration:none}
+.c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:6px}
+.c-item a{display:block;color:var(--color-text-primary);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .c-item a:hover{color:var(--color-accent)}
+.c-item span.c-val{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px;transition:background-color var(--duration-normal) var(--ease-default)}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
 .reveal.in{opacity:1;transform:none}
@@ -152,12 +154,33 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   if(c.phone)items.push(["电话",c.phone,"tel:"+c.phone]);
   if(c.wechat)items.push(["微信",c.wechat,null]);
   if(c.qq)items.push(["QQ",c.qq,null]);
-  if(c.github)items.push(["GitHub",c.github,c.github]);
-  if(c.blog)items.push(["博客",c.blog,c.blog]);
+  
+  // 优化 GitHub 链接显示：提取用户名展示为 @xxx 格式，同时保持完整超链接
+  if(c.github){
+    let ghUrl = c.github.trim();
+    if(!ghUrl.startsWith("http")) ghUrl = "https://" + ghUrl;
+    let ghText = c.github.trim();
+    const match = ghText.match(/github\.com\/([^\/\s?#]+)/i);
+    if(match && match[1]){
+      ghText = "@" + match[1];
+    } else {
+      ghText = ghText.replace(/^https?:\/\//i, "");
+    }
+    items.push(["GitHub", ghText, ghUrl]);
+  }
+  
+  // 优化博客/其他外链显示：去除协议头简化文本
+  if(c.blog){
+    let bUrl = c.blog.trim();
+    if(!bUrl.startsWith("http")) bUrl = "https://" + bUrl;
+    let bText = c.blog.trim().replace(/^https?:\/\//i, "");
+    items.push(["博客", bText, bUrl]);
+  }
+
   if(!items.length)$("contact").style.display="none";
   items.forEach(it=>{
     const div=document.createElement("div");div.className="c-item reveal";
-    div.innerHTML='<span class="c-label">'+it[0]+'</span>'+(it[2]?'<a href="'+esc(it[2])+'" target="_blank">'+esc(it[1])+'</a>':esc(it[1]));
+    div.innerHTML='<span class="c-label">'+it[0]+'</span>'+(it[2]?'<a href="'+esc(it[2])+'" target="_blank" title="'+esc(it[1])+'">'+esc(it[1])+'</a>':'<span class="c-val">'+esc(it[1])+'</span>');
     $("contactBox").appendChild(div);
   });
 

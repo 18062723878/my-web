@@ -37,7 +37,7 @@ body{background:var(--bg-page);color:var(--text-main);padding:20px;transition:ba
 .field label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:var(--text-muted)}
 .field input,.field textarea{width:100%;padding:10px;background:var(--input-bg);color:var(--text-main);border:1px solid var(--border-color);border-radius:8px;font-size:14px}
 .field textarea{min-height:70px;resize:vertical}
-textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:200px;line-height:1.6}
+textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:140px;line-height:1.6}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .card{border:1px solid var(--border-card);border-radius:10px;padding:16px;margin-bottom:14px;background:var(--bg-subcard)}
 .card-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:700;font-size:14px}
@@ -50,6 +50,13 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
 .proj-fields{border-top:1px dashed var(--border-color);margin-top:4px;padding-top:14px;background:var(--bg-card);border-radius:8px;padding:14px;border:1px solid var(--border-card)}
 .badge{display:inline-block;background:var(--badge-bg);color:var(--badge-color);font-size:11px;padding:2px 8px;border-radius:99px;margin-left:6px;font-weight:400}
 .tip{font-size:12px;color:var(--text-tip);margin-top:8px}
+
+/* 多代码板块区域 */
+.code-blocks-wrap{margin-top:16px;border:1px solid var(--border-color);padding:14px;border-radius:8px;background:var(--bg-subcard)}
+.code-block-card{background:var(--bg-card);border:1px solid var(--border-card);border-radius:8px;padding:12px;margin-bottom:12px}
+.code-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:600}
+.add-code-btn{padding:6px 12px;background:transparent;border:1px dashed var(--accent);color:var(--accent);border-radius:6px;cursor:pointer;font-size:13px}
+
 .save-bar{position:sticky;bottom:10px;text-align:center;padding:10px 0}
 .save-btn{padding:14px 44px;background:#34c759;color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer;box-shadow:0 4px 12px rgba(52,199,89,.4)}
 .msg{margin-top:12px;padding:10px;border-radius:8px;display:none;text-align:center}
@@ -91,7 +98,7 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
     <h3>🕐 时间线 + 项目</h3>
     <div id="timelineList"></div>
     <button class="add-btn" onclick="addTimeline()">＋ 添加时间节点</button>
-    <div class="tip">勾选「挂一个项目卡片」后，该节点旁边就会显示项目卡片；点卡片进入详情页，展示详细介绍和代码。节点加几个，时间线就多长。</div>
+    <div class="tip">勾选「挂一个项目卡片」后，该节点旁边就会显示项目卡片；支持为每个项目添加多个代码展示板块。</div>
   </div>
 
   <div class="section">
@@ -133,9 +140,6 @@ async function loadData(){
   try{
     const r=await fetch("/api/data");const d=await r.json();
     let tl=Array.isArray(d.timeline)?d.timeline:[];
-    if(Array.isArray(d.projects)&&d.projects.length){
-      d.projects.forEach(p=>{tl.push({date:p.time||"",title:p.title||"",desc:"",project:{id:genId(),title:p.title||"",tags:p.tags||"",summary:p.desc||"",detail:"",codeLang:"",code:"",link:p.link||""}})});
-    }
     DATA={
       site:Object.assign({name:"",heroTitle:"",heroSub:"",aboutSub:"",about:""},d.site||{}),
       timeline:tl,
@@ -166,6 +170,31 @@ function renderTimeline(){
     const p=t.project||null;
     const div=document.createElement("div");div.className="card";
     if(p&&p.id)div.dataset.pid=p.id;
+
+    // 格式化代码板块
+    let blocks = [];
+    if(p){
+      if(Array.isArray(p.codeBlocks)) blocks = p.codeBlocks;
+      else if(p.code) blocks = [{ title:"核心实现", lang:p.codeLang||"", code:p.code }];
+    }
+
+    let codeBlocksHtml = "";
+    blocks.forEach((b, bIdx)=>{
+      codeBlocksHtml += `
+        <div class="code-block-card">
+          <div class="code-block-head">
+            <span>💻 代码板块 ${bIdx + 1}</span>
+            <button class="mini-btn del" onclick="delCodeBlock(${i}, ${bIdx})">删除该板块</button>
+          </div>
+          <div class="row2">
+            <div class="field"><label>板块标题</label><input data-cb="title" value="${esc(b.title)}" placeholder="例如：前端界面结构 / 核心算法"></div>
+            <div class="field"><label>语言标签</label><input data-cb="lang" value="${esc(b.lang)}" placeholder="例如：html / javascript / python"></div>
+          </div>
+          <div class="field"><label>代码内容</label><textarea class="mono" data-cb="code">${esc(b.code)}</textarea></div>
+        </div>
+      `;
+    });
+
     div.innerHTML=
       '<div class="card-head">🕐 节点 '+(i+1)+'<span class="spacer"></span>'+
       '<button class="mini-btn" onclick="moveItem('+i+',-1)">↑</button>'+
@@ -184,9 +213,14 @@ function renderTimeline(){
           '<div class="field"><label>项目链接（可不填）</label><input data-k="p_link" value="'+esc(p&&p.link)+'" placeholder="https://..."></div>'+
         '</div>'+
         '<div class="field"><label>卡片简介<span class="badge">显示在时间线旁的卡片上</span></label><textarea data-k="p_summary">'+esc(p&&p.summary)+'</textarea></div>'+
-        '<div class="field"><label>详细介绍<span class="badge">详情页展示，空行分段</span></label><textarea data-k="p_detail" style="min-height:120px">'+esc(p&&p.detail)+'</textarea></div>'+
-        '<div class="field"><label>代码语言标签</label><input data-k="p_lang" value="'+esc(p&&p.codeLang)+'" placeholder="例如：html / javascript / css"></div>'+
-        '<div class="field"><label>代码内容<span class="badge">详情页代码区展示，可不填</span></label><textarea class="mono" data-k="p_code">'+esc(p&&p.code)+'</textarea></div>'+
+        '<div class="field"><label>详细介绍<span class="badge">详情页展示，空行分段</span></label><textarea data-k="p_detail" style="min-height:100px">'+esc(p&&p.detail)+'</textarea></div>'+
+        '<div class="code-blocks-wrap">'+
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+            '<strong>📂 代码展示板块（可添加多个）</strong>'+
+            '<button class="add-code-btn" onclick="addCodeBlock('+i+')">＋ 添加代码板块</button>'+
+          '</div>'+
+          '<div class="code-list">'+codeBlocksHtml+'</div>'+
+        '</div>'+
       '</div>';
     box.appendChild(div);
   });
@@ -207,7 +241,29 @@ function collectAll(){
     if(card.querySelector('[data-k="hasProject"]').checked){
       const id=card.dataset.pid||genId();
       card.dataset.pid=id;
-      node.project={id:id,title:g("p_title"),tags:g("p_tags"),link:g("p_link"),summary:g("p_summary"),detail:g("p_detail"),codeLang:g("p_lang"),code:g("p_code")};
+      
+      // 收集多个代码板块
+      const codeBlocks = [];
+      card.querySelectorAll(".code-block-card").forEach(cbCard=>{
+        codeBlocks.push({
+          title: cbCard.querySelector('[data-cb="title"]').value,
+          lang: cbCard.querySelector('[data-cb="lang"]').value,
+          code: cbCard.querySelector('[data-cb="code"]').value
+        });
+      });
+
+      node.project={
+        id:id,
+        title:g("p_title"),
+        tags:g("p_tags"),
+        link:g("p_link"),
+        summary:g("p_summary"),
+        detail:g("p_detail"),
+        codeBlocks: codeBlocks,
+        // 兼容单代码字段回退
+        codeLang: codeBlocks.length ? codeBlocks[0].lang : "",
+        code: codeBlocks.length ? codeBlocks[0].code : ""
+      };
     }
     DATA.timeline.push(node);
   });
@@ -217,6 +273,25 @@ function collectAll(){
 function addTimeline(){collectAll();DATA.timeline.push({date:"",title:"",desc:""});renderTimeline()}
 function delItem(i){collectAll();if(!confirm("确定删除节点 "+(i+1)+" 吗？挂着的项目也会一起删除。"))return;DATA.timeline.splice(i,1);renderTimeline()}
 function moveItem(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.timeline.length)return;const t=DATA.timeline[i];DATA.timeline[i]=DATA.timeline[j];DATA.timeline[j]=t;renderTimeline()}
+
+// 添加/删除代码板块
+function addCodeBlock(timelineIdx){
+  collectAll();
+  const proj = DATA.timeline[timelineIdx].project;
+  if(proj){
+    if(!Array.isArray(proj.codeBlocks)) proj.codeBlocks = [];
+    proj.codeBlocks.push({ title:"", lang:"", code:"" });
+  }
+  renderTimeline();
+}
+function delCodeBlock(timelineIdx, blockIdx){
+  collectAll();
+  const proj = DATA.timeline[timelineIdx].project;
+  if(proj && Array.isArray(proj.codeBlocks)){
+    proj.codeBlocks.splice(blockIdx, 1);
+  }
+  renderTimeline();
+}
 
 async function saveAll(){
   collectAll();

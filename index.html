@@ -8,6 +8,8 @@
 :root{
   --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
   --color-bg-primary:#FFFFFF;--color-bg-secondary:#F5F5F7;--color-accent:#0071E3;
+  --header-bg:rgba(255,255,255,.8);--header-border:rgba(0,0,0,.06);
+  --dot-border:#FFFFFF;--card-shadow:rgba(0,0,0,.1);
   --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
   --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
   --space-unit:8px;--space-section:120px;--space-block:64px;--space-element:24px;--space-inline:12px;
@@ -15,15 +17,23 @@
   --ease-default:cubic-bezier(0.25,0.1,0.25,1);
   --radius-button:980px;--radius-card:18px;
 }
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-text-primary:#F5F5F7;--color-text-secondary:#A1A1A6;--color-text-tertiary:#86868B;
+    --color-bg-primary:#000000;--color-bg-secondary:#161617;--color-accent:#2997FF;
+    --header-bg:rgba(0,0,0,.75);--header-border:rgba(255,255,255,.1);
+    --dot-border:#000000;--card-shadow:rgba(0,0,0,.5);
+  }
+}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:var(--font-text);color:var(--color-text-primary);background:var(--color-bg-primary);-webkit-font-smoothing:antialiased}
-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:rgba(255,255,255,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
+body{font-family:var(--font-text);color:var(--color-text-primary);background:var(--color-bg-primary);-webkit-font-smoothing:antialiased;transition:background-color var(--duration-normal) var(--ease-default),color var(--duration-normal) var(--ease-default)}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:var(--header-bg);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--header-border)}
 header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 header nav{margin-left:auto;display:flex;gap:var(--space-element)}
 header nav a{color:var(--color-text-secondary);text-decoration:none;font-size:14px;transition:color var(--duration-fast) var(--ease-default)}
 header nav a:hover{color:var(--color-text-primary)}
-.hero{text-align:center;padding:var(--space-section) var(--space-element);background:var(--color-bg-secondary)}
+.hero{text-align:center;padding:var(--space-section) var(--space-element);background:var(--color-bg-secondary);transition:background-color var(--duration-normal) var(--ease-default)}
 .hero h1{font-family:var(--font-display);font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-element)}
 .hero p{font-size:21px;line-height:1.4;color:var(--color-text-secondary);max-width:620px;margin:0 auto}
 section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-element)}
@@ -32,7 +42,7 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 .section-head p{font-size:19px;color:var(--color-text-secondary)}
 
 /* 个人简介 */
-.about-card{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-block) var(--space-element);max-width:840px;margin:0 auto;text-align:center}
+.about-card{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-block) var(--space-element);max-width:840px;margin:0 auto;text-align:center;transition:background-color var(--duration-normal) var(--ease-default)}
 .about-text{font-size:20px;line-height:1.6;color:var(--color-text-secondary);max-width:680px;margin:0 auto;white-space:pre-line}
 
 /* 时间线 + 项目卡片 */
@@ -41,27 +51,27 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 .tl-item{position:relative;padding-left:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:var(--space-element) var(--space-block);padding-bottom:var(--space-block)}
 .tl-item.solo{grid-template-columns:1fr}
 .tl-item:last-child{padding-bottom:0}
-.tl-dot{position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--color-accent);border:3px solid #fff;box-shadow:0 0 0 2px var(--color-accent)}
+.tl-dot{position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--color-accent);border:3px solid var(--dot-border);box-shadow:0 0 0 2px var(--color-accent);transition:border-color var(--duration-fast)}
 .tl-date{font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px;letter-spacing:.02em}
 .tl-left h3{font-family:var(--font-display);font-size:24px;font-weight:600;margin-bottom:6px}
 .tl-left p{font-size:17px;line-height:1.47;color:var(--color-text-secondary)}
-.p-card{display:block;background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);text-decoration:none;color:inherit;transition:transform var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal) var(--ease-default)}
-.p-card:hover{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+.p-card{display:block;background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);text-decoration:none;color:inherit;transition:transform var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal) var(--ease-default),background-color var(--duration-normal) var(--ease-default)}
+.p-card:hover{transform:scale(1.02);box-shadow:0 12px 40px var(--card-shadow)}
 .p-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-inline);margin-bottom:6px}
 .p-top h4{font-family:var(--font-display);font-size:21px;font-weight:600}
 .p-more{color:var(--color-accent);font-size:14px;white-space:nowrap}
 .p-desc{font-size:15px;line-height:1.47;color:var(--color-text-secondary)}
 .p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-inline)}
-.tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
+.tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button);transition:background-color var(--duration-fast)}
 
 /* 联系 */
 .contact-box{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-inline);max-width:760px;margin:0 auto}
-.c-item{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);font-size:17px;text-align:center;transition:transform var(--duration-fast) var(--ease-default)}
+.c-item{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);font-size:17px;text-align:center;transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default)}
 .c-item:hover{transform:translateY(-3px)}
 .c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px}
 .c-item a{color:var(--color-text-primary);text-decoration:none}
 .c-item a:hover{color:var(--color-accent)}
-footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px}
+footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px;transition:background-color var(--duration-normal) var(--ease-default)}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
 .reveal.in{opacity:1;transform:none}
 @media(max-width:734px){
@@ -82,7 +92,6 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 
 <div class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p></div>
 
-<!-- 新增：个人简介模块 -->
 <section id="aboutSec">
   <div class="section-head reveal"><h2>个人简介</h2><p id="aboutSub">保持好奇，专注创造价值</p></div>
   <div class="about-card reveal">
@@ -113,7 +122,6 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   $("heroTitle").textContent=site.heroTitle||"";
   $("heroSub").textContent=site.heroSub||"";
 
-  // 绑定个人简介数据（若 KV 中 site.about / site.bio 存在则显示，不存在则保留默认文案）
   if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
   if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
 

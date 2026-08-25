@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>项目详情</title>
-<!-- 引入 html2canvas 实现纯前端一键整页高清截图 -->
+<!-- 引入 html2canvas 实现长图截图导出 -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 :root{
@@ -45,6 +45,18 @@ header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 .d-sec h2{font-family:var(--font-display);font-size:28px;font-weight:600;margin-bottom:var(--space-element)}
 .d-sec h3.sub-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin:24px 0 10px;color:var(--color-text-primary)}
 .prose p{margin-bottom:var(--space-element);font-size:17px;line-height:1.6;color:var(--color-text-secondary)}
+
+/* 在线试玩沙盒 (Live Demo Box) */
+.demo-box{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.15);border:1px solid rgba(128,128,128,0.2);background:var(--color-bg-secondary)}
+.demo-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(128,128,128,0.08);border-bottom:1px solid rgba(128,128,128,0.15)}
+.demo-dots{display:flex;gap:6px}
+.demo-dot{width:11px;height:11px;border-radius:50%}
+.demo-dot.red{background:#ff5f56}.demo-dot.yellow{background:#ffbd2e}.demo-dot.green{background:#27c93f}
+.demo-url-title{font-size:12px;color:var(--color-text-tertiary);font-family:ui-monospace,sans-serif}
+.demo-link-btn{font-size:12px;color:var(--color-accent);text-decoration:none}
+.demo-frame{width:100%;height:460px;border:none;background:#ffffff;display:block}
+
+/* 代码分块展示 */
 .code-item{margin-bottom:28px}
 .code-item:last-child{margin-bottom:0}
 .codebox{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)}
@@ -63,7 +75,7 @@ header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 .missing h1{font-size:40px;margin-bottom:var(--space-element)}
 .missing p{color:var(--color-text-secondary);margin-bottom:var(--space-element)}
 footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px}
-@media(max-width:734px){.d-hero h1{font-size:34px}.wrap{padding-top:var(--space-block)}}
+@media(max-width:734px){.d-hero h1{font-size:34px}.wrap{padding-top:var(--space-block)}.demo-frame{height:340px}}
 </style>
 </head>
 <body>
@@ -112,7 +124,6 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   const paras=(p.detail||"").split(/\n{2,}/).filter(b=>b.trim())
     .map(b=>"<p>"+esc(b).replace(/\n/g,"<br>")+"</p>").join("");
 
-  // 整理代码板块数据（兼容旧的单个 code 结构与新的 codeBlocks 数组）
   let blocks = Array.isArray(p.codeBlocks) ? p.codeBlocks.filter(b=>b.code&&b.code.trim()) : [];
   if(!blocks.length && p.code && p.code.trim()){
     blocks = [{ title:"核心实现", lang: p.codeLang||"code", code: p.code }];
@@ -132,6 +143,25 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
 
   if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
 
+  // 在线试玩沙盒 (Live Demo)
+  if(p.demoUrl && p.demoUrl.trim()){
+    let dUrl = p.demoUrl.trim();
+    if(!dUrl.startsWith("http") && !dUrl.startsWith("/")) dUrl = "https://" + dUrl;
+    html+=
+      '<div class="d-sec">'+
+        '<h2>🎮 在线试玩演示</h2>'+
+        '<div class="demo-box">'+
+          '<div class="demo-bar">'+
+            '<div class="demo-dots"><span class="demo-dot red"></span><span class="demo-dot yellow"></span><span class="demo-dot green"></span></div>'+
+            '<span class="demo-url-title">Live Preview</span>'+
+            '<a class="demo-link-btn" href="'+esc(dUrl)+'" target="_blank">新标签页打开 ↗</a>'+
+          '</div>'+
+          '<iframe class="demo-frame" src="'+esc(dUrl)+'" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>'+
+        '</div>'+
+      '</div>';
+  }
+
+  // 多代码板块展示
   if(blocks.length){
     html+='<div class="d-sec"><h2>代码展示</h2>';
     blocks.forEach((b,idx)=>{
@@ -166,18 +196,16 @@ function copyBlock(idx, btn){
   });
 }
 
-// 截取全页面为高清长图并下载
 function takeScreenshot(){
   const btn = document.getElementById("snapBtn");
   const origText = btn ? btn.textContent : "";
   if(btn) btn.textContent = "生成中…";
 
-  // 获取当前主题实际背景色
   const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   const bgColor = isDark ? "#000000" : "#FFFFFF";
 
   html2canvas(document.body, {
-    scale: 2, // 2倍清晰度输出
+    scale: 2,
     useCORS: true,
     backgroundColor: bgColor,
     windowWidth: document.body.scrollWidth,

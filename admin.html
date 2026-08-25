@@ -62,6 +62,12 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
   </div>
 
   <div class="section">
+    <h3>👤 个人简介</h3>
+    <div class="field"><label>简介副标题<span class="badge">标题下方的短语</span></label><input id="f_aboutSub" placeholder="例如：保持好奇，专注创造价值"></div>
+    <div class="field"><label>简介正文内容<span class="badge">支持换行</span></label><textarea id="f_about" style="min-height:90px" placeholder="例如：热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。"></textarea></div>
+  </div>
+
+  <div class="section">
     <h3>🕐 时间线 + 项目</h3>
     <div id="timelineList"></div>
     <button class="add-btn" onclick="addTimeline()">＋ 添加时间节点</button>
@@ -89,7 +95,7 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
 <script>
 const $=id=>document.getElementById(id);
 let DATA={};
-function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function genId(){return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function showMsg(id,text,type){const el=$(id);el.className="msg "+type;el.textContent=text}
 
@@ -112,7 +118,7 @@ async function loadData(){
       d.projects.forEach(p=>{tl.push({date:p.time||"",title:p.title||"",desc:"",project:{id:genId(),title:p.title||"",tags:p.tags||"",summary:p.desc||"",detail:"",codeLang:"",code:"",link:p.link||""}})});
     }
     DATA={
-      site:Object.assign({name:"",heroTitle:"",heroSub:""},d.site||{}),
+      site:Object.assign({name:"",heroTitle:"",heroSub:"",aboutSub:"",about:""},d.site||{}),
       timeline:tl,
       contact:Object.assign({email:"",phone:"",wechat:"",qq:"",github:"",blog:""},d.contact||{})
     };
@@ -124,6 +130,8 @@ function renderAll(){
   $("f_name").value=DATA.site.name||"";
   $("f_heroTitle").value=DATA.site.heroTitle||"";
   $("f_heroSub").value=DATA.site.heroSub||"";
+  $("f_aboutSub").value=DATA.site.aboutSub||"";
+  $("f_about").value=DATA.site.about||DATA.site.bio||"";
   $("c_email").value=DATA.contact.email||"";
   $("c_phone").value=DATA.contact.phone||"";
   $("c_wechat").value=DATA.contact.wechat||"";
@@ -171,6 +179,8 @@ function collectAll(){
   DATA.site.name=$("f_name").value;
   DATA.site.heroTitle=$("f_heroTitle").value;
   DATA.site.heroSub=$("f_heroSub").value;
+  DATA.site.aboutSub=$("f_aboutSub").value;
+  DATA.site.about=$("f_about").value;
   DATA.timeline=[];
   document.querySelectorAll("#timelineList .card").forEach(card=>{
     const g=k=>card.querySelector('[data-k="'+k+'"]').value;

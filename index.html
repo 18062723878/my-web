@@ -30,6 +30,11 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 .section-head{text-align:center;margin-bottom:var(--space-block)}
 .section-head h2{font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-.01em;margin-bottom:var(--space-inline)}
 .section-head p{font-size:19px;color:var(--color-text-secondary)}
+
+/* 个人简介 */
+.about-card{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-block) var(--space-element);max-width:840px;margin:0 auto;text-align:center}
+.about-text{font-size:20px;line-height:1.6;color:var(--color-text-secondary);max-width:680px;margin:0 auto;white-space:pre-line}
+
 /* 时间线 + 项目卡片 */
 .tl{position:relative;max-width:900px;margin:0 auto}
 .tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--color-accent),rgba(0,113,227,.12))}
@@ -48,6 +53,7 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 .p-desc{font-size:15px;line-height:1.47;color:var(--color-text-secondary)}
 .p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-inline)}
 .tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
+
 /* 联系 */
 .contact-box{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--space-inline);max-width:760px;margin:0 auto}
 .c-item{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);font-size:17px;text-align:center;transition:transform var(--duration-fast) var(--ease-default)}
@@ -64,16 +70,25 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
   section{padding:var(--space-block) var(--space-element)}
   .section-head h2{font-size:32px}
   .tl-item{grid-template-columns:1fr}
+  .about-text{font-size:17px}
 }
 </style>
 </head>
 <body>
 <header>
   <span class="logo" id="siteName">我的个人网站</span>
-  <nav><a href="#timelineSec">经历</a><a href="#contact">联系</a></nav>
+  <nav><a href="#aboutSec">简介</a><a href="#timelineSec">经历</a><a href="#contact">联系</a></nav>
 </header>
 
 <div class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p></div>
+
+<!-- 新增：个人简介模块 -->
+<section id="aboutSec">
+  <div class="section-head reveal"><h2>个人简介</h2><p id="aboutSub">保持好奇，专注创造价值</p></div>
+  <div class="about-card reveal">
+    <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
+  </div>
+</section>
 
 <section id="timelineSec">
   <div class="section-head reveal"><h2>我的经历</h2><p>每一个节点，都对应一个作品</p></div>
@@ -97,6 +112,10 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   if(site.name){document.title=site.name;$("siteName").textContent=site.name}
   $("heroTitle").textContent=site.heroTitle||"";
   $("heroSub").textContent=site.heroSub||"";
+
+  // 绑定个人简介数据（若 KV 中 site.about / site.bio 存在则显示，不存在则保留默认文案）
+  if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
+  if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
 
   const ts=(d.timeline||[]).filter(t=>t.title||t.date);
   if(!ts.length)$("timelineSec").style.display="none";

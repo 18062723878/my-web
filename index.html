@@ -36,6 +36,11 @@ header nav a:hover{color:var(--color-text-primary)}
 .hero{text-align:center;padding:var(--space-section) var(--space-element);background:var(--color-bg-secondary);transition:background-color var(--duration-normal) var(--ease-default)}
 .hero h1{font-family:var(--font-display);font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-element)}
 .hero p{font-size:21px;line-height:1.4;color:var(--color-text-secondary);max-width:620px;margin:0 auto}
+.hero-actions{margin-top:28px;display:flex;justify-content:center;gap:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px;font-weight:500;transition:transform var(--duration-fast),opacity var(--duration-fast)}
+.btn:hover{opacity:.92}
+.btn:active{transform:scale(.98)}
+
 section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-element)}
 .section-head{text-align:center;margin-bottom:var(--space-block)}
 .section-head h2{font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-.01em;margin-bottom:var(--space-inline)}
@@ -44,6 +49,14 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 /* 个人简介 */
 .about-card{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-block) var(--space-element);max-width:840px;margin:0 auto;text-align:center;transition:background-color var(--duration-normal) var(--ease-default)}
 .about-text{font-size:20px;line-height:1.6;color:var(--color-text-secondary);max-width:680px;margin:0 auto;white-space:pre-line}
+
+/* 技能卡片 Bento Grid */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-element)}
+.skill-card{background:var(--color-bg-secondary);border-radius:var(--radius-card);padding:var(--space-element);transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default)}
+.skill-card:hover{transform:translateY(-3px)}
+.skill-cat{font-size:12px;color:var(--color-accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.skill-name{font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:6px}
+.skill-desc{font-size:14px;line-height:1.5;color:var(--color-text-secondary)}
 
 /* 时间线 + 项目卡片 */
 .tl{position:relative;max-width:900px;margin:0 auto}
@@ -89,16 +102,33 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 <body>
 <header>
   <span class="logo" id="siteName">我的个人网站</span>
-  <nav><a href="#aboutSec">简介</a><a href="#timelineSec">经历</a><a href="#contact">联系</a></nav>
+  <nav>
+    <a href="#aboutSec">简介</a>
+    <a href="#skillsSec" id="navSkills">技能</a>
+    <a href="#timelineSec">经历</a>
+    <a href="#contact">联系</a>
+  </nav>
 </header>
 
-<div class="hero"><h1 id="heroTitle"></h1><p id="heroSub"></p></div>
+<div class="hero">
+  <h1 id="heroTitle"></h1>
+  <p id="heroSub"></p>
+  <div class="hero-actions" id="heroActions" style="display:none">
+    <a class="btn" id="resumeBtn" href="#" target="_blank">📄 预览 / 下载简历</a>
+  </div>
+</div>
 
 <section id="aboutSec">
   <div class="section-head reveal"><h2>个人简介</h2><p id="aboutSub">保持好奇，专注创造价值</p></div>
   <div class="about-card reveal">
     <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
   </div>
+</section>
+
+<!-- 技能卡片模块 -->
+<section id="skillsSec">
+  <div class="section-head reveal"><h2>技能与工具</h2><p>工欲善其事，必先利其器</p></div>
+  <div class="skills-grid" id="skillsGrid"></div>
 </section>
 
 <section id="timelineSec">
@@ -124,9 +154,34 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   $("heroTitle").textContent=site.heroTitle||"";
   $("heroSub").textContent=site.heroSub||"";
 
+  // 简历按钮
+  if(site.resumeUrl && site.resumeUrl.trim()){
+    $("resumeBtn").href = site.resumeUrl.trim();
+    $("heroActions").style.display = "flex";
+  }
+
+  // 个人简介
   if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
   if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
 
+  // 技能卡片 (Bento Grid)
+  const skills = Array.isArray(d.skills) ? d.skills.filter(s=>s.name||s.cat) : [];
+  if(!skills.length){
+    $("skillsSec").style.display = "none";
+    if($("navSkills")) $("navSkills").style.display = "none";
+  } else {
+    skills.forEach(s=>{
+      const div = document.createElement("div");
+      div.className = "skill-card reveal";
+      div.innerHTML = 
+        (s.cat ? '<div class="skill-cat">'+esc(s.cat)+'</div>' : '') +
+        '<div class="skill-name">'+esc(s.name)+'</div>' +
+        (s.desc ? '<div class="skill-desc">'+esc(s.desc)+'</div>' : '');
+      $("skillsGrid").appendChild(div);
+    });
+  }
+
+  // 时间线与项目
   const ts=(d.timeline||[]).filter(t=>t.title||t.date);
   if(!ts.length)$("timelineSec").style.display="none";
   ts.forEach(t=>{
@@ -149,32 +204,26 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
     $("tlBox").appendChild(item);
   });
 
+  // 联系方式
   const c=d.contact||{};const items=[];
   if(c.email)items.push(["邮箱",c.email,"mailto:"+c.email]);
   if(c.phone)items.push(["电话",c.phone,"tel:"+c.phone]);
   if(c.wechat)items.push(["微信",c.wechat,null]);
   if(c.qq)items.push(["QQ",c.qq,null]);
   
-  // 优化 GitHub 链接显示：提取用户名展示为 @xxx 格式，同时保持完整超链接
   if(c.github){
     let ghUrl = c.github.trim();
     if(!ghUrl.startsWith("http")) ghUrl = "https://" + ghUrl;
     let ghText = c.github.trim();
     const match = ghText.match(/github\.com\/([^\/\s?#]+)/i);
-    if(match && match[1]){
-      ghText = "@" + match[1];
-    } else {
-      ghText = ghText.replace(/^https?:\/\//i, "");
-    }
+    ghText = (match && match[1]) ? ("@" + match[1]) : ghText.replace(/^https?:\/\//i, "");
     items.push(["GitHub", ghText, ghUrl]);
   }
   
-  // 优化博客/其他外链显示：去除协议头简化文本
   if(c.blog){
     let bUrl = c.blog.trim();
     if(!bUrl.startsWith("http")) bUrl = "https://" + bUrl;
-    let bText = c.blog.trim().replace(/^https?:\/\//i, "");
-    items.push(["博客", bText, bUrl]);
+    items.push(["博客", c.blog.trim().replace(/^https?:\/\//i, ""), bUrl]);
   }
 
   if(!items.length)$("contact").style.display="none";

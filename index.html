@@ -33,11 +33,82 @@ header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 header nav{margin-left:auto;display:flex;gap:var(--space-element)}
 header nav a{color:var(--color-text-secondary);text-decoration:none;font-size:14px;transition:color var(--duration-fast) var(--ease-default)}
 header nav a:hover{color:var(--color-text-primary)}
-.hero{text-align:center;padding:var(--space-section) var(--space-element);background:var(--color-bg-secondary);transition:background-color var(--duration-normal) var(--ease-default)}
-.hero h1{font-family:var(--font-display);font-size:56px;line-height:1.05;font-weight:700;letter-spacing:-.02em;margin-bottom:var(--space-element)}
-.hero p{font-size:21px;line-height:1.4;color:var(--color-text-secondary);max-width:620px;margin:0 auto}
+
+/* Hero 区域背景融合 */
+.hero{
+  position:relative;
+  min-height:78vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:var(--space-section) var(--space-element);
+  background-color:#020204;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;
+  inset:0;
+  background-image:url('504470-michael-jackson-minimalism-hd-wallpaper-desktop-and-mobile-image-photo (1).jpg');
+  background-repeat:no-repeat;
+  background-position:center 38%;
+  background-size:cover;
+  opacity:.72;
+  filter:contrast(1.15) brightness(0.9);
+  pointer-events:none;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    180deg,
+    rgba(2,2,4,0.45) 0%,
+    rgba(2,2,4,0.15) 45%,
+    rgba(2,2,4,0.75) 85%,
+    var(--color-bg-primary) 100%
+  );
+  pointer-events:none;
+}
+.hero-inner{
+  position:relative;
+  z-index:2;
+  max-width:800px;
+  margin:0 auto;
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:56px;
+  line-height:1.1;
+  font-weight:700;
+  letter-spacing:-.02em;
+  margin-bottom:var(--space-element);
+  color:#FFFFFF;
+  text-shadow:0 4px 24px rgba(0,0,0,0.85);
+}
+.hero p{
+  font-size:21px;
+  line-height:1.4;
+  color:rgba(255,255,255,0.88);
+  max-width:620px;
+  margin:0 auto;
+  text-shadow:0 2px 14px rgba(0,0,0,0.85);
+}
 .hero-actions{margin-top:28px;display:flex;justify-content:center;gap:14px}
-.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px;font-weight:500;transition:transform var(--duration-fast),opacity var(--duration-fast)}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-accent);
+  color:#fff;
+  text-decoration:none;
+  border-radius:var(--radius-button);
+  padding:12px 24px;
+  font-size:15px;
+  font-weight:500;
+  box-shadow:0 4px 16px rgba(0,113,227,0.35);
+  transition:transform var(--duration-fast),opacity var(--duration-fast);
+}
 .btn:hover{opacity:.92}
 .btn:active{transform:scale(.98)}
 
@@ -90,7 +161,7 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 .reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
 .reveal.in{opacity:1;transform:none}
 @media(max-width:734px){
-  .hero{padding:var(--space-block) var(--space-element)}
+  .hero{min-height:65vh;padding:var(--space-block) var(--space-element)}
   .hero h1{font-size:40px}
   section{padding:var(--space-block) var(--space-element)}
   .section-head h2{font-size:32px}
@@ -111,10 +182,13 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 </header>
 
 <div class="hero">
-  <h1 id="heroTitle"></h1>
-  <p id="heroSub"></p>
-  <div class="hero-actions" id="heroActions" style="display:none">
-    <a class="btn" id="resumeBtn" href="#" target="_blank">📄 预览 / 下载简历</a>
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <h1 id="heroTitle"></h1>
+    <p id="heroSub"></p>
+    <div class="hero-actions" id="heroActions" style="display:none">
+      <a class="btn" id="resumeBtn" href="#" target="_blank">📄 预览 / 下载简历</a>
+    </div>
   </div>
 </div>
 

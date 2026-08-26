@@ -34,65 +34,39 @@ header nav{margin-left:auto;display:flex;gap:var(--space-element)}
 header nav a{color:var(--color-text-secondary);text-decoration:none;font-size:14px;transition:color var(--duration-fast) var(--ease-default)}
 header nav a:hover{color:var(--color-text-primary)}
 
-/* Hero 区域背景融合 */
+/* Apple 风格暗夜聚光灯 Hero 区域 */
 .hero{
   position:relative;
-  min-height:78vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   text-align:center;
-  padding:var(--space-section) var(--space-element);
-  background-color:#020204;
+  padding:var(--space-section) var(--space-element) 40px;
+  background:#000000;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
-.hero-bg{
-  position:absolute;
-  inset:0;
-  background-image:url('504470-michael-jackson-minimalism-hd-wallpaper-desktop-and-mobile-image-photo (1).jpg');
-  background-repeat:no-repeat;
-  background-position:center 38%;
-  background-size:cover;
-  opacity:.72;
-  filter:contrast(1.15) brightness(0.9);
-  pointer-events:none;
-}
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    180deg,
-    rgba(2,2,4,0.45) 0%,
-    rgba(2,2,4,0.15) 45%,
-    rgba(2,2,4,0.75) 85%,
-    var(--color-bg-primary) 100%
-  );
-  pointer-events:none;
-}
-.hero-inner{
+.hero-content{
   position:relative;
   z-index:2;
-  max-width:800px;
+  max-width:760px;
   margin:0 auto;
 }
 .hero h1{
   font-family:var(--font-display);
   font-size:56px;
-  line-height:1.1;
+  line-height:1.08;
   font-weight:700;
-  letter-spacing:-.02em;
+  letter-spacing:-.025em;
   margin-bottom:var(--space-element);
-  color:#FFFFFF;
-  text-shadow:0 4px 24px rgba(0,0,0,0.85);
+  color:#F5F5F7;
+  text-shadow:0 2px 20px rgba(0,0,0,0.8);
 }
 .hero p{
   font-size:21px;
   line-height:1.4;
-  color:rgba(255,255,255,0.88);
+  color:#A1A1A6;
   max-width:620px;
   margin:0 auto;
-  text-shadow:0 2px 14px rgba(0,0,0,0.85);
 }
 .hero-actions{margin-top:28px;display:flex;justify-content:center;gap:14px}
 .btn{
@@ -106,11 +80,50 @@ header nav a:hover{color:var(--color-text-primary)}
   padding:12px 24px;
   font-size:15px;
   font-weight:500;
-  box-shadow:0 4px 16px rgba(0,113,227,0.35);
+  box-shadow:0 4px 20px rgba(41,151,255,0.35);
   transition:transform var(--duration-fast),opacity var(--duration-fast);
 }
 .btn:hover{opacity:.92}
 .btn:active{transform:scale(.98)}
+
+/* Michael Jackson 视觉融合展示组件 */
+.hero-stage{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:860px;
+  margin:20px auto 0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.hero-stage::before{
+  content:"";
+  position:absolute;
+  top:30%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:320px;
+  height:320px;
+  background:radial-gradient(circle, rgba(41,151,255,0.22) 0%, rgba(0,0,0,0) 70%);
+  pointer-events:none;
+  z-index:1;
+}
+.hero-stage-img{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-height:500px;
+  object-fit:contain;
+  border-radius:var(--radius-card);
+  -webkit-mask-image:radial-gradient(ellipse 80% 75% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 95%);
+  mask-image:radial-gradient(ellipse 80% 75% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 95%);
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,0.8));
+  transition:transform var(--duration-slow) var(--ease-default);
+}
+.hero-stage-img:hover{
+  transform:scale(1.02);
+}
 
 section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-element)}
 .section-head{text-align:center;margin-bottom:var(--space-block)}
@@ -161,8 +174,9 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 .reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
 .reveal.in{opacity:1;transform:none}
 @media(max-width:734px){
-  .hero{min-height:65vh;padding:var(--space-block) var(--space-element)}
-  .hero h1{font-size:40px}
+  .hero{padding:var(--space-block) var(--space-element) 24px}
+  .hero h1{font-size:38px}
+  .hero-stage-img{max-height:320px}
   section{padding:var(--space-block) var(--space-element)}
   .section-head h2{font-size:32px}
   .tl-item{grid-template-columns:1fr}
@@ -182,13 +196,21 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
 </header>
 
 <div class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-inner">
+  <div class="hero-content">
     <h1 id="heroTitle"></h1>
     <p id="heroSub"></p>
     <div class="hero-actions" id="heroActions" style="display:none">
       <a class="btn" id="resumeBtn" href="#" target="_blank">📄 预览 / 下载简历</a>
     </div>
+  </div>
+
+  <div class="hero-stage reveal in">
+    <img 
+      class="hero-stage-img" 
+      src="mj.jpg" 
+      alt="Michael Jackson Silhouette"
+      onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='504470-michael-jackson-minimalism-hd-wallpaper-desktop-and-mobile-image-photo (1).jpg';}else if(this.dataset.tried==='1'){this.dataset.tried='2';this.src='mj.png';}"
+    >
   </div>
 </div>
 

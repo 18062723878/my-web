@@ -3,352 +3,398 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>后台管理</title>
+<title>我的个人网站</title>
 <style>
 :root{
-  --bg-page:#f5f5f7;--bg-card:#ffffff;--bg-subcard:#fafafa;
-  --text-main:#1d1d1f;--text-muted:#555555;--text-tip:#999999;
-  --border-color:#dddddd;--border-card:#e5e5e5;
-  --accent:#0071E3;--badge-bg:#eef4ff;--badge-color:#0071E3;
-  --input-bg:#ffffff;
-}
-@media(prefers-color-scheme:dark){
-  :root{
-    --bg-page:#000000;--bg-card:#161617;--bg-subcard:#242426;
-    --text-main:#f5f5f7;--text-muted:#a1a1a6;--text-tip:#6e6e73;
-    --border-color:rgba(255,255,255,0.15);--border-card:rgba(255,255,255,0.08);
-    --accent:#2997FF;--badge-bg:rgba(41,151,255,0.15);--badge-color:#2997FF;
-    --input-bg:#121212;
-  }
-}
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
-body{background:var(--bg-page);color:var(--text-main);padding:20px;transition:background-color 300ms,color 300ms}
-.login{max-width:360px;margin:100px auto;background:var(--bg-card);padding:40px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid var(--border-card)}
-.login h2{margin-bottom:20px;text-align:center}
-.login input{width:100%;padding:12px;background:var(--input-bg);color:var(--text-main);border:1px solid var(--border-color);border-radius:8px;margin-bottom:12px;font-size:14px}
-.login button{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer}
-.admin{max-width:960px;margin:0 auto;display:none}
-.topbar{display:flex;align-items:center;margin-bottom:16px}
-.topbar h2{flex:1}
-.topbar a{color:var(--accent);text-decoration:none;font-size:14px}
-.section{background:var(--bg-card);border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid var(--border-card)}
-.section h3{margin-bottom:16px;font-size:16px;border-left:4px solid var(--accent);padding-left:10px}
-.field{margin-bottom:12px}
-.field label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:var(--text-muted)}
-.field input,.field textarea{width:100%;padding:10px;background:var(--input-bg);color:var(--text-main);border:1px solid var(--border-color);border-radius:8px;font-size:14px}
-.field textarea{min-height:70px;resize:vertical}
-textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:140px;line-height:1.6}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.row3{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px}
-.card{border:1px solid var(--border-card);border-radius:10px;padding:16px;margin-bottom:14px;background:var(--bg-subcard)}
-.card-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:700;font-size:14px}
-.card-head .spacer{flex:1}
-.mini-btn{padding:4px 10px;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-main);border-radius:6px;cursor:pointer;font-size:12px}
-.mini-btn.del{color:#ff453a;border-color:#ff453a}
-.add-btn{padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px}
-.check{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin:6px 0 12px;cursor:pointer}
-.check input{width:auto}
-.proj-fields{border-top:1px dashed var(--border-color);margin-top:4px;padding-top:14px;background:var(--bg-card);border-radius:8px;padding:14px;border:1px solid var(--border-card)}
-.badge{display:inline-block;background:var(--badge-bg);color:var(--badge-color);font-size:11px;padding:2px 8px;border-radius:99px;margin-left:6px;font-weight:400}
-.tip{font-size:12px;color:var(--text-tip);margin-top:8px}
+  --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
+  --color-bg-primary:#F5F5F7;--color-bg-secondary:#FFFFFF;--color-accent:#0071E3;
+  --header-bg:rgba(245,245,247,.8);--header-border:rgba(0,0,0,.08);
+  --dot-border:#FFFFFF;--card-shadow:rgba(0,0,0,.06);
+  --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
+  --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
+  --space-unit:8px;--space-section:100px;--space-block:64px;--space-element:24px;--space-inline:12px;
+  --duration-fast:200ms;--duration-normal:400ms;--duration-slow:700ms;
+  --ease-default:cubic-bezier(0.25,0.1,0.25,1);
+  --radius-button:980px;--radius-card:22px;
 
-.code-blocks-wrap{margin-top:16px;border:1px solid var(--border-color);padding:14px;border-radius:8px;background:var(--bg-subcard)}
-.code-block-card{background:var(--bg-card);border:1px solid var(--border-card);border-radius:8px;padding:12px;margin-bottom:12px}
-.code-block-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:600}
-.add-code-btn{padding:6px 12px;background:transparent;border:1px dashed var(--accent);color:var(--accent);border-radius:6px;cursor:pointer;font-size:13px}
-
-.save-bar{position:sticky;bottom:10px;text-align:center;padding:10px 0}
-.save-btn{padding:14px 44px;background:#34c759;color:#fff;border:none;border-radius:10px;font-size:16px;cursor:pointer;box-shadow:0 4px 12px rgba(52,199,89,.4)}
-.msg{margin-top:12px;padding:10px;border-radius:8px;display:none;text-align:center}
-.msg.ok{background:#d4edda;color:#155724;display:block}
-.msg.err{background:#f8d7da;color:#721c24;display:block}
-@media(prefers-color-scheme:dark){
-  .msg.ok{background:#1b3922;color:#75d58d}
-  .msg.err{background:#44191d;color:#ff858d}
+  /* 亮色模式下的舞台卡片参数 */
+  --hero-card-radius:28px;
+  --hero-card-margin:24px auto;
+  --hero-card-shadow:0 20px 50px rgba(0,0,0,.22), 0 0 40px rgba(0,113,227,.12);
+  --hero-card-border:1px solid rgba(0,0,0,.15);
 }
-@media(max-width:640px){.row2,.row3{grid-template-columns:1fr}}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-text-primary:#F5F5F7;--color-text-secondary:#A1A1A6;--color-text-tertiary:#86868B;
+    --color-bg-primary:#000000;--color-bg-secondary:#161617;--color-accent:#2997FF;
+    --header-bg:rgba(0,0,0,.75);--header-border:rgba(255,255,255,.1);
+    --dot-border:#000000;--card-shadow:rgba(0,0,0,.5);
+
+    /* 暗黑模式下全幅融入 */
+    --hero-card-radius:0px;
+    --hero-card-margin:0 auto;
+    --hero-card-shadow:none;
+    --hero-card-border:none;
+  }
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-text);
+  color:var(--color-text-primary);
+  background:var(--color-bg-primary);
+  -webkit-font-smoothing:antialiased;
+  transition:background-color var(--duration-normal) var(--ease-default),color var(--duration-normal) var(--ease-default);
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  gap:var(--space-element);
+  padding:0 var(--space-element);
+  height:52px;
+  background:var(--header-bg);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--header-border);
+  transition:background-color var(--duration-normal),border-color var(--duration-normal);
+}
+header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
+header nav{margin-left:auto;display:flex;gap:var(--space-element)}
+header nav a{color:var(--color-text-secondary);text-decoration:none;font-size:14px;transition:color var(--duration-fast) var(--ease-default)}
+header nav a:hover{color:var(--color-text-primary)}
+
+/* 外层舞台容器 */
+.hero-wrapper{
+  padding:0 var(--space-element);
+  max-width:1200px;
+  margin:0 auto;
+}
+
+/* 核心 Apple Stage 剧场卡片 */
+.hero{
+  position:relative;
+  min-height:75vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:var(--space-section) var(--space-element);
+  background-color:#020203;
+  border-radius:var(--hero-card-radius);
+  margin:var(--hero-card-margin);
+  box-shadow:var(--hero-card-shadow);
+  border:var(--hero-card-border);
+  overflow:hidden;
+  transition:all var(--duration-normal) var(--ease-default);
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  background-image:url('mj.jpg'), url('504470-michael-jackson-minimalism-hd-wallpaper-desktop-and-mobile-image-photo%20(1).jpg');
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-size:cover;
+  opacity:.78;
+  filter:contrast(1.12) brightness(.92);
+  pointer-events:none;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(2,2,3,0.3) 0%, rgba(2,2,3,0.1) 40%, rgba(2,2,3,0.65) 100%);
+  pointer-events:none;
+}
+
+.hero-inner{
+  position:relative;
+  z-index:2;
+  max-width:760px;
+  margin:0 auto;
+}
+
+.hero h1{
+  font-family:var(--font-display);
+  font-size:56px;
+  line-height:1.1;
+  font-weight:700;
+  letter-spacing:-.025em;
+  margin-bottom:var(--space-element);
+  color:#FFFFFF !important;
+  text-shadow:0 4px 28px rgba(0,0,0,0.9);
+}
+
+.hero p{
+  font-size:21px;
+  line-height:1.4;
+  color:rgba(255,255,255,0.85) !important;
+  max-width:620px;
+  margin:0 auto;
+  text-shadow:0 2px 16px rgba(0,0,0,0.9);
+}
+
+.hero-actions{margin-top:28px;display:flex;justify-content:center;gap:14px}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-accent);
+  color:#fff !important;
+  text-decoration:none;
+  border-radius:var(--radius-button);
+  padding:12px 24px;
+  font-size:15px;
+  font-weight:500;
+  box-shadow:0 4px 20px rgba(0,113,227,0.4);
+  transition:transform var(--duration-fast),opacity var(--duration-fast);
+}
+.btn:hover{opacity:.92}
+.btn:active{transform:scale(.98)}
+
+section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-element)}
+.section-head{text-align:center;margin-bottom:var(--space-block)}
+.section-head h2{font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-.01em;margin-bottom:var(--space-inline)}
+.section-head p{font-size:19px;color:var(--color-text-secondary)}
+
+/* 个人简介 */
+.about-card{
+  background:var(--color-bg-secondary);
+  border-radius:var(--radius-card);
+  padding:var(--space-block) var(--space-element);
+  max-width:840px;
+  margin:0 auto;
+  text-align:center;
+  box-shadow:0 4px 24px var(--card-shadow);
+  transition:background-color var(--duration-normal) var(--ease-default);
+}
+.about-text{font-size:20px;line-height:1.6;color:var(--color-text-secondary);max-width:680px;margin:0 auto;white-space:pre-line}
+
+/* 技能卡片 Bento Grid */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-element)}
+.skill-card{
+  background:var(--color-bg-secondary);
+  border-radius:var(--radius-card);
+  padding:var(--space-element);
+  box-shadow:0 4px 20px var(--card-shadow);
+  transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default);
+}
+.skill-card:hover{transform:translateY(-3px)}
+.skill-cat{font-size:12px;color:var(--color-accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.skill-name{font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:6px}
+.skill-desc{font-size:14px;line-height:1.5;color:var(--color-text-secondary)}
+
+/* 时间线 + 项目卡片 */
+.tl{position:relative;max-width:900px;margin:0 auto}
+.tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--color-accent),rgba(0,113,227,.12))}
+.tl-item{position:relative;padding-left:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:var(--space-element) var(--space-block);padding-bottom:var(--space-block)}
+.tl-item.solo{grid-template-columns:1fr}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--color-accent);border:3px solid var(--dot-border);box-shadow:0 0 0 2px var(--color-accent);transition:border-color var(--duration-fast)}
+.tl-date{font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px;letter-spacing:.02em}
+.tl-left h3{font-family:var(--font-display);font-size:24px;font-weight:600;margin-bottom:6px}
+.tl-left p{font-size:17px;line-height:1.47;color:var(--color-text-secondary)}
+.p-card{
+  display:block;
+  background:var(--color-bg-secondary);
+  border-radius:var(--radius-card);
+  padding:var(--space-element);
+  text-decoration:none;
+  color:inherit;
+  box-shadow:0 4px 20px var(--card-shadow);
+  transition:transform var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal) var(--ease-default),background-color var(--duration-normal) var(--ease-default);
+}
+.p-card:hover{transform:scale(1.02);box-shadow:0 12px 40px var(--card-shadow)}
+.p-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-inline);margin-bottom:6px}
+.p-top h4{font-family:var(--font-display);font-size:21px;font-weight:600}
+.p-more{color:var(--color-accent);font-size:14px;white-space:nowrap}
+.p-desc{font-size:15px;line-height:1.47;color:var(--color-text-secondary)}
+.p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-inline)}
+.tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button);transition:background-color var(--duration-fast)}
+
+/* 联系卡片 */
+.contact-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-inline);max-width:840px;margin:0 auto}
+.c-item{
+  background:var(--color-bg-secondary);
+  border-radius:var(--radius-card);
+  padding:20px var(--space-element);
+  font-size:16px;
+  text-align:center;
+  overflow:hidden;
+  box-shadow:0 4px 20px var(--card-shadow);
+  transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default);
+}
+.c-item:hover{transform:translateY(-3px)}
+.c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:6px}
+.c-item a{display:block;color:var(--color-text-primary);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-item a:hover{color:var(--color-accent)}
+.c-item span.c-val{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px;transition:background-color var(--duration-normal) var(--ease-default)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:734px){
+  .hero-wrapper{padding:0 12px}
+  .hero{min-height:68vh;padding:var(--space-block) var(--space-element);border-radius:20px;margin:12px auto}
+  .hero h1{font-size:36px}
+  .hero-bg{background-position:center center;background-size:cover}
+  section{padding:var(--space-block) var(--space-element)}
+  .section-head h2{font-size:32px}
+  .tl-item{grid-template-columns:1fr}
+  .about-text{font-size:17px}
+}
 </style>
 </head>
 <body>
+<header>
+  <span class="logo" id="siteName">我的个人网站</span>
+  <nav>
+    <a href="#aboutSec">简介</a>
+    <a href="#skillsSec" id="navSkills">技能</a>
+    <a href="#timelineSec">经历</a>
+    <a href="#contact">联系</a>
+  </nav>
+</header>
 
-<div class="login" id="loginBox">
-  <h2>🔒 后台登录</h2>
-  <input type="password" id="pwd" placeholder="请输入管理密码">
-  <button onclick="doLogin()">登录</button>
-  <div class="msg" id="loginMsg"></div>
+<div class="hero-wrapper">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <h1 id="heroTitle"></h1>
+      <p id="heroSub"></p>
+      <div class="hero-actions" id="heroActions" style="display:none">
+        <a class="btn" id="resumeBtn" href="#" target="_blank">📄 预览 / 下载简历</a>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="admin" id="adminBox">
-  <div class="topbar"><h2>✏️ 内容管理</h2><a href="/" target="_blank">预览前台 ↗</a></div>
+<section id="aboutSec">
+  <div class="section-head reveal"><h2>个人简介</h2><p id="aboutSub">保持好奇，专注创造价值</p></div>
+  <div class="about-card reveal">
+    <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
+  </div>
+</section>
 
-  <div class="section">
-    <h3>🏠 站点信息</h3>
-    <div class="field"><label>站点名称</label><input id="f_name"></div>
-    <div class="field"><label>首页大标题</label><input id="f_heroTitle"></div>
-    <div class="field"><label>首页副标题</label><textarea id="f_heroSub"></textarea></div>
-    <div class="field"><label>📄 个人简历链接<span class="badge">PDF外链或在线文档地址，留空则首页不显示按钮</span></label><input id="f_resumeUrl" placeholder="例如：https://.../resume.pdf"></div>
-  </div>
+<!-- 技能卡片模块 -->
+<section id="skillsSec">
+  <div class="section-head reveal"><h2>技能与工具</h2><p>工欲善其事，必先利其器</p></div>
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
 
-  <div class="section">
-    <h3>👤 个人简介</h3>
-    <div class="field"><label>简介副标题<span class="badge">标题下方的短语</span></label><input id="f_aboutSub" placeholder="例如：保持好奇，专注创造价值"></div>
-    <div class="field"><label>简介正文内容<span class="badge">支持换行</span></label><textarea id="f_about" style="min-height:90px" placeholder="例如：热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。"></textarea></div>
-  </div>
+<section id="timelineSec">
+  <div class="section-head reveal"><h2>我的经历</h2><p>每一个节点，都对应一个作品</p></div>
+  <div class="tl" id="tlBox"></div>
+</section>
 
-  <div class="section">
-    <h3>🛠️ 技能与工具 (Bento Grid)</h3>
-    <div id="skillsList"></div>
-    <button class="add-btn" onclick="addSkill()">＋ 添加技能卡片</button>
-    <div class="tip">会在首页展示为便当盒式的技能与工具卡片。支持随时调整顺序与删除。</div>
-  </div>
+<section id="contact">
+  <div class="section-head reveal"><h2>联系我</h2><p>欢迎随时找我聊聊</p></div>
+  <div class="contact-box" id="contactBox"></div>
+</section>
 
-  <div class="section">
-    <h3>🕐 时间线 + 项目</h3>
-    <div id="timelineList"></div>
-    <button class="add-btn" onclick="addTimeline()">＋ 添加时间节点</button>
-    <div class="tip">勾选「挂一个项目卡片」后可添加详细图文、在线试玩 Demo 与多段代码展示。</div>
-  </div>
-
-  <div class="section">
-    <h3>📮 联系方式（留空 = 前台不显示）</h3>
-    <div class="row2">
-      <div class="field"><label>📧 邮箱</label><input id="c_email"></div>
-      <div class="field"><label>📱 电话</label><input id="c_phone"></div>
-      <div class="field"><label>💬 微信号</label><input id="c_wechat"></div>
-      <div class="field"><label>🐧 QQ 号</label><input id="c_qq"></div>
-      <div class="field"><label>🐙 GitHub 主页</label><input id="c_github" placeholder="https://github.com/用户名"></div>
-      <div class="field"><label>🌐 博客 / 其他链接</label><input id="c_blog" placeholder="https://..."></div>
-    </div>
-  </div>
-
-  <div class="save-bar">
-    <button class="save-btn" onclick="saveAll()">💾 保存全部修改</button>
-    <div class="msg" id="saveMsg"></div>
-  </div>
-</div>
+<footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
 
 <script>
 const $=id=>document.getElementById(id);
-let DATA={};
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function genId(){return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function showMsg(id,text,type){const el=$(id);el.className="msg "+type;el.textContent=text}
+$("year").textContent=new Date().getFullYear();
 
-function doLogin(){
-  const pwd=$("pwd").value;
-  fetch("/api/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:pwd})})
-  .then(r=>r.json()).then(j=>{
-    if(j.ok){sessionStorage.setItem("admin_pwd",pwd);enter()}
-    else showMsg("loginMsg","密码错误","err");
-  }).catch(()=>showMsg("loginMsg","网络错误","err"));
-}
-function enter(){$("loginBox").style.display="none";$("adminBox").style.display="block";loadData()}
+fetch("/api/data").then(r=>r.json()).then(d=>{
+  const site=d.site||{};
+  if(site.name){document.title=site.name;$("siteName").textContent=site.name}
+  $("heroTitle").textContent=site.heroTitle||"";
+  $("heroSub").textContent=site.heroSub||"";
 
-async function loadData(){
-  try{
-    const r=await fetch("/api/data");const d=await r.json();
-    let tl=Array.isArray(d.timeline)?d.timeline:[];
-    DATA={
-      site:Object.assign({name:"",heroTitle:"",heroSub:"",aboutSub:"",about:"",resumeUrl:""},d.site||{}),
-      skills:Array.isArray(d.skills)?d.skills:[
-        { cat:"前端开发", name:"HTML / CSS / JavaScript", desc:"原生现代 Web 标准与响应式设计" },
-        { cat:"基础设施", name:"Cloudflare Pages & KV", desc:"边缘无服务器架构部署与全栈实践" }
-      ],
-      timeline:tl,
-      contact:Object.assign({email:"",phone:"",wechat:"",qq:"",github:"",blog:""},d.contact||{})
-    };
-  }catch(e){DATA={site:{},skills:[],timeline:[],contact:{}}}
-  renderAll();
-}
+  // 简历按钮
+  if(site.resumeUrl && site.resumeUrl.trim()){
+    $("resumeBtn").href = site.resumeUrl.trim();
+    $("heroActions").style.display = "flex";
+  }
 
-function renderAll(){
-  $("f_name").value=DATA.site.name||"";
-  $("f_heroTitle").value=DATA.site.heroTitle||"";
-  $("f_heroSub").value=DATA.site.heroSub||"";
-  $("f_resumeUrl").value=DATA.site.resumeUrl||"";
-  $("f_aboutSub").value=DATA.site.aboutSub||"";
-  $("f_about").value=DATA.site.about||DATA.site.bio||"";
-  $("c_email").value=DATA.contact.email||"";
-  $("c_phone").value=DATA.contact.phone||"";
-  $("c_wechat").value=DATA.contact.wechat||"";
-  $("c_qq").value=DATA.contact.qq||"";
-  $("c_github").value=DATA.contact.github||"";
-  $("c_blog").value=DATA.contact.blog||"";
-  renderSkills();
-  renderTimeline();
-}
+  // 个人简介
+  if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
+  if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
 
-function renderSkills(){
-  const box=$("skillsList");box.innerHTML="";
-  DATA.skills.forEach((s,i)=>{
-    const div=document.createElement("div");div.className="card";
-    div.innerHTML=
-      '<div class="card-head">🛠️ 技能 '+(i+1)+'<span class="spacer"></span>'+
-      '<button class="mini-btn" onclick="moveSkill('+i+',-1)">↑</button>'+
-      '<button class="mini-btn" onclick="moveSkill('+i+',1)">↓</button>'+
-      '<button class="mini-btn del" onclick="delSkill('+i+')">删除</button></div>'+
-      '<div class="row3">'+
-        '<div class="field"><label>类别/领域</label><input data-sk="cat" value="'+esc(s.cat)+'" placeholder="如：前端 / 语言 / 工具"></div>'+
-        '<div class="field"><label>技能/工具名称</label><input data-sk="name" value="'+esc(s.name)+'" placeholder="如：JavaScript"></div>'+
-        '<div class="field"><label>熟练度简述</label><input data-sk="desc" value="'+esc(s.desc)+'" placeholder="如：日常开发与性能调优"></div>'+
-      '</div>';
-    box.appendChild(div);
-  });
-}
+  // 技能卡片 (Bento Grid)
+  const skills = Array.isArray(d.skills) ? d.skills.filter(s=>s.name||s.cat) : [];
+  if(!skills.length){
+    $("skillsSec").style.display = "none";
+    if($("navSkills")) $("navSkills").style.display = "none";
+  } else {
+    skills.forEach(s=>{
+      const div = document.createElement("div");
+      div.className = "skill-card reveal";
+      div.innerHTML = 
+        (s.cat ? '<div class="skill-cat">'+esc(s.cat)+'</div>' : '') +
+        '<div class="skill-name">'+esc(s.name)+'</div>' +
+        (s.desc ? '<div class="skill-desc">'+esc(s.desc)+'</div>' : '');
+      $("skillsGrid").appendChild(div);
+    });
+  }
 
-function addSkill(){collectAll();DATA.skills.push({cat:"",name:"",desc:""});renderSkills()}
-function delSkill(i){collectAll();DATA.skills.splice(i,1);renderSkills()}
-function moveSkill(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.skills.length)return;const t=DATA.skills[i];DATA.skills[i]=DATA.skills[j];DATA.skills[j]=t;renderSkills()}
+  // 时间线与项目
+  const ts=(d.timeline||[]).filter(t=>t.title||t.date);
+  if(!ts.length)$("timelineSec").style.display="none";
+  ts.forEach(t=>{
+    const p=t.project;
+    const hasP=p&&(p.title||p.summary);
+    const item=document.createElement("div");
+    item.className="tl-item reveal"+(hasP?"":" solo");
+    let right="";
+    if(hasP){
+      const tags=(p.tags||"").split(/[,，]/).map(x=>x.trim()).filter(Boolean)
+        .map(x=>'<span class="tag">'+esc(x)+'</span>').join("");
+      right='<a class="p-card" href="project.html?id='+encodeURIComponent(p.id||"")+'">'+
+        '<div class="p-top"><h4>'+esc(p.title)+'</h4><span class="p-more">查看详情 ›</span></div>'+
+        '<p class="p-desc">'+esc(p.summary)+'</p>'+
+        (tags?'<div class="p-tags">'+tags+'</div>':'')+'</a>';
+    }
+    item.innerHTML='<div class="tl-dot"></div>'+
+      '<div class="tl-left"><div class="tl-date">'+esc(t.date)+'</div><h3>'+esc(t.title)+'</h3>'+(t.desc?'<p>'+esc(t.desc)+'</p>':'')+'</div>'+
+      '<div class="tl-right">'+right+'</div>';
+    $("tlBox").appendChild(item);
+  });
 
-function renderTimeline(){
-  const box=$("timelineList");box.innerHTML="";
-  DATA.timeline.forEach((t,i)=>{
-    const p=t.project||null;
-    const div=document.createElement("div");div.className="card";
-    if(p&&p.id)div.dataset.pid=p.id;
+  // 联系方式
+  const c=d.contact||{};const items=[];
+  if(c.email)items.push(["邮箱",c.email,"mailto:"+c.email]);
+  if(c.phone)items.push(["电话",c.phone,"tel:"+c.phone]);
+  if(c.wechat)items.push(["微信",c.wechat,null]);
+  if(c.qq)items.push(["QQ",c.qq,null]);
+  
+  if(c.github){
+    let ghUrl = c.github.trim();
+    if(!ghUrl.startsWith("http")) ghUrl = "https://" + ghUrl;
+    let ghText = c.github.trim();
+    const match = ghText.match(/github\.com\/([^\/\s?#]+)/i);
+    ghText = (match && match[1]) ? ("@" + match[1]) : ghText.replace(/^https?:\/\//i, "");
+    items.push(["GitHub", ghText, ghUrl]);
+  }
+  
+  if(c.blog){
+    let bUrl = c.blog.trim();
+    if(!bUrl.startsWith("http")) bUrl = "https://" + bUrl;
+    items.push(["博客", c.blog.trim().replace(/^https?:\/\//i, ""), bUrl]);
+  }
 
-    let blocks = [];
-    if(p){
-      if(Array.isArray(p.codeBlocks)) blocks = p.codeBlocks;
-      else if(p.code) blocks = [{ title:"核心实现", lang:p.codeLang||"", code:p.code }];
-    }
+  if(!items.length)$("contact").style.display="none";
+  items.forEach(it=>{
+    const div=document.createElement("div");div.className="c-item reveal";
+    div.innerHTML='<span class="c-label">'+it[0]+'</span>'+(it[2]?'<a href="'+esc(it[2])+'" target="_blank" title="'+esc(it[1])+'">'+esc(it[1])+'</a>':'<span class="c-val">'+esc(it[1])+'</span>');
+    $("contactBox").appendChild(div);
+  });
 
-    let codeBlocksHtml = "";
-    blocks.forEach((b, bIdx)=>{
-      codeBlocksHtml += `
-        <div class="code-block-card">
-          <div class="code-block-head">
-            <span>💻 代码板块 ${bIdx + 1}</span>
-            <button class="mini-btn del" onclick="delCodeBlock(${i}, ${bIdx})">删除该板块</button>
-          </div>
-          <div class="row2">
-            <div class="field"><label>板块标题</label><input data-cb="title" value="${esc(b.title)}" placeholder="例如：前端界面结构 / 核心算法"></div>
-            <div class="field"><label>语言标签</label><input data-cb="lang" value="${esc(b.lang)}" placeholder="例如：html / javascript / python"></div>
-          </div>
-          <div class="field"><label>代码内容</label><textarea class="mono" data-cb="code">${esc(b.code)}</textarea></div>
-        </div>
-      `;
-    });
-
-    div.innerHTML=
-      '<div class="card-head">🕐 节点 '+(i+1)+'<span class="spacer"></span>'+
-      '<button class="mini-btn" onclick="moveItem('+i+',-1)">↑</button>'+
-      '<button class="mini-btn" onclick="moveItem('+i+',1)">↓</button>'+
-      '<button class="mini-btn del" onclick="delItem('+i+')">删除</button></div>'+
-      '<div class="row2">'+
-        '<div class="field"><label>日期</label><input data-k="date" value="'+esc(t.date)+'" placeholder="例如：2026.08"></div>'+
-        '<div class="field"><label>节点标题</label><input data-k="title" value="'+esc(t.title)+'" placeholder="例如：上线个人网站"></div>'+
-      '</div>'+
-      '<div class="field"><label>节点描述（可不填）</label><textarea data-k="desc">'+esc(t.desc)+'</textarea></div>'+
-      '<label class="check"><input type="checkbox" data-k="hasProject" '+(p?"checked":"")+' onchange="toggleProj(this)"> 📁 在这个节点旁挂一个项目卡片</label>'+
-      '<div class="proj-fields" style="'+(p?"":"display:none")+'">'+
-        '<div class="field"><label>项目名称<span class="badge">卡片 + 详情页标题</span></label><input data-k="p_title" value="'+esc(p&&p.title)+'" placeholder="例如：个人作品集网站"></div>'+
-        '<div class="row2">'+
-          '<div class="field"><label>技术标签（逗号分隔）</label><input data-k="p_tags" value="'+esc(p&&p.tags)+'" placeholder="例如：HTML, CSS, JS"></div>'+
-          '<div class="field"><label>项目外链（可不填）</label><input data-k="p_link" value="'+esc(p&&p.link)+'" placeholder="https://..."></div>'+
-        '</div>'+
-        '<div class="field"><label>🎮 在线试玩 / Live Demo 演示链接<span class="badge">详情页内嵌试玩沙盒，可不填</span></label><input data-k="p_demo" value="'+esc(p&&p.demoUrl)+'" placeholder="例如：https://demo.example.com"></div>'+
-        '<div class="field"><label>卡片简介<span class="badge">显示在时间线旁的卡片上</span></label><textarea data-k="p_summary">'+esc(p&&p.summary)+'</textarea></div>'+
-        '<div class="field"><label>详细介绍<span class="badge">详情页展示，空行分段</span></label><textarea data-k="p_detail" style="min-height:100px">'+esc(p&&p.detail)+'</textarea></div>'+
-        '<div class="code-blocks-wrap">'+
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
-            '<strong>📂 代码展示板块（可添加多个）</strong>'+
-            '<button class="add-code-btn" onclick="addCodeBlock('+i+')">＋ 添加代码板块</button>'+
-          '</div>'+
-          '<div class="code-list">'+codeBlocksHtml+'</div>'+
-        '</div>'+
-      '</div>';
-    box.appendChild(div);
-  });
-}
-
-function toggleProj(cb){cb.closest(".card").querySelector(".proj-fields").style.display=cb.checked?"block":"none"}
-
-function collectAll(){
-  DATA.site.name=$("f_name").value;
-  DATA.site.heroTitle=$("f_heroTitle").value;
-  DATA.site.heroSub=$("f_heroSub").value;
-  DATA.site.resumeUrl=$("f_resumeUrl").value;
-  DATA.site.aboutSub=$("f_aboutSub").value;
-  DATA.site.about=$("f_about").value;
-
-  DATA.skills=[];
-  document.querySelectorAll("#skillsList .card").forEach(c=>{
-    DATA.skills.push({
-      cat: c.querySelector('[data-sk="cat"]').value,
-      name: c.querySelector('[data-sk="name"]').value,
-      desc: c.querySelector('[data-sk="desc"]').value
-    });
-  });
-
-  DATA.timeline=[];
-  document.querySelectorAll("#timelineList .card").forEach(card=>{
-    const g=k=>card.querySelector('[data-k="'+k+'"]').value;
-    const node={date:g("date"),title:g("title"),desc:g("desc")};
-    if(card.querySelector('[data-k="hasProject"]').checked){
-      const id=card.dataset.pid||genId();
-      card.dataset.pid=id;
-      
-      const codeBlocks = [];
-      card.querySelectorAll(".code-block-card").forEach(cbCard=>{
-        codeBlocks.push({
-          title: cbCard.querySelector('[data-cb="title"]').value,
-          lang: cbCard.querySelector('[data-cb="lang"]').value,
-          code: cbCard.querySelector('[data-cb="code"]').value
-        });
-      });
-
-      node.project={
-        id:id,
-        title:g("p_title"),
-        tags:g("p_tags"),
-        link:g("p_link"),
-        demoUrl:g("p_demo"),
-        summary:g("p_summary"),
-        detail:g("p_detail"),
-        codeBlocks: codeBlocks,
-        codeLang: codeBlocks.length ? codeBlocks[0].lang : "",
-        code: codeBlocks.length ? codeBlocks[0].code : ""
-      };
-    }
-    DATA.timeline.push(node);
-  });
-  DATA.contact={email:$("c_email").value,phone:$("c_phone").value,wechat:$("c_wechat").value,qq:$("c_qq").value,github:$("c_github").value,blog:$("c_blog").value};
-}
-
-function addTimeline(){collectAll();DATA.timeline.push({date:"",title:"",desc:""});renderTimeline()}
-function delItem(i){collectAll();if(!confirm("确定删除节点 "+(i+1)+" 吗？挂着的项目也会一起删除。"))return;DATA.timeline.splice(i,1);renderTimeline()}
-function moveItem(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.timeline.length)return;const t=DATA.timeline[i];DATA.timeline[i]=DATA.timeline[j];DATA.timeline[j]=t;renderTimeline()}
-
-function addCodeBlock(timelineIdx){
-  collectAll();
-  const proj = DATA.timeline[timelineIdx].project;
-  if(proj){
-    if(!Array.isArray(proj.codeBlocks)) proj.codeBlocks = [];
-    proj.codeBlocks.push({ title:"", lang:"", code:"" });
-  }
-  renderTimeline();
-}
-function delCodeBlock(timelineIdx, blockIdx){
-  collectAll();
-  const proj = DATA.timeline[timelineIdx].project;
-  if(proj && Array.isArray(proj.codeBlocks)){
-    proj.codeBlocks.splice(blockIdx, 1);
-  }
-  renderTimeline();
-}
-
-async function saveAll(){
-  collectAll();
-  const pwd=sessionStorage.getItem("admin_pwd");
-  try{
-    const r=await fetch("/api/data",{method:"PUT",headers:{"Content-Type":"application/json","Authorization":"Bearer "+pwd},body:JSON.stringify(DATA)});
-    const j=await r.json();
-    showMsg("saveMsg",j.ok?"✅ 保存成功！前台刷新即可看到":"❌ "+(j.error||"保存失败"),j.ok?"ok":"err");
-  }catch(e){showMsg("saveMsg","❌ 网络错误："+e.message,"err")}
-}
-
-if(sessionStorage.getItem("admin_pwd"))enter();
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+}).catch(e=>console.error(e));
 </script>
 </body>
 </html>

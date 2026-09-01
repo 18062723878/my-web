@@ -102,8 +102,16 @@ textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-hei
     <div class="tip">会在首页展示为便当盒式的技能与工具卡片。支持随时调整顺序与删除。</div>
   </div>
 
+  <!-- 新增：博客与笔记板块管理 -->
   <div class="section">
-    <h3>🕐 时间线 + 项目</h3>
+    <h3>📝 博客与技术笔记</h3>
+    <div id="postsList"></div>
+    <button class="add-btn" onclick="addPost()">＋ 添加笔记文章</button>
+    <div class="tip">在前台展示为文章卡片。可填入文章的外部阅读链接（如知乎、掘金、Notion、微信公众号等）。</div>
+  </div>
+
+  <div class="section">
+    <h3>🚀 时间线 + 项目</h3>
     <div id="timelineList"></div>
     <button class="add-btn" onclick="addTimeline()">＋ 添加时间节点</button>
     <div class="tip">勾选「挂一个项目卡片」后可添加详细图文、在线试玩 Demo 与多段代码展示。</div>
@@ -154,10 +162,11 @@ async function loadData(){
         { cat:"前端开发", name:"HTML / CSS / JavaScript", desc:"原生现代 Web 标准与响应式设计" },
         { cat:"基础设施", name:"Cloudflare Pages & KV", desc:"边缘无服务器架构部署与全栈实践" }
       ],
+      posts:Array.isArray(d.posts)?d.posts:[],
       timeline:tl,
       contact:Object.assign({email:"",phone:"",wechat:"",qq:"",github:"",blog:""},d.contact||{})
     };
-  }catch(e){DATA={site:{},skills:[],timeline:[],contact:{}}}
+  }catch(e){DATA={site:{},skills:[],posts:[],timeline:[],contact:{}}}
   renderAll();
 }
 
@@ -175,9 +184,11 @@ function renderAll(){
   $("c_github").value=DATA.contact.github||"";
   $("c_blog").value=DATA.contact.blog||"";
   renderSkills();
+  renderPosts();
   renderTimeline();
 }
 
+// 技能卡片
 function renderSkills(){
   const box=$("skillsList");box.innerHTML="";
   DATA.skills.forEach((s,i)=>{
@@ -200,6 +211,32 @@ function addSkill(){collectAll();DATA.skills.push({cat:"",name:"",desc:""});rend
 function delSkill(i){collectAll();DATA.skills.splice(i,1);renderSkills()}
 function moveSkill(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.skills.length)return;const t=DATA.skills[i];DATA.skills[i]=DATA.skills[j];DATA.skills[j]=t;renderSkills()}
 
+// 博客文章卡片
+function renderPosts(){
+  const box=$("postsList");box.innerHTML="";
+  DATA.posts.forEach((p,i)=>{
+    const div=document.createElement("div");div.className="card";
+    div.innerHTML=
+      '<div class="card-head">📝 文章 '+(i+1)+'<span class="spacer"></span>'+
+      '<button class="mini-btn" onclick="movePost('+i+',-1)">↑</button>'+
+      '<button class="mini-btn" onclick="movePost('+i+',1)">↓</button>'+
+      '<button class="mini-btn del" onclick="delPost('+i+')">删除</button></div>'+
+      '<div class="row3">'+
+        '<div class="field"><label>分类标签</label><input data-pt="tag" value="'+esc(p.tag)+'" placeholder="如：#建站心得 / #日常折腾"></div>'+
+        '<div class="field"><label>文章标题</label><input data-pt="title" value="'+esc(p.title)+'" placeholder="如：我是如何搭建个人主页的"></div>'+
+        '<div class="field"><label>发布日期</label><input data-pt="date" value="'+esc(p.date)+'" placeholder="如：2026.09"></div>'+
+      '</div>'+
+      '<div class="field"><label>文章外部阅读链接（可不填）</label><input data-pt="link" value="'+esc(p.link)+'" placeholder="如：https://juejin.cn/... 或 https://notion.site/..."></div>'+
+      '<div class="field"><label>文章简述</label><textarea data-pt="summary" placeholder="简要概括这篇文章讲了什么">'+esc(p.summary)+'</textarea></div>';
+    box.appendChild(div);
+  });
+}
+
+function addPost(){collectAll();DATA.posts.push({tag:"",title:"",date:"",link:"",summary:""});renderPosts()}
+function delPost(i){collectAll();DATA.posts.splice(i,1);renderPosts()}
+function movePost(i,dir){collectAll();const j=i+dir;if(j<0||j>=DATA.posts.length)return;const t=DATA.posts[i];DATA.posts[i]=DATA.posts[j];DATA.posts[j]=t;renderPosts()}
+
+// 时间线与项目
 function renderTimeline(){
   const box=$("timelineList");box.innerHTML="";
   DATA.timeline.forEach((t,i)=>{
@@ -231,7 +268,7 @@ function renderTimeline(){
     });
 
     div.innerHTML=
-      '<div class="card-head">🕐 节点 '+(i+1)+'<span class="spacer"></span>'+
+      '<div class="card-head">🚀 节点 '+(i+1)+'<span class="spacer"></span>'+
       '<button class="mini-btn" onclick="moveItem('+i+',-1)">↑</button>'+
       '<button class="mini-btn" onclick="moveItem('+i+',1)">↓</button>'+
       '<button class="mini-btn del" onclick="delItem('+i+')">删除</button></div>'+
@@ -272,6 +309,7 @@ function collectAll(){
   DATA.site.aboutSub=$("f_aboutSub").value;
   DATA.site.about=$("f_about").value;
 
+  // 收集技能
   DATA.skills=[];
   document.querySelectorAll("#skillsList .card").forEach(c=>{
     DATA.skills.push({
@@ -281,6 +319,19 @@ function collectAll(){
     });
   });
 
+  // 收集文章
+  DATA.posts=[];
+  document.querySelectorAll("#postsList .card").forEach(c=>{
+    DATA.posts.push({
+      tag: c.querySelector('[data-pt="tag"]').value,
+      title: c.querySelector('[data-pt="title"]').value,
+      date: c.querySelector('[data-pt="date"]').value,
+      link: c.querySelector('[data-pt="link"]').value,
+      summary: c.querySelector('[data-pt="summary"]').value
+    });
+  });
+
+  // 收集时间线
   DATA.timeline=[];
   document.querySelectorAll("#timelineList .card").forEach(card=>{
     const g=k=>card.querySelector('[data-k="'+k+'"]').value;

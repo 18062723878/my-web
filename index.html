@@ -177,19 +177,25 @@ section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-e
 }
 .about-text{font-size:20px;line-height:1.6;color:var(--color-text-secondary);max-width:680px;margin:0 auto;white-space:pre-line}
 
-/* 技能卡片 Bento Grid */
+/* 技能与博客卡片 Bento Grid */
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-element)}
 .skill-card{
   background:var(--color-bg-secondary);
   border-radius:var(--radius-card);
   padding:var(--space-element);
   box-shadow:0 4px 20px var(--card-shadow);
-  transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default);
+  text-decoration:none;
+  color:inherit;
+  display:block;
+  transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal);
 }
-.skill-card:hover{transform:translateY(-3px)}
-.skill-cat{font-size:12px;color:var(--color-accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
-.skill-name{font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:6px}
+.skill-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px var(--card-shadow)}
+.skill-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.skill-cat{font-size:12px;color:var(--color-accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.skill-date{font-size:12px;color:var(--color-text-tertiary)}
+.skill-name{font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:6px;color:var(--color-text-primary)}
 .skill-desc{font-size:14px;line-height:1.5;color:var(--color-text-secondary)}
+.skill-more{display:inline-block;margin-top:10px;font-size:13px;color:var(--color-accent);font-weight:500}
 
 /* 时间线 + 项目卡片 */
 .tl{position:relative;max-width:900px;margin:0 auto}
@@ -259,7 +265,8 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
   <nav>
     <a href="#aboutSec">简介</a>
     <a href="#skillsSec" id="navSkills">技能</a>
-    <a href="#timelineSec">经历</a>
+    <a href="#blogSec" id="navBlog">笔记</a>
+    <a href="#timelineSec" id="navTimeline">经历</a>
     <a href="#contact">联系</a>
   </nav>
 </header>
@@ -284,19 +291,27 @@ footer{text-align:center;padding:var(--space-block) var(--space-element);backgro
   </div>
 </section>
 
-<!-- 技能卡片模块 -->
+<!-- 技能与工具模块 -->
 <section id="skillsSec">
-  <div class="section-head reveal"><h2>技能与工具</h2><p>工欲善其事，必先利其器</p></div>
+  <div class="section-head reveal"><h2>🛠️ 技能与工具</h2><p>工欲善其事，必先利其器</p></div>
   <div class="skills-grid" id="skillsGrid"></div>
 </section>
 
+<!-- 新增：技术与学习笔记模块 -->
+<section id="blogSec">
+  <div class="section-head reveal"><h2>📝 技术与学习笔记</h2><p>记录平时的技术探索、折腾技巧与踩坑日常</p></div>
+  <div class="skills-grid" id="blogGrid"></div>
+</section>
+
+<!-- 经历与项目模块 -->
 <section id="timelineSec">
-  <div class="section-head reveal"><h2>我的经历</h2><p>每一个节点，都对应一个作品</p></div>
+  <div class="section-head reveal"><h2>🚀 我的经历</h2><p>每一个节点，都对应一个作品</p></div>
   <div class="tl" id="tlBox"></div>
 </section>
 
+<!-- 联系方式 -->
 <section id="contact">
-  <div class="section-head reveal"><h2>联系我</h2><p>欢迎随时找我聊聊</p></div>
+  <div class="section-head reveal"><h2>📮 联系我</h2><p>欢迎随时找我聊聊</p></div>
   <div class="contact-box" id="contactBox"></div>
 </section>
 
@@ -340,9 +355,38 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
     });
   }
 
+  // 渲染技术笔记与文章 (Posts)
+  const posts = Array.isArray(d.posts) ? d.posts.filter(p=>p.title) : [];
+  if(!posts.length){
+    $("blogSec").style.display = "none";
+    if($("navBlog")) $("navBlog").style.display = "none";
+  } else {
+    posts.forEach(p=>{
+      const hasLink = p.link && p.link.trim();
+      const card = document.createElement(hasLink ? "a" : "div");
+      card.className = "skill-card reveal";
+      if(hasLink){
+        card.href = p.link.trim();
+        card.target = "_blank";
+      }
+      card.innerHTML = 
+        '<div class="skill-top">' +
+          (p.tag ? '<span class="skill-cat">'+esc(p.tag)+'</span>' : '<span></span>') +
+          (p.date ? '<span class="skill-date">'+esc(p.date)+'</span>' : '') +
+        '</div>' +
+        '<div class="skill-name">'+esc(p.title)+'</div>' +
+        (p.summary ? '<div class="skill-desc">'+esc(p.summary)+'</div>' : '') +
+        (hasLink ? '<div class="skill-more">阅读全文 ›</div>' : '');
+      $("blogGrid").appendChild(card);
+    });
+  }
+
   // 时间线与项目
   const ts=(d.timeline||[]).filter(t=>t.title||t.date);
-  if(!ts.length)$("timelineSec").style.display="none";
+  if(!ts.length){
+    $("timelineSec").style.display="none";
+    if($("navTimeline")) $("navTimeline").style.display="none";
+  }
   ts.forEach(t=>{
     const p=t.project;
     const hasP=p&&(p.title||p.summary);
@@ -392,6 +436,7 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
     $("contactBox").appendChild(div);
   });
 
+  // 动态监听动画
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});
   document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
 }).catch(e=>console.error(e));

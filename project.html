@@ -25,10 +25,32 @@
   }
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:var(--font-text);color:var(--color-text-primary);background:var(--color-bg-primary);-webkit-font-smoothing:antialiased;transition:background-color var(--duration-fast),color var(--duration-fast)}
-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:var(--space-element);padding:0 var(--space-element);height:52px;background:var(--header-bg);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--header-border)}
+body{
+  font-family:var(--font-text);
+  color:var(--color-text-primary);
+  background:var(--color-bg-primary);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background-color var(--duration-fast),color var(--duration-fast);
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  gap:var(--space-element);
+  padding:0 var(--space-element);
+  height:52px;
+  background:var(--header-bg);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--header-border);
+}
 header .back{color:var(--color-accent);text-decoration:none;font-size:14px}
 header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
+
 .wrap{max-width:860px;margin:0 auto;padding:var(--space-section) var(--space-element) var(--space-block)}
 .d-hero{text-align:center;margin-bottom:var(--space-block)}
 .d-crumb{font-size:12px;color:var(--color-text-tertiary);margin-bottom:var(--space-inline);letter-spacing:.02em}
@@ -37,13 +59,26 @@ header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 .d-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:var(--space-element)}
 .tag{background:var(--color-bg-secondary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button)}
 .d-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:var(--space-inline)}
-.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--color-accent);color:#fff;text-decoration:none;border-radius:var(--radius-button);padding:12px 24px;font-size:15px;cursor:pointer;border:none;transition:transform var(--duration-fast) var(--ease-default),opacity var(--duration-fast)}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--color-accent);
+  color:#fff;
+  text-decoration:none;
+  border-radius:var(--radius-button);
+  padding:12px 24px;
+  font-size:15px;
+  cursor:pointer;
+  border:none;
+  transition:transform var(--duration-fast) var(--ease-default),opacity var(--duration-fast);
+}
 .btn:active{transform:scale(0.98)}
 .btn.ghost{background:transparent;color:var(--color-accent);border:1px solid var(--color-accent)}
 .btn.secondary{background:var(--color-bg-secondary);color:var(--color-text-primary)}
+
 .d-sec{margin-bottom:var(--space-block)}
 .d-sec h2{font-family:var(--font-display);font-size:28px;font-weight:600;margin-bottom:var(--space-element)}
-.d-sec h3.sub-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin:24px 0 10px;color:var(--color-text-primary)}
 .prose p{margin-bottom:var(--space-element);font-size:17px;line-height:1.6;color:var(--color-text-secondary)}
 
 /* 在线试玩沙盒 (Live Demo Box) */
@@ -56,26 +91,195 @@ header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
 .demo-link-btn{font-size:12px;color:var(--color-accent);text-decoration:none}
 .demo-frame{width:100%;height:460px;border:none;background:#ffffff;display:block}
 
-/* 代码分块展示 */
-.code-item{margin-bottom:28px}
-.code-item:last-child{margin-bottom:0}
-.codebox{border-radius:var(--radius-card);overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)}
-.code-head{display:flex;align-items:center;justify-content:space-between;background:#2d2d30;color:#9a9a9f;padding:10px 16px;font-size:13px}
-.code-head .left{display:flex;align-items:center;gap:10px}
-.code-head .b-name{color:#fff;font-weight:600}
-.code-head .b-lang{background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-size:11px}
-.copy-btn{background:#3a3a3d;color:#e5e5e7;border:none;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer}
-.copy-btn:hover{background:#4a4a4e}
-.codebox pre{background:#1e1e1e;color:#d4d4d4;padding:16px 0;overflow:auto;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace}
+/* ===================================================
+   Apple Style 代码画廊轮播模块
+   =================================================== */
+.code-gallery-section{
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+  background:#020203;
+  padding:70px 0 80px;
+  margin-top:var(--space-block);
+  margin-bottom:var(--space-block);
+  position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.gallery-head{
+  max-width:860px;
+  margin:0 auto 36px;
+  padding:0 var(--space-element);
+  text-align:center;
+}
+.gallery-head .badge-tag{
+  display:inline-block;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--color-accent);
+  margin-bottom:8px;
+}
+.gallery-head h2{
+  font-family:var(--font-display);
+  font-size:36px;
+  font-weight:700;
+  color:#FFFFFF;
+  margin-bottom:10px;
+  letter-spacing:-.015em;
+}
+.gallery-head p{
+  font-size:16px;
+  color:#86868B;
+}
+
+.gallery-viewport{
+  position:relative;
+  width:100%;
+  height:530px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+}
+
+.gallery-track{
+  display:flex;
+  gap:28px;
+  will-change:transform;
+  /* 苹果核心平滑减速刹车曲线 */
+  transition:transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 单个代码卡片 */
+.code-card{
+  flex-shrink:0;
+  width:clamp(320px, 75vw, 860px);
+  height:460px;
+  background:#161618;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,0.12);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  user-select:none;
+  opacity:0.35;
+  transform:scale(0.92);
+  cursor:pointer;
+  box-shadow:0 16px 40px rgba(0,0,0,0.5);
+  transition:
+    transform 0.85s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.4s ease,
+    box-shadow 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.code-card.active{
+  opacity:1;
+  transform:scale(1);
+  cursor:default;
+  border-color:rgba(255,255,255,0.22);
+  box-shadow:0 24px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+/* 卡片顶栏 */
+.code-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px;
+  background:rgba(255,255,255,0.03);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-shrink:0;
+}
+.code-card-head .meta{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.mac-dots{display:flex;gap:6px}
+.mac-dot{width:10px;height:10px;border-radius:50%}
+.mac-dot.red{background:#ff5f56}.mac-dot.yellow{background:#ffbd2e}.mac-dot.green{background:#27c93f}
+.code-card-title{font-size:14px;font-weight:600;color:#F5F5F7}
+.code-card-lang{
+  font-size:11px;
+  text-transform:uppercase;
+  padding:2px 8px;
+  border-radius:6px;
+  background:rgba(255,255,255,0.1);
+  color:#A1A1A6;
+  font-family:ui-monospace,sans-serif;
+}
+.card-copy-btn{
+  background:rgba(255,255,255,0.08);
+  color:#F5F5F7;
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:6px;
+  padding:5px 12px;
+  font-size:12px;
+  cursor:pointer;
+  transition:background-color 0.2s;
+}
+.card-copy-btn:hover{background:rgba(255,255,255,0.18)}
+
+/* 代码高亮主体 */
+.code-card-body{
+  flex:1;
+  overflow:auto;
+  background:#111113;
+  padding:16px 0;
+  font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
 .cl{display:flex;padding:0 16px}
 .ln{flex:0 0 40px;color:#6e6e73;text-align:right;padding-right:14px;user-select:none}
 .lc{white-space:pre}
 .tk-c{color:#6A9955}.tk-s{color:#CE9178}.tk-k{color:#569CD6}.tk-n{color:#B5CEA8}
+
+/* 底部悬浮胶囊控制条 */
+.capsule-controls{
+  position:absolute;
+  bottom:16px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 18px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:9999px;
+  z-index:10;
+  box-shadow:0 16px 36px rgba(0,0,0,0.5);
+}
+.indicator-dot{
+  width:8px;
+  height:8px;
+  border-radius:9999px;
+  background:rgba(255,255,255,0.35);
+  border:none;
+  padding:0;
+  cursor:pointer;
+  outline:none;
+  transition:width 0.5s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
+}
+.indicator-dot:hover{background:rgba(255,255,255,0.65)}
+.indicator-dot.active{
+  width:28px;
+  background:#FFFFFF;
+}
+
 .missing{text-align:center;padding:var(--space-section) 20px}
 .missing h1{font-size:40px;margin-bottom:var(--space-element)}
 .missing p{color:var(--color-text-secondary);margin-bottom:var(--space-element)}
 footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px}
-@media(max-width:734px){.d-hero h1{font-size:34px}.wrap{padding-top:var(--space-block)}.demo-frame{height:340px}}
+@media(max-width:734px){
+  .d-hero h1{font-size:34px}
+  .wrap{padding-top:var(--space-block)}
+  .demo-frame{height:340px}
+  .code-card{height:420px}
+  .gallery-viewport{height:490px}
+}
 </style>
 </head>
 <body>
@@ -124,6 +328,7 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
   const paras=(p.detail||"").split(/\n{2,}/).filter(b=>b.trim())
     .map(b=>"<p>"+esc(b).replace(/\n/g,"<br>")+"</p>").join("");
 
+  // 获取多代码板块
   let blocks = Array.isArray(p.codeBlocks) ? p.codeBlocks.filter(b=>b.code&&b.code.trim()) : [];
   if(!blocks.length && p.code && p.code.trim()){
     blocks = [{ title:"核心实现", lang: p.codeLang||"code", code: p.code }];
@@ -141,7 +346,7 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
       '<a class="btn ghost" href="/">返回首页</a>'+
     '</div></div>';
 
-  if(paras)html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
+  if(paras) html+='<div class="d-sec"><h2>项目介绍</h2><div class="prose">'+paras+'</div></div>';
 
   // 在线试玩沙盒 (Live Demo)
   if(p.demoUrl && p.demoUrl.trim()){
@@ -161,32 +366,143 @@ fetch("/api/data").then(r=>r.json()).then(d=>{
       '</div>';
   }
 
-  // 多代码板块展示
+  // 融入 Apple 居中 Peek 代码画廊
   if(blocks.length){
-    html+='<div class="d-sec"><h2>代码展示</h2>';
-    blocks.forEach((b,idx)=>{
-      const lines=b.code.replace(/\n$/,"").split("\n");
-      const body=lines.map((l,i)=>'<div class="cl"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>').join("");
+    let cardsHtml = "";
+    blocks.forEach((b, idx)=>{
+      const lines = b.code.replace(/\n$/,"").split("\n");
+      const body = lines.map((l,i)=>'<div class="cl"><span class="ln">'+(i+1)+'</span><span class="lc">'+hl(l)+'</span></div>').join("");
       const blockTitle = b.title || ("板块 " + (idx+1));
-      html+=
-        '<div class="code-item">'+
-          '<h3 class="sub-title">'+esc(blockTitle)+'</h3>'+
-          '<div class="codebox">'+
-            '<div class="code-head">'+
-              '<div class="left"><span class="b-name">'+esc(blockTitle)+'</span><span class="b-lang">'+esc(b.lang||"code")+'</span></div>'+
-              '<button class="copy-btn" onclick="copyBlock('+idx+', this)">复制代码</button>'+
-            '</div>'+
-            '<pre>'+body+'</pre>'+
-          '</div>'+
-        '</div>';
+      const langName = b.lang || "code";
+
+      cardsHtml += `
+        <article class="code-card ${idx===0 ? 'active' : ''}">
+          <div class="code-card-head">
+            <div class="meta">
+              <div class="mac-dots">
+                <span class="mac-dot red"></span>
+                <span class="mac-dot yellow"></span>
+                <span class="mac-dot green"></span>
+              </div>
+              <span class="code-card-title">${esc(blockTitle)}</span>
+              <span class="code-card-lang">${esc(langName)}</span>
+            </div>
+            <button class="card-copy-btn" onclick="copyBlock(${idx}, this)">复制代码</button>
+          </div>
+          <div class="code-card-body">
+            <pre>${body}</pre>
+          </div>
+        </article>
+      `;
     });
-    html+='</div>';
+
+    html += `
+      <section class="code-gallery-section">
+        <div class="gallery-head">
+          <span class="badge-tag">Code Architecture</span>
+          <h2>核心架构与代码展示</h2>
+          <p>左右轻点卡片边缘或通过底部胶囊快速流转</p>
+        </div>
+        <div class="gallery-viewport">
+          <div class="gallery-track" id="galleryTrack">
+            ${cardsHtml}
+          </div>
+          <nav class="capsule-controls" id="capsuleControls" aria-label="代码模块导航"></nav>
+        </div>
+      </section>
+    `;
   }
 
   $("app").innerHTML=html;
+
+  // 画廊注入 DOM 后初始化轮播交互
+  if(blocks.length){
+    initCodeGallery();
+  }
+
 }).catch(e=>{
   $("app").innerHTML='<div class="missing"><h1>⚠️ 加载失败</h1><p>'+esc(String(e))+'</p><a class="btn" href="/">返回首页</a></div>';
 });
+
+// Apple Style 画廊居中与交互控制器
+function initCodeGallery(){
+  const track = document.getElementById('galleryTrack');
+  if(!track) return;
+  const cards = Array.from(track.querySelectorAll('.code-card'));
+  const controlsContainer = document.getElementById('capsuleControls');
+  if(!cards.length || !controlsContainer) return;
+
+  controlsContainer.innerHTML = "";
+  let currentIndex = 0;
+  const CARD_GAP = 28;
+
+  // 动态创建底部胶囊指示点
+  cards.forEach((_, idx)=>{
+    const dot = document.createElement('button');
+    dot.className = 'indicator-dot' + (idx === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `跳转至板块 ${idx + 1}`);
+    dot.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      goToCard(idx);
+    });
+    controlsContainer.appendChild(dot);
+  });
+
+  const dots = Array.from(controlsContainer.querySelectorAll('.indicator-dot'));
+
+  function goToCard(index){
+    if(index < 0 || index >= cards.length) return;
+    currentIndex = index;
+
+    const viewportWidth = track.parentElement.offsetWidth;
+    const cardWidth = cards[0].offsetWidth;
+
+    // 居中偏移量运算
+    const centerOffset = (viewportWidth - cardWidth) / 2;
+    const moveDistance = index * (cardWidth + CARD_GAP);
+    const targetTransformX = centerOffset - moveDistance;
+
+    track.style.transform = `translateX(${targetTransformX}px)`;
+
+    cards.forEach((c, i)=>{
+      c.classList.toggle('active', i === index);
+    });
+
+    dots.forEach((d, i)=>{
+      d.classList.toggle('active', i === index);
+    });
+  }
+
+  // 点击 Peek 露出的上一张/下一张卡片直接平滑对齐居中
+  cards.forEach((card, idx)=>{
+    card.addEventListener('click', ()=>{
+      if(currentIndex !== idx){
+        goToCard(idx);
+      }
+    });
+  });
+
+  // 视口尺寸调整自适应
+  window.removeEventListener('resize', window._galleryResize);
+  window._galleryResize = () => goToCard(currentIndex);
+  window.addEventListener('resize', window._galleryResize);
+
+  // 键盘左右键支持
+  window.removeEventListener('keydown', window._galleryKey);
+  window._galleryKey = (e)=>{
+    if(e.key === 'ArrowLeft'){
+      goToCard(Math.max(0, currentIndex - 1));
+    } else if(e.key === 'ArrowRight'){
+      goToCard(Math.min(cards.length - 1, currentIndex + 1));
+    }
+  };
+  window.addEventListener('keydown', window._galleryKey);
+
+  // 执行初次居中计算
+  requestAnimationFrame(()=>{
+    goToCard(0);
+  });
+}
 
 function copyBlock(idx, btn){
   const code = CODE_CACHE[idx] || "";

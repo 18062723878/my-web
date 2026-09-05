@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>我的个人网站</title>
 <style>
-/* ===================================================
-   自动检测并适配系统亮色/暗色模式变量系统
-   =================================================== */
 :root {
   --color-text-primary: #1D1D1F;
   --color-text-secondary: #6E6E73;
@@ -17,18 +14,21 @@
   --color-accent: #0071E3;
   --header-bg: rgba(245, 245, 247, 0.82);
   --header-border: rgba(0, 0, 0, 0.08);
-  --card-border: 1px solid rgba(0, 0, 0, 0.07);
-  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  --card-active-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
-  --control-btn-bg: rgba(0, 0, 0, 0.06);
-  --control-btn-border: 1px solid rgba(0, 0, 0, 0.08);
-  --control-btn-color: #1D1D1F;
-  --control-btn-hover: rgba(0, 0, 0, 0.12);
+  --card-border: 1px solid rgba(0, 0, 0, 0.06);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --card-hover-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  --dot-border: #FFFFFF;
+
+  /* 悬浮控制胶囊与箭头 - 亮色 */
   --capsule-bg: rgba(0, 0, 0, 0.06);
   --capsule-border: 1px solid rgba(0, 0, 0, 0.08);
-  --dot-bg: rgba(0, 0, 0, 0.22);
+  --dot-bg: rgba(0, 0, 0, 0.25);
   --dot-active: #1D1D1F;
+  --arrow-bg: rgba(255, 255, 255, 0.85);
+  --arrow-border: 1px solid rgba(0, 0, 0, 0.08);
+  --arrow-color: #1D1D1F;
 
+  /* Hero 舞台参数 */
   --hero-card-radius: 28px;
   --hero-card-margin: 24px auto;
   --hero-card-shadow: 0 20px 50px rgba(0,0,0,.22), 0 0 40px rgba(0,113,227,.12);
@@ -36,8 +36,9 @@
 
   --font-display: "SF Pro Display", "PingFang SC", -apple-system, sans-serif;
   --font-text: "SF Pro Text", "PingFang SC", -apple-system, sans-serif;
-  --max-width: 1040px;
-  --radius-card: 24px;
+
+  --max-width: 980px;
+  --radius-card: 22px;
   --radius-pill: 9999px;
   --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -52,17 +53,19 @@
     --color-accent: #2997FF;
     --header-bg: rgba(0, 0, 0, 0.75);
     --header-border: rgba(255, 255, 255, 0.1);
-    --card-border: 1px solid rgba(255, 255, 255, 0.12);
+    --card-border: 1px solid rgba(255, 255, 255, 0.1);
     --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-    --card-active-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
-    --control-btn-bg: rgba(255, 255, 255, 0.12);
-    --control-btn-border: 1px solid rgba(255, 255, 255, 0.18);
-    --control-btn-color: #F5F5F7;
-    --control-btn-hover: rgba(255, 255, 255, 0.25);
+    --card-hover-shadow: 0 20px 48px rgba(0, 0, 0, 0.85);
+    --dot-border: #000000;
+
+    /* 悬浮控制胶囊与箭头 - 暗色同色系 */
     --capsule-bg: rgba(255, 255, 255, 0.12);
     --capsule-border: 1px solid rgba(255, 255, 255, 0.18);
     --dot-bg: rgba(255, 255, 255, 0.35);
     --dot-active: #FFFFFF;
+    --arrow-bg: rgba(255, 255, 255, 0.12);
+    --arrow-border: 1px solid rgba(255, 255, 255, 0.18);
+    --arrow-color: #FFFFFF;
 
     --hero-card-radius: 0px;
     --hero-card-margin: 0 auto;
@@ -82,7 +85,7 @@ body {
   transition: background-color 400ms ease, color 400ms ease;
 }
 
-/* 顶部磨砂导航 */
+/* 顶部导航 */
 header {
   position: sticky;
   top: 0;
@@ -107,15 +110,9 @@ header nav a {
 }
 header nav a:hover { color: var(--color-text-primary); }
 
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-/* 1. 恢复 Michael 背景与 Apple Stage 剧场卡片 */
+/* 1. Michael 剧场卡片 (Hero) */
 .hero-wrapper {
-  padding: 0 20px;
+  padding: 0 24px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -133,7 +130,7 @@ header nav a:hover { color: var(--color-text-primary); }
   box-shadow: var(--hero-card-shadow);
   border: var(--hero-card-border);
   overflow: hidden;
-  transition: all 400ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: all 400ms ease;
 }
 .hero-bg {
   position: absolute;
@@ -165,7 +162,7 @@ header nav a:hover { color: var(--color-text-primary); }
   line-height: 1.1;
   font-weight: 700;
   letter-spacing: -.025em;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
   color: #FFFFFF !important;
   text-shadow: 0 4px 28px rgba(0,0,0,0.9);
 }
@@ -194,71 +191,107 @@ header nav a:hover { color: var(--color-text-primary); }
   padding: 12px 26px;
   font-size: 15px;
   font-weight: 500;
+  cursor: pointer;
+  border: none;
   box-shadow: 0 4px 20px rgba(0,113,227,0.4);
   transition: transform 200ms ease, opacity 200ms ease;
 }
-.btn:hover { opacity: 0.92; }
-.btn:active { transform: scale(0.98); }
+.btn:hover { opacity: .92; }
+.btn:active { transform: scale(.98); }
 
-/* 通用标题 */
-.sec-head {
+/* 页面通用段落 */
+section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+.section-head {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
-.sec-tag {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-accent);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.sec-title {
+.section-head h2 {
   font-family: var(--font-display);
   font-size: 38px;
   font-weight: 700;
-  letter-spacing: -0.015em;
-  margin-bottom: 8px;
+  letter-spacing: -.015em;
+  margin-bottom: 10px;
 }
-.sec-desc {
+.section-head p {
   font-size: 18px;
   color: var(--color-text-secondary);
 }
 
 /* 2. 个人简介 */
-.about-section { padding: 40px 0; }
 .about-card {
   background: var(--color-bg-secondary);
   border: var(--card-border);
   border-radius: var(--radius-card);
-  padding: 48px 36px;
+  padding: 48px 32px;
+  max-width: 840px;
+  margin: 0 auto;
   text-align: center;
   box-shadow: var(--card-shadow);
-  transition: background-color 400ms ease, border-color 400ms ease;
+  transition: background-color 400ms ease;
 }
 .about-text {
-  font-size: 21px;
+  font-size: 20px;
   line-height: 1.6;
   color: var(--color-text-secondary);
-  max-width: 720px;
+  max-width: 680px;
   margin: 0 auto;
   white-space: pre-line;
 }
 
+/* 3. 技能与工具 Bento Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+.skill-card {
+  background: var(--color-bg-secondary);
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+  transition: transform 200ms ease, box-shadow 400ms ease, background-color 400ms ease;
+}
+.skill-card:hover { transform: translateY(-4px); box-shadow: var(--card-hover-shadow); }
+.skill-cat { font-size: 12px; color: var(--color-accent); font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+.skill-name { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.skill-desc { font-size: 14px; line-height: 1.5; color: var(--color-text-secondary); }
+
 /* ===================================================
-   3. 技术与学习笔记（左右卡片画廊轮播 + 左右切换箭头）
+   4. 技术与学习笔记：Apple 居中画廊 + 箭头控制器
    =================================================== */
-.notes-gallery-section {
-  padding: 50px 0 70px;
+section#blogSec {
+  max-width: 100vw !important;
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  padding: 80px 0 !important;
   position: relative;
   overflow: hidden;
 }
-.gallery-container {
-  position: relative;
-  width: 100%;
-  margin: 0 auto;
+.blog-head-inner {
+  max-width: var(--max-width);
+  margin: 0 auto 36px;
+  padding: 0 24px;
+  text-align: center;
 }
-.gallery-viewport {
+.blog-head-inner h2 {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  margin-bottom: 10px;
+}
+.blog-head-inner p {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+}
+
+.blog-viewport {
   position: relative;
   width: 100%;
   height: 480px;
@@ -266,22 +299,22 @@ header nav a:hover { color: var(--color-text-primary); }
   display: flex;
   align-items: center;
 }
-.gallery-track {
+.blog-track {
   display: flex;
   gap: 28px;
   will-change: transform;
   transition: transform 0.85s var(--ease-apple);
 }
 
-/* 卡片本体：自动与背景同色自适应 */
+/* 博客大卡片 */
 .blog-card {
   flex-shrink: 0;
   width: clamp(320px, 72vw, 840px);
-  height: 390px;
+  height: 380px;
   background: var(--color-bg-secondary);
   border: var(--card-border);
   border-radius: 30px;
-  padding: 38px 42px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -289,31 +322,28 @@ header nav a:hover { color: var(--color-text-primary); }
   cursor: pointer;
   opacity: 0.35;
   transform: scale(0.92);
-  color: var(--color-text-primary);
   box-shadow: var(--card-shadow);
   transition: 
     transform 0.85s var(--ease-apple),
     opacity 0.85s var(--ease-apple),
-    background-color 400ms ease,
-    border-color 400ms ease,
-    box-shadow 0.85s var(--ease-apple);
+    box-shadow 0.85s var(--ease-apple),
+    background-color 400ms ease;
 }
 .blog-card.active {
   opacity: 1;
   transform: scale(1);
   cursor: default;
-  box-shadow: var(--card-active-shadow);
+  box-shadow: var(--card-hover-shadow);
 }
 .blog-card-top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 .blog-card-tag {
   font-size: 13px;
   font-weight: 700;
   color: var(--color-accent);
-  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 .blog-card-date {
@@ -321,21 +351,21 @@ header nav a:hover { color: var(--color-text-primary); }
   color: var(--color-text-tertiary);
   font-weight: 500;
 }
-.blog-card-main { margin: auto 0; }
+.blog-card-body {
+  margin: auto 0;
+}
 .blog-card-title {
   font-family: var(--font-display);
   font-size: 30px;
   font-weight: 700;
   line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
+  letter-spacing: -.02em;
   margin-bottom: 12px;
 }
 .blog-card-desc {
   font-size: 16px;
   line-height: 1.55;
   color: var(--color-text-secondary);
-  max-width: 660px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -343,62 +373,62 @@ header nav a:hover { color: var(--color-text-primary); }
 }
 .blog-card-bottom {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 .blog-card-link {
-  display: inline-flex;
-  align-items: center;
   font-size: 15px;
   font-weight: 600;
   color: var(--color-accent);
   text-decoration: none;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.2s;
 }
-.blog-card-link:hover { opacity: 0.8; transform: translateX(3px); }
-.blog-card-link.disabled { color: var(--color-text-tertiary); font-weight: 400; cursor: default; }
+.blog-card-link:hover { transform: translateX(3px); }
+.blog-card-link.disabled { color: var(--color-text-tertiary); cursor: default; }
 
-/* 左右切换箭头按钮 (Apple 悬浮圆形微光设计) */
-.gallery-nav-btn {
+/* 左右轻量切换箭头 */
+.gallery-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: var(--control-btn-bg);
+  background: var(--arrow-bg);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: var(--control-btn-border);
-  color: var(--control-btn-color);
+  border: var(--arrow-border);
+  color: var(--arrow-color);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 15;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  transition: all 250ms var(--ease-apple);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s var(--ease-apple), background-color 0.25s;
 }
-.gallery-nav-btn:hover:not(:disabled) {
-  background: var(--control-btn-hover);
-  transform: translateY(-50%) scale(1.08);
+.gallery-arrow:hover {
+  transform: translateY(-50%) scale(1.1);
 }
-.gallery-nav-btn:active:not(:disabled) {
+.gallery-arrow:active {
   transform: translateY(-50%) scale(0.95);
 }
-.gallery-nav-btn.disabled,
-.gallery-nav-btn:disabled {
-  opacity: 0.2;
-  cursor: not-allowed;
-  pointer-events: none;
+.gallery-arrow.prev { left: 28px; }
+.gallery-arrow.next { right: 28px; }
+.gallery-arrow svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-.gallery-nav-btn.prev { left: 24px; }
-.gallery-nav-btn.next { right: 24px; }
 
-/* 悬浮毛玻璃胶囊控制条 */
+/* 底部悬浮毛玻璃胶囊控制条 */
 .capsule-controls {
   position: absolute;
-  bottom: 14px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -411,8 +441,7 @@ header nav a:hover { color: var(--color-text-primary); }
   border: var(--capsule-border);
   border-radius: var(--radius-pill);
   z-index: 10;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
-  transition: background-color 400ms, border-color 400ms;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
 }
 .indicator-dot {
   width: 8px;
@@ -429,45 +458,8 @@ header nav a:hover { color: var(--color-text-primary); }
   background: var(--dot-active);
 }
 
-/* 4. 技能与工具 Bento Grid */
-.skills-section { padding: 50px 0; }
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-.skill-card {
-  background: var(--color-bg-secondary);
-  border: var(--card-border);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: var(--card-shadow);
-  transition: transform 200ms ease, box-shadow 200ms ease, background-color 400ms;
-}
-.skill-card:hover { transform: translateY(-3px); }
-.skill-cat {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-accent);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.skill-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.skill-desc {
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--color-text-secondary);
-}
-
-/* 5. 经历与项目卡片 */
-.timeline-section { padding: 50px 0; }
-.tl { position: relative; max-width: 920px; margin: 0 auto; }
+/* 5. 时间线 + 项目卡片 */
+.tl { position: relative; max-width: 900px; margin: 0 auto; }
 .tl::before {
   content: "";
   position: absolute;
@@ -481,9 +473,9 @@ header nav a:hover { color: var(--color-text-primary); }
   position: relative;
   padding-left: 44px;
   display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1.2fr);
-  gap: 24px 50px;
-  padding-bottom: 50px;
+  grid-template-columns: minmax(0,1fr) minmax(0,1.15fr);
+  gap: 24px 64px;
+  padding-bottom: 64px;
 }
 .tl-item.solo { grid-template-columns: 1fr; }
 .tl-item:last-child { padding-bottom: 0; }
@@ -495,26 +487,12 @@ header nav a:hover { color: var(--color-text-primary); }
   height: 16px;
   border-radius: 50%;
   background: var(--color-accent);
-  box-shadow: 0 0 0 3px var(--color-bg-primary);
+  border: 3px solid var(--dot-border);
+  box-shadow: 0 0 0 2px var(--color-accent);
 }
-.tl-date {
-  font-size: 12px;
-  color: var(--color-text-tertiary);
-  margin-bottom: 4px;
-  letter-spacing: .02em;
-  font-weight: 600;
-}
-.tl-left h3 {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-.tl-left p {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--color-text-secondary);
-}
+.tl-date { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 4px; }
+.tl-left h3 { font-family: var(--font-display); font-size: 24px; font-weight: 600; margin-bottom: 6px; }
+.tl-left p { font-size: 16px; line-height: 1.5; color: var(--color-text-secondary); }
 .p-card {
   display: block;
   background: var(--color-bg-secondary);
@@ -524,76 +502,41 @@ header nav a:hover { color: var(--color-text-primary); }
   text-decoration: none;
   color: inherit;
   box-shadow: var(--card-shadow);
-  transition: transform 300ms var(--ease-apple), box-shadow 300ms var(--ease-apple), background-color 400ms;
+  transition: transform 300ms var(--ease-apple), box-shadow 300ms var(--ease-apple);
 }
-.p-card:hover {
-  transform: scale(1.02);
-  box-shadow: var(--card-active-shadow);
-}
-.p-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-.p-top h4 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-}
-.p-more {
-  color: var(--color-accent);
-  font-size: 14px;
-  white-space: nowrap;
-}
-.p-desc {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--color-text-secondary);
-}
-.p-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
-}
-.tag {
-  background: var(--color-bg-primary);
-  color: var(--color-accent);
-  font-size: 12px;
-  padding: 4px 12px;
-  border-radius: var(--radius-pill);
-}
+.p-card:hover { transform: scale(1.02); box-shadow: var(--card-hover-shadow); }
+.p-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.p-top h4 { font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+.p-more { color: var(--color-accent); font-size: 14px; }
+.p-desc { font-size: 14px; line-height: 1.5; color: var(--color-text-secondary); }
+.p-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.tag { background: var(--color-bg-primary); color: var(--color-accent); font-size: 12px; padding: 4px 10px; border-radius: var(--radius-pill); }
 
-/* 6. 联系我 */
-.contact-section { padding: 50px 0 80px; }
+/* 6. 联系卡片 */
 .contact-box {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
-  max-width: 860px;
+  max-width: 840px;
   margin: 0 auto;
 }
 .c-item {
   background: var(--color-bg-secondary);
   border: var(--card-border);
-  border-radius: 18px;
-  padding: 18px 20px;
+  border-radius: var(--radius-card);
+  padding: 20px;
   text-align: center;
   box-shadow: var(--card-shadow);
-  transition: transform 200ms ease, background-color 400ms;
+  transition: transform 200ms ease;
 }
-.c-item:hover { transform: translateY(-2px); }
-.c-item .c-label { display: block; font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 4px; }
-.c-item a { display: block; color: var(--color-text-primary); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-item:hover { transform: translateY(-3px); }
+.c-item .c-label { display: block; font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 6px; }
+.c-item a { color: var(--color-text-primary); text-decoration: none; word-break: break-all; }
 .c-item a:hover { color: var(--color-accent); }
-.c-item span.c-val { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* 页脚署名更新 */
 footer {
   text-align: center;
-  padding: 40px 24px;
+  padding: 48px 24px;
   background: var(--color-bg-secondary);
   color: var(--color-text-tertiary);
   font-size: 13px;
@@ -603,20 +546,23 @@ footer {
 
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(20px);
   transition: opacity 600ms var(--ease-apple), transform 600ms var(--ease-apple);
 }
-.reveal.in { opacity: 1; transform: none; }
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .hero-wrapper { padding: 0 12px; }
-  .hero { min-height: 65vh; padding: 60px 16px; border-radius: 20px; }
+  .hero { min-height: 68vh; padding: 60px 20px; border-radius: 20px; margin: 12px auto; }
   .hero h1 { font-size: 34px; }
   .tl-item { grid-template-columns: 1fr; }
-  .blog-card { height: 350px; padding: 26px 20px; border-radius: 24px; }
+  .gallery-arrow { display: none; } /* 移动端靠左右手势滑动手感更佳 */
+  .blog-card { height: 350px; padding: 24px 20px; border-radius: 22px; }
   .blog-card-title { font-size: 22px; }
-  .gallery-viewport { height: 430px; }
-  .gallery-nav-btn { display: none; } /* 移动端靠滑动手势与胶囊 */
+  .blog-viewport { height: 420px; }
 }
 </style>
 </head>
@@ -626,20 +572,20 @@ footer {
   <span class="logo" id="siteName">我的个人网站</span>
   <nav>
     <a href="#aboutSec">简介</a>
-    <a href="#notesSec">笔记</a>
     <a href="#skillsSec">技能</a>
+    <a href="#blogSec">笔记</a>
     <a href="#timelineSec">经历</a>
-    <a href="#contactSec">联系</a>
+    <a href="#contact">联系</a>
   </nav>
 </header>
 
-<!-- 1. Hero 剧场（Michael 经典封面背景） -->
+<!-- 1. Hero 剧场（保留 Michael 经典背景图） -->
 <div class="hero-wrapper">
   <div class="hero">
     <div class="hero-bg"></div>
     <div class="hero-inner">
-      <h1 id="heroTitle">你好，我是开发者</h1>
-      <p id="heroSub">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品。</p>
+      <h1 id="heroTitle"></h1>
+      <p id="heroSub"></p>
       <div class="hero-actions" id="heroActions" style="display:none">
         <a class="btn" id="resumeBtn" href="#" target="_blank">预览 / 下载简历</a>
       </div>
@@ -647,83 +593,70 @@ footer {
   </div>
 </div>
 
-<!-- 2. 个人简白 -->
-<section class="about-section" id="aboutSec">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="sec-tag">About Me</div>
-      <h2 class="sec-title">个人简介</h2>
-      <p class="sec-desc" id="aboutSub">保持好奇，专注创造价值</p>
-    </div>
-    <div class="about-card reveal">
-      <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
-    </div>
+<!-- 2. 个人简介 -->
+<section id="aboutSec">
+  <div class="section-head reveal">
+    <h2>个人简介</h2>
+    <p id="aboutSub">保持好奇，专注创造价值</p>
+  </div>
+  <div class="about-card reveal">
+    <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
   </div>
 </section>
 
-<!-- 3. 技术与学习笔记（左右卡片画廊轮播 + 左右切换箭头） -->
-<section class="notes-gallery-section" id="notesSec">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="sec-tag">Notes & Articles</div>
-      <h2 class="sec-title">技术与学习笔记</h2>
-      <p class="sec-desc">记录平时的技术探索、折腾技巧与踩坑日常</p>
-    </div>
+<!-- 3. 技能与工具模块 -->
+<section id="skillsSec">
+  <div class="section-head reveal">
+    <h2>技能与工具</h2>
+    <p>工欲善其事，必先利其器</p>
   </div>
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
 
-  <div class="gallery-container">
-    <!-- 左右翻页微光箭头 -->
-    <button class="gallery-nav-btn prev" id="notesPrevBtn" aria-label="上一篇">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+<!-- 4. 技术与学习笔记（居中卡片画廊 + 箭头控制） -->
+<section id="blogSec">
+  <div class="blog-head-inner reveal">
+    <h2>技术与学习笔记</h2>
+    <p>记录平时的技术探索、折腾技巧与踩坑日常</p>
+  </div>
+  <div class="blog-viewport">
+    <!-- 左箭头 -->
+    <button class="gallery-arrow prev" id="blogPrevBtn" aria-label="上一篇">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
     </button>
-    <button class="gallery-nav-btn next" id="notesNextBtn" aria-label="下一篇">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    
+    <!-- 卡片轨道 -->
+    <div class="blog-track" id="blogTrack"></div>
+    
+    <!-- 右箭头 -->
+    <button class="gallery-arrow next" id="blogNextBtn" aria-label="下一篇">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </button>
 
-    <div class="gallery-viewport">
-      <div class="gallery-track" id="notesTrack"></div>
-      <nav class="capsule-controls" id="notesCapsuleControls" aria-label="技术笔记导航"></nav>
-    </div>
+    <!-- 底部悬浮胶囊 -->
+    <nav class="capsule-controls" id="blogCapsuleControls" aria-label="技术笔记导航"></nav>
   </div>
 </section>
 
-<!-- 4. 技能与工具 Bento Grid -->
-<section class="skills-section" id="skillsSec">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="sec-tag">Toolkit</div>
-      <h2 class="sec-title">技能与工具</h2>
-      <p class="sec-desc">工欲善其事，必先利其器</p>
-    </div>
-    <div class="skills-grid" id="skillsGrid"></div>
+<!-- 5. 经历与项目模块 -->
+<section id="timelineSec">
+  <div class="section-head reveal">
+    <h2>我的经历</h2>
+    <p>每一个节点，都对应一个作品</p>
   </div>
+  <div class="tl" id="tlBox"></div>
 </section>
 
-<!-- 5. 经历与项目 -->
-<section class="timeline-section" id="timelineSec">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="sec-tag">Milestones</div>
-      <h2 class="sec-title">我的经历</h2>
-      <p class="sec-desc">每一个节点，都对应一个作品</p>
-    </div>
-    <div class="tl" id="tlBox"></div>
+<!-- 6. 联系方式 -->
+<section id="contact">
+  <div class="section-head reveal">
+    <h2>联系我</h2>
+    <p>欢迎随时找我聊聊</p>
   </div>
+  <div class="contact-box" id="contactBox"></div>
 </section>
 
-<!-- 6. 联系我 -->
-<section class="contact-section" id="contactSec">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="sec-tag">Contact</div>
-      <h2 class="sec-title">保持联系</h2>
-      <p class="sec-desc">欢迎随时找我聊聊</p>
-    </div>
-    <div class="contact-box" id="contactBox"></div>
-  </div>
-</section>
-
-<!-- 7. 页脚更新 -->
+<!-- 7. 页脚 -->
 <footer>© <span id="year"></span> · Designed by Michael</footer>
 
 <script>
@@ -731,69 +664,59 @@ const $ = id => document.getElementById(id);
 function esc(s){ return (s == null ? "" : String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 $("year").textContent = new Date().getFullYear();
 
-// 默认预设笔记（用于在后台数据尚未拉取或为空时的无缝兜底）
+// 默认兜底展示数据
 const DEFAULT_POSTS = [
   {
     tag: "#建站心得",
     date: "2026.09",
     title: "零服务器成本：用 Cloudflare Pages 与 KV 搭建动态个人主页",
-    summary: "利用边缘网络托管静态前端，配合 Workers 与 KV 键值存储实现极简高效的后台内容持久化方案。",
+    summary: "利用边缘网络托管静态前端，配合 Workers 与 KV 键值存储实现轻量数据持久化与后台鉴权管理，兼顾优雅交互与极简架构。",
     link: ""
   },
   {
     tag: "#前端动效",
     date: "2026.08",
-    title: "纯原生实现：仿 Apple 官网减速刹车居中画廊与毛玻璃条",
-    summary: "拆解苹果官网的减速刹车缓动曲线与视口偏移计算逻辑。不依赖复杂第三方库，利用纯原生 CSS 与 JS 打造轮播交互体验。",
+    title: "纯原生实现：仿 Apple 官网居中卡片画廊与毛玻璃胶囊条",
+    summary: "深入拆解苹果官网的减速刹车缓动曲线与视口偏移计算逻辑。不依赖复杂第三方库，利用纯原生 CSS 与 JS 打造轮播交互体验。",
     link: ""
   },
   {
     tag: "#学习笔记",
     date: "2026.07",
     title: "大一新生自学 C 语言：从控制流到指针内存初探",
-    summary: "整理 C 语言核心语法的学习心得与基础算法练习。从标准输入输出缓冲区清洗，到指针变量与数组内存布局的思考。",
+    summary: "整理 C 语言核心语法的学习心得与基础算法练习。从标准输入输出缓冲区清洗、函数栈设计，到指针变量与数组内存布局，记录由浅入深夯实计算机底层素养的思考过程。",
     link: ""
   }
 ];
 
-// 请求后端数据（附带时间戳防缓存）
 fetch("/api/data?_t=" + Date.now(), { cache: "no-store" })
   .then(r => r.json())
   .then(d => {
     const site = d.site || {};
     if(site.name){ document.title = site.name; $("siteName").textContent = site.name; }
-    if(site.heroTitle) $("heroTitle").textContent = site.heroTitle;
-    if(site.heroSub) $("heroSub").textContent = site.heroSub;
-    if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
-    if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
+    $("heroTitle").textContent = site.heroTitle || "你好，我是开发者";
+    $("heroSub").textContent = site.heroSub || "欢迎来到我的个人网站";
 
-    // 简历按钮
     if(site.resumeUrl && site.resumeUrl.trim()){
       $("resumeBtn").href = site.resumeUrl.trim();
       $("heroActions").style.display = "flex";
     }
 
-    // 1. 渲染技术笔记（左右画廊）
-    const rawPosts = Array.isArray(d.posts) ? d.posts : [];
-    let validPosts = rawPosts.filter(p => p && (
-      (p.title && String(p.title).trim()) || 
-      (p.summary && String(p.summary).trim()) || 
-      (p.tag && String(p.tag).trim())
-    ));
-    renderNotesGallery(validPosts.length ? validPosts : DEFAULT_POSTS);
+    if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
+    if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
 
-    // 2. 渲染技能与工具 (Bento Grid)
+    // 渲染技能卡片
     const skills = Array.isArray(d.skills) ? d.skills.filter(s => s.name || s.cat) : [];
-    const skillsGrid = $("skillsGrid");
-    skillsGrid.innerHTML = "";
     if(!skills.length){
       $("skillsSec").style.display = "none";
     } else {
+      const skillsGrid = $("skillsGrid");
+      skillsGrid.innerHTML = "";
       skills.forEach(s => {
         const div = document.createElement("div");
         div.className = "skill-card reveal";
         div.innerHTML = `
-          <div class="skill-cat">${esc(s.cat || "SKILL")}</div>
+          <div class="skill-cat">${esc(s.cat || "技能")}</div>
           <div class="skill-name">${esc(s.name)}</div>
           <div class="skill-desc">${esc(s.desc || "")}</div>
         `;
@@ -801,14 +724,23 @@ fetch("/api/data?_t=" + Date.now(), { cache: "no-store" })
       });
     }
 
-    // 3. 渲染经历时间线与挂载的项目卡片
-    const timeline = (d.timeline || []).filter(t => t.title || t.date);
-    const tlBox = $("tlBox");
-    tlBox.innerHTML = "";
-    if(!timeline.length){
+    // 渲染技术笔记（画廊）
+    const rawPosts = Array.isArray(d.posts) ? d.posts : [];
+    let validPosts = rawPosts.filter(p => p && (
+      (p.title && String(p.title).trim()) || 
+      (p.summary && String(p.summary).trim()) || 
+      (p.tag && String(p.tag).trim())
+    ));
+    renderBlogGallery(validPosts.length ? validPosts : DEFAULT_POSTS);
+
+    // 渲染时间线与项目卡片（联动 project.html）
+    const ts = (d.timeline || []).filter(t => t.title || t.date);
+    if(!ts.length){
       $("timelineSec").style.display = "none";
     } else {
-      timeline.forEach(t => {
+      const tlBox = $("tlBox");
+      tlBox.innerHTML = "";
+      ts.forEach(t => {
         const p = t.project;
         const hasP = p && (p.title || p.summary);
         const item = document.createElement("div");
@@ -819,11 +751,8 @@ fetch("/api/data?_t=" + Date.now(), { cache: "no-store" })
             .map(x => `<span class="tag">${esc(x)}</span>`).join("");
           right = `
             <a class="p-card" href="project.html?id=${encodeURIComponent(p.id || "")}">
-              <div class="p-top">
-                <h4>${esc(p.title)}</h4>
-                <span class="p-more">查看详情 ›</span>
-              </div>
-              <p class="p-desc">${esc(p.summary)}</p>
+              <div class="p-top"><h4>${esc(p.title)}</h4><span class="p-more">查看详情 ›</span></div>
+              <p class="p-desc">${esc(p.summary || "")}</p>
               ${tags ? `<div class="p-tags">${tags}</div>` : ""}
             </a>
           `;
@@ -841,7 +770,7 @@ fetch("/api/data?_t=" + Date.now(), { cache: "no-store" })
       });
     }
 
-    // 4. 渲染联系方式
+    // 渲染联系方式
     const c = d.contact || {};
     const items = [];
     if(c.email) items.push(["邮箱", c.email, "mailto:" + c.email]);
@@ -849,53 +778,42 @@ fetch("/api/data?_t=" + Date.now(), { cache: "no-store" })
     if(c.wechat) items.push(["微信", c.wechat, null]);
     if(c.qq) items.push(["QQ", c.qq, null]);
     if(c.github){
-      let ghUrl = c.github.trim();
-      if(!ghUrl.startsWith("http")) ghUrl = "https://" + ghUrl;
-      let ghText = c.github.trim().match(/github\.com\/([^\/\s?#]+)/i);
-      items.push(["GitHub", ghText && ghText[1] ? "@" + ghText[1] : c.github.trim().replace(/^https?:\/\//i, ""), ghUrl]);
+      let gh = c.github.trim();
+      items.push(["GitHub", gh.replace(/^https?:\/\//i, ""), gh.startsWith("http") ? gh : "https://" + gh]);
     }
     if(c.blog){
-      let bUrl = c.blog.trim();
-      if(!bUrl.startsWith("http")) bUrl = "https://" + bUrl;
-      items.push(["博客", c.blog.trim().replace(/^https?:\/\//i, ""), bUrl]);
-    }
-    const contactBox = $("contactBox");
-    contactBox.innerHTML = "";
-    if(!items.length){
-      $("contactSec").style.display = "none";
-    } else {
-      items.forEach(it => {
-        const div = document.createElement("div");
-        div.className = "c-item reveal";
-        div.innerHTML = `
-          <span class="c-label">${esc(it[0])}</span>
-          ${it[2] ? `<a href="${esc(it[2])}" target="_blank" title="${esc(it[1])}">${esc(it[1])}</a>` : `<span class="c-val">${esc(it[1])}</span>`}
-        `;
-        contactBox.appendChild(div);
-      });
+      let bg = c.blog.trim();
+      items.push(["博客", bg.replace(/^https?:\/\//i, ""), bg.startsWith("http") ? bg : "https://" + bg]);
     }
 
-    // 渐现动画监听
+    const contactBox = $("contactBox");
+    contactBox.innerHTML = "";
+    items.forEach(it => {
+      const div = document.createElement("div");
+      div.className = "c-item reveal";
+      div.innerHTML = `<span class="c-label">${esc(it[0])}</span>` + 
+        (it[2] ? `<a href="${esc(it[2])}" target="_blank">${esc(it[1])}</a>` : `<span>${esc(it[1])}</span>`);
+      contactBox.appendChild(div);
+    });
+
     const io = new IntersectionObserver(es => {
-      es.forEach(e => {
-        if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.1 });
+      es.forEach(e => { if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
     document.querySelectorAll(".reveal").forEach(el => io.observe(el));
   })
   .catch(e => {
-    console.error("API 数据加载失败，已启用默认预设展示", e);
-    renderNotesGallery(DEFAULT_POSTS);
+    console.error(e);
+    renderBlogGallery(DEFAULT_POSTS);
   });
 
-// 驱动技术与学习笔记 Apple 画廊
-function renderNotesGallery(posts){
-  const track = $("notesTrack");
-  const controls = $("notesCapsuleControls");
-  const prevBtn = $("notesPrevBtn");
-  const nextBtn = $("notesNextBtn");
-
+// 渲染居中画廊与双向交互控制
+function renderBlogGallery(posts){
+  const track = $("blogTrack");
+  const controls = $("blogCapsuleControls");
+  const prevBtn = $("blogPrevBtn");
+  const nextBtn = $("blogNextBtn");
   if(!track || !controls) return;
+
   track.innerHTML = "";
   controls.innerHTML = "";
 
@@ -904,27 +822,28 @@ function renderNotesGallery(posts){
     const card = document.createElement("article");
     card.className = "blog-card" + (idx === 0 ? " active" : "");
 
-    // 智能标题容错：若标题漏填，提取简述前段，拒绝生硬的“未命名笔记”
-    let title = (p.title && String(p.title).trim()) || "";
-    let summary = (p.summary && String(p.summary).trim()) || "";
+    // 智能标题填充：避免留空出现“未命名笔记”
+    let title = (p.title && p.title.trim()) || "";
+    let summary = (p.summary && p.summary.trim()) || "";
     if(!title && summary){
-      title = summary.length > 36 ? summary.slice(0, 36) + "..." : summary;
-    } else if(!title){
-      title = "技术与探索笔记";
+      title = summary;
+      summary = "";
+    } else if(!title && !summary){
+      title = "技术与学习笔记";
     }
 
     const linkHtml = hasLink 
       ? `<a class="blog-card-link" href="${esc(p.link.trim())}" target="_blank" onclick="event.stopPropagation()">阅读全文 ›</a>`
-      : `<span class="blog-card-link disabled">站内记录</span>`;
+      : `<span class="blog-card-link disabled">站内笔记</span>`;
 
     card.innerHTML = `
       <div class="blog-card-top">
         <span class="blog-card-tag">${esc(p.tag || "#技术笔记")}</span>
         <span class="blog-card-date">${esc(p.date || "")}</span>
       </div>
-      <div class="blog-card-main">
+      <div class="blog-card-body">
         <h3 class="blog-card-title">${esc(title)}</h3>
-        <p class="blog-card-desc">${esc(summary || "暂无描述，可在后台直接添加文章简述。")}</p>
+        <p class="blog-card-desc">${esc(summary || "暂无简要介绍，可随时在管理后台中补充。")}</p>
       </div>
       <div class="blog-card-bottom">
         ${linkHtml}
@@ -936,67 +855,48 @@ function renderNotesGallery(posts){
 
   const cards = Array.from(track.querySelectorAll(".blog-card"));
   let currentIndex = 0;
-  const CARD_GAP = 28;
 
-  // 生成底部胶囊指示条
-  if(cards.length <= 1){
-    controls.style.display = "none";
-    if(prevBtn) prevBtn.style.display = "none";
-    if(nextBtn) nextBtn.style.display = "none";
-  } else {
-    controls.style.display = "flex";
-    if(prevBtn) prevBtn.style.display = "flex";
-    if(nextBtn) nextBtn.style.display = "flex";
-
-    cards.forEach((_, idx) => {
-      const dot = document.createElement("button");
-      dot.className = "indicator-dot" + (idx === 0 ? " active" : "");
-      dot.setAttribute("aria-label", `跳转至第 ${idx + 1} 篇`);
-      dot.addEventListener("click", (e) => {
-        e.stopPropagation();
-        goToCard(idx);
-      });
-      controls.appendChild(dot);
+  // 动态创建指示点
+  cards.forEach((_, idx) => {
+    const dot = document.createElement("button");
+    dot.className = "indicator-dot" + (idx === 0 ? " active" : "");
+    dot.setAttribute("aria-label", `跳转至第 ${idx + 1} 篇`);
+    dot.addEventListener("click", (e) => {
+      e.stopPropagation();
+      goToCard(idx);
     });
-  }
+    controls.appendChild(dot);
+  });
 
   const dots = Array.from(controls.querySelectorAll(".indicator-dot"));
 
+  // 基于 offsetLeft 的居中公式，解决单张卡片或首张卡片偏移不居中的问题
   function goToCard(index){
-    if(index < 0 || index >= cards.length) return;
+    if(!cards.length) return;
+    if(index < 0) index = cards.length - 1; // 循环切换
+    if(index >= cards.length) index = 0;
     currentIndex = index;
 
-    const viewportWidth = track.parentElement.offsetWidth || window.innerWidth;
-    const cardWidth = cards[0].offsetWidth || Math.min(840, window.innerWidth * 0.72);
+    const viewport = track.parentElement;
+    const viewportWidth = viewport.offsetWidth || window.innerWidth;
+    const targetCard = cards[index];
+    const cardWidth = targetCard.offsetWidth || Math.min(840, viewportWidth * 0.72);
+    const cardLeft = targetCard.offsetLeft;
 
-    // 严格中心位移对齐算法
-    const centerOffset = (viewportWidth - cardWidth) / 2;
-    const moveDistance = index * (cardWidth + CARD_GAP);
-    const targetTransformX = centerOffset - moveDistance;
-
+    const targetTransformX = (viewportWidth - cardWidth) / 2 - cardLeft;
     track.style.transform = `translateX(${targetTransformX}px)`;
 
     cards.forEach((c, i) => c.classList.toggle("active", i === index));
     dots.forEach((d, i) => d.classList.toggle("active", i === index));
-
-    // 左右箭头可用态
-    if(prevBtn && nextBtn){
-      prevBtn.disabled = (index === 0);
-      nextBtn.disabled = (index === cards.length - 1);
-      prevBtn.classList.toggle("disabled", index === 0);
-      nextBtn.classList.toggle("disabled", index === cards.length - 1);
-    }
   }
 
-  // 左右箭头点击事件
-  if(prevBtn){
-    prevBtn.onclick = () => { if(currentIndex > 0) goToCard(currentIndex - 1); };
-  }
-  if(nextBtn){
-    nextBtn.onclick = () => { if(currentIndex < cards.length - 1) goToCard(currentIndex + 1); };
+  // 箭头点击事件绑定
+  if(prevBtn && nextBtn){
+    prevBtn.onclick = (e) => { e.stopPropagation(); goToCard(currentIndex - 1); };
+    nextBtn.onclick = (e) => { e.stopPropagation(); goToCard(currentIndex + 1); };
   }
 
-  // 点击露出的上一张/下一张卡片直接平滑对齐
+  // 点击侧边露出的卡片直接居中
   cards.forEach((card, idx) => {
     card.addEventListener("click", (e) => {
       if(e.target.tagName === 'A' || e.target.closest('a')) return;
@@ -1004,26 +904,21 @@ function renderNotesGallery(posts){
     });
   });
 
-  // 键盘左右键支持
+  window.addEventListener("resize", () => goToCard(currentIndex));
+
+  // 键盘左右方向键支持
   window.addEventListener("keydown", (e) => {
     const rect = track.getBoundingClientRect();
     if(rect.top < window.innerHeight && rect.bottom > 0){
-      if(e.key === "ArrowLeft" && currentIndex > 0) goToCard(currentIndex - 1);
-      if(e.key === "ArrowRight" && currentIndex < cards.length - 1) goToCard(currentIndex + 1);
+      if(e.key === "ArrowLeft") goToCard(currentIndex - 1);
+      if(e.key === "ArrowRight") goToCard(currentIndex + 1);
     }
   });
 
-  window.addEventListener("resize", () => goToCard(currentIndex));
-
-  // 监听操作系统亮/暗模式即时切换
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    goToCard(currentIndex);
-  });
-
-  // 初始多阶段平滑居中校验
+  // 连续帧对齐校准，确保任何网速与分辨率下都能完成居中运算
   requestAnimationFrame(() => goToCard(0));
   setTimeout(() => goToCard(0), 80);
-  setTimeout(() => goToCard(0), 320);
+  setTimeout(() => goToCard(0), 300);
 }
 </script>
 </body>

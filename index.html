@@ -5,565 +5,695 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>我的个人网站</title>
 <style>
-:root{
-  --color-text-primary:#1D1D1F;--color-text-secondary:#6E6E73;--color-text-tertiary:#86868B;
-  --color-bg-primary:#F5F5F7;--color-bg-secondary:#FFFFFF;--color-accent:#0071E3;
-  --header-bg:rgba(245,245,247,.8);--header-border:rgba(0,0,0,.08);
-  --dot-border:#FFFFFF;--card-shadow:rgba(0,0,0,.06);
-  --font-display:"SF Pro Display","PingFang SC",-apple-system,sans-serif;
-  --font-text:"SF Pro Text","PingFang SC",-apple-system,sans-serif;
-  --space-unit:8px;--space-section:100px;--space-block:64px;--space-element:24px;--space-inline:12px;
-  --duration-fast:200ms;--duration-normal:400ms;--duration-slow:700ms;
-  --ease-default:cubic-bezier(0.25,0.1,0.25,1);
-  --radius-button:980px;--radius-card:22px;
+:root {
+  --color-text-primary: #1D1D1F;
+  --color-text-secondary: #6E6E73;
+  --color-text-tertiary: #86868B;
+  --color-bg-primary: #F5F5F7;
+  --color-bg-secondary: #FFFFFF;
+  --color-accent: #0071E3;
+  --header-bg: rgba(245, 245, 247, 0.82);
+  --header-border: rgba(0, 0, 0, 0.08);
+  --card-border: 1px solid rgba(0, 0, 0, 0.06);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --card-hover-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  --capsule-bg: rgba(0, 0, 0, 0.06);
+  --capsule-border: 1px solid rgba(0, 0, 0, 0.08);
+  --dot-bg: rgba(0, 0, 0, 0.22);
+  --dot-active: #1D1D1F;
 
-  /* 亮色模式下的舞台卡片参数 */
-  --hero-card-radius:28px;
-  --hero-card-margin:24px auto;
-  --hero-card-shadow:0 20px 50px rgba(0,0,0,.22), 0 0 40px rgba(0,113,227,.12);
-  --hero-card-border:1px solid rgba(0,0,0,.15);
+  --font-display: "SF Pro Display", "PingFang SC", -apple-system, sans-serif;
+  --font-text: "SF Pro Text", "PingFang SC", -apple-system, sans-serif;
 
-  /* 亮色模式：技术笔记画廊专属主题变量 */
-  --blog-sec-bg: #F5F5F7;
-  --blog-card-bg: #FFFFFF;
-  --blog-card-border: 1px solid rgba(0,0,0,0.06);
-  --blog-card-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  --blog-card-active-shadow: 0 20px 48px rgba(0,0,0,0.12);
-  --blog-capsule-bg: rgba(0, 0, 0, 0.07);
-  --blog-capsule-border: 1px solid rgba(0, 0, 0, 0.08);
-  --blog-dot-bg: rgba(0, 0, 0, 0.22);
-  --blog-dot-active-bg: #1D1D1F;
+  --max-width: 1040px;
+  --radius-card: 24px;
+  --radius-pill: 9999px;
+  --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-@media(prefers-color-scheme:dark){
-  :root{
-    --color-text-primary:#F5F5F7;--color-text-secondary:#A1A1A6;--color-text-tertiary:#86868B;
-    --color-bg-primary:#000000;--color-bg-secondary:#161617;--color-accent:#2997FF;
-    --header-bg:rgba(0,0,0,.75);--header-border:rgba(255,255,255,.1);
-    --dot-border:#000000;--card-shadow:rgba(0,0,0,.5);
-
-    /* 暗黑模式全幅融入 */
-    --hero-card-radius:0px;
-    --hero-card-margin:0 auto;
-    --hero-card-shadow:none;
-    --hero-card-border:none;
-
-    /* 暗黑模式：技术笔记画廊专属主题变量（同色卡片与无缝黑底） */
-    --blog-sec-bg: #000000;
-    --blog-card-bg: #161617;
-    --blog-card-border: 1px solid rgba(255,255,255,0.12);
-    --blog-card-shadow: 0 16px 40px rgba(0,0,0,0.6);
-    --blog-card-active-shadow: 0 24px 60px rgba(0,0,0,0.85);
-    --blog-capsule-bg: rgba(255, 255, 255, 0.12);
-    --blog-capsule-border: 1px solid rgba(255, 255, 255, 0.18);
-    --blog-dot-bg: rgba(255, 255, 255, 0.35);
-    --blog-dot-active-bg: #FFFFFF;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #F5F5F7;
+    --color-text-secondary: #A1A1A6;
+    --color-text-tertiary: #86868B;
+    --color-bg-primary: #000000;
+    --color-bg-secondary: #161617;
+    --color-accent: #2997FF;
+    --header-bg: rgba(0, 0, 0, 0.75);
+    --header-border: rgba(255, 255, 255, 0.1);
+    --card-border: 1px solid rgba(255, 255, 255, 0.1);
+    --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    --card-hover-shadow: 0 20px 48px rgba(0, 0, 0, 0.85);
+    --capsule-bg: rgba(255, 255, 255, 0.12);
+    --capsule-border: 1px solid rgba(255, 255, 255, 0.18);
+    --dot-bg: rgba(255, 255, 255, 0.35);
+    --dot-active: #FFFFFF;
   }
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  font-family:var(--font-text);
-  color:var(--color-text-primary);
-  background:var(--color-bg-primary);
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-  transition:background-color var(--duration-normal) var(--ease-default),color var(--duration-normal) var(--ease-default);
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-text);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background-color 400ms ease, color 400ms ease;
 }
 
-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  gap:var(--space-element);
-  padding:0 var(--space-element);
-  height:52px;
-  background:var(--header-bg);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid var(--header-border);
-  transition:background-color var(--duration-normal),border-color var(--duration-normal);
+/* 顶部导航 */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 0 24px;
+  background: var(--header-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--header-border);
 }
-header .logo{font-family:var(--font-display);font-weight:600;font-size:17px}
-header nav{margin-left:auto;display:flex;gap:var(--space-element)}
-header nav a{color:var(--color-text-secondary);text-decoration:none;font-size:14px;transition:color var(--duration-fast) var(--ease-default)}
-header nav a:hover{color:var(--color-text-primary)}
-
-/* 舞台卡片容器 */
-.hero-wrapper{
-  padding:0 var(--space-element);
-  max-width:1200px;
-  margin:0 auto;
+header .logo { font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+header nav { display: flex; gap: 20px; }
+header nav a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 200ms ease;
 }
+header nav a:hover { color: var(--color-text-primary); }
 
-.hero{
-  position:relative;
-  min-height:75vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:var(--space-section) var(--space-element);
-  background-color:#020203;
-  border-radius:var(--hero-card-radius);
-  margin:var(--hero-card-margin);
-  box-shadow:var(--hero-card-shadow);
-  border:var(--hero-card-border);
-  overflow:hidden;
-  transition:all var(--duration-normal) var(--ease-default);
+/* 全局容器约束 */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-.hero-bg{
-  position:absolute;
-  inset:0;
-  background-image:url('mj.jpg'), url('504470-michael-jackson-minimalism-hd-wallpaper-desktop-and-mobile-image-photo%20(1).jpg');
-  background-position:center center;
-  background-repeat:no-repeat;
-  background-size:cover;
-  opacity:.78;
-  filter:contrast(1.12) brightness(.92);
-  pointer-events:none;
+/* 1. Hero 剧场 */
+.hero-section {
+  padding: 90px 24px 70px;
+  text-align: center;
+  position: relative;
+}
+.hero-glow {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(0, 113, 227, 0.12) 0%, rgba(0,0,0,0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin-bottom: 16px;
+}
+.hero-desc {
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  max-width: 620px;
+  margin: 0 auto 28px;
+}
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: #FFFFFF !important;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  padding: 11px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+.btn:hover { opacity: 0.92; }
+.btn:active { transform: scale(0.98); }
+.btn.ghost {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary) !important;
+  border: var(--card-border);
 }
 
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg, rgba(2,2,3,0.3) 0%, rgba(2,2,3,0.1) 40%, rgba(2,2,3,0.65) 100%);
-  pointer-events:none;
+/* 板块通用头部 */
+.sec-head {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.sec-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 8px;
+}
+.sec-desc {
+  font-size: 18px;
+  color: var(--color-text-secondary);
 }
 
-.hero-inner{
-  position:relative;
-  z-index:2;
-  max-width:760px;
-  margin:0 auto;
+/* 2. 个人简白 */
+.about-section {
+  padding: 40px 0;
+}
+.about-card {
+  background: var(--color-bg-secondary);
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 48px 36px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+}
+.about-text {
+  font-size: 21px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 720px;
+  margin: 0 auto;
+  white-space: pre-line;
 }
 
-.hero h1{
-  font-family:var(--font-display);
-  font-size:56px;
-  line-height:1.1;
-  font-weight:700;
-  letter-spacing:-.025em;
-  margin-bottom:var(--space-element);
-  color:#FFFFFF !important;
-  text-shadow:0 4px 28px rgba(0,0,0,0.9);
+/* 3. 精选项目展厅（Apple 居中画廊） */
+.showcase-section {
+  padding: 60px 0;
+}
+.gallery-viewport {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.gallery-track {
+  display: flex;
+  gap: 28px;
+  will-change: transform;
+  transition: transform 0.85s var(--ease-apple);
+}
+.proj-card {
+  flex-shrink: 0;
+  width: clamp(320px, 70vw, 780px);
+  height: 390px;
+  background: var(--color-bg-secondary);
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  user-select: none;
+  cursor: pointer;
+  opacity: 0.35;
+  transform: scale(0.92);
+  box-shadow: var(--card-shadow);
+  transition: 
+    transform 0.85s var(--ease-apple),
+    opacity 0.85s var(--ease-apple),
+    box-shadow 0.85s var(--ease-apple);
+}
+.proj-card.active {
+  opacity: 1;
+  transform: scale(1);
+  cursor: default;
+  box-shadow: var(--card-hover-shadow);
+}
+.proj-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.proj-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.proj-date {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+}
+.proj-main {
+  margin: auto 0;
+}
+.proj-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.proj-desc {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.tag-pill {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-primary);
+  color: var(--color-accent);
+}
+.proj-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.proj-btn {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.proj-btn:hover { opacity: 0.85; }
+
+/* 底部胶囊控制条 */
+.capsule-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  background: var(--capsule-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: var(--capsule-border);
+  border-radius: var(--radius-pill);
+  z-index: 10;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.15);
+}
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--dot-bg);
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: width 0.5s var(--ease-apple), background-color 0.4s ease;
+}
+.indicator-dot.active {
+  width: 28px;
+  background: var(--dot-active);
 }
 
-.hero p{
-  font-size:21px;
-  line-height:1.4;
-  color:rgba(255,255,255,0.85) !important;
-  max-width:620px;
-  margin:0 auto;
-  text-shadow:0 2px 16px rgba(0,0,0,0.9);
+/* 4. 技术与学习笔记（双列规整卡片） */
+.notes-section {
+  padding: 60px 0;
+}
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.note-card {
+  background: var(--color-bg-secondary);
+  border: var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--card-shadow);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-hover-shadow);
+}
+.note-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.note-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+.note-date {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+.note-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.note-summary {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.note-more {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
 }
 
-.hero-actions{margin-top:28px;display:flex;justify-content:center;gap:14px}
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--color-accent);
-  color:#fff !important;
-  text-decoration:none;
-  border-radius:var(--radius-button);
-  padding:12px 24px;
-  font-size:15px;
-  font-weight:500;
-  box-shadow:0 4px 20px rgba(0,113,227,0.4);
-  transition:transform var(--duration-fast),opacity var(--duration-fast);
+/* 5. 技能与工具 Bento Grid */
+.skills-section {
+  padding: 60px 0;
 }
-.btn:hover{opacity:.92}
-.btn:active{transform:scale(.98)}
-
-section{max-width:980px;margin:0 auto;padding:var(--space-section) var(--space-element)}
-.section-head{text-align:center;margin-bottom:var(--space-block)}
-.section-head h2{font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-.01em;margin-bottom:var(--space-inline)}
-.section-head p{font-size:19px;color:var(--color-text-secondary)}
-
-/* 个人简介 */
-.about-card{
-  background:var(--color-bg-secondary);
-  border-radius:var(--radius-card);
-  padding:var(--space-block) var(--space-element);
-  max-width:840px;
-  margin:0 auto;
-  text-align:center;
-  box-shadow:0 4px 24px var(--card-shadow);
-  transition:background-color var(--duration-normal) var(--ease-default);
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
 }
-.about-text{font-size:20px;line-height:1.6;color:var(--color-text-secondary);max-width:680px;margin:0 auto;white-space:pre-line}
-
-/* 技能与工具 Bento Grid */
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-element)}
-.skill-card{
-  background:var(--color-bg-secondary);
-  border-radius:var(--radius-card);
-  padding:var(--space-element);
-  box-shadow:0 4px 20px var(--card-shadow);
-  text-decoration:none;
-  color:inherit;
-  display:block;
-  transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal);
+.skill-card {
+  background: var(--color-bg-secondary);
+  border: var(--card-border);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--card-shadow);
+  transition: transform 200ms ease;
 }
-.skill-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px var(--card-shadow)}
-.skill-cat{font-size:12px;color:var(--color-accent);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
-.skill-name{font-family:var(--font-display);font-size:20px;font-weight:600;margin-bottom:6px;color:var(--color-text-primary)}
-.skill-desc{font-size:14px;line-height:1.5;color:var(--color-text-secondary)}
-
-/* ==========================================================================
-   Apple Style 技术与学习笔记居中画廊（完全自适应亮暗主题）
-   ========================================================================== */
-section#blogSec{
-  max-width:100vw !important;
-  width:100vw !important;
-  margin-left:calc(50% - 50vw) !important;
-  margin-right:calc(50% - 50vw) !important;
-  margin-top:20px !important;
-  margin-bottom:40px !important;
-  padding:80px 0 90px !important;
-  background:var(--blog-sec-bg) !important;
-  position:relative;
-  overflow:hidden;
-  transition:background-color var(--duration-normal) var(--ease-default);
+.skill-card:hover { transform: translateY(-3px); }
+.skill-cat {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.skill-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.skill-desc {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
 }
 
-.blog-head-inner{
-  max-width:980px;
-  margin:0 auto 36px;
-  padding:0 var(--space-element);
-  text-align:center;
+/* 6. 学习足迹与经历（极简单列时间线） */
+.timeline-section {
+  padding: 60px 0;
 }
-.blog-head-inner .badge-cat{
-  display:inline-block;
-  font-size:12px;
-  font-weight:600;
-  color:var(--color-accent);
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  margin-bottom:8px;
+.stream-wrap {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+  padding-left: 28px;
 }
-.blog-head-inner h2{
-  font-family:var(--font-display);
-  font-size:40px;
-  font-weight:700;
-  letter-spacing:-0.015em;
-  color:var(--color-text-primary);
-  margin-bottom:var(--space-inline);
+.stream-wrap::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(var(--color-accent), rgba(0, 113, 227, 0.15));
 }
-.blog-head-inner p{
-  font-size:19px;
-  color:var(--color-text-secondary);
+.stream-node {
+  position: relative;
+  padding-bottom: 32px;
 }
-
-.blog-viewport{
-  position:relative;
-  width:100%;
-  height:490px;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
+.stream-node:last-child { padding-bottom: 0; }
+.stream-dot {
+  position: absolute;
+  left: -28px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-bg-primary);
 }
-
-.blog-track{
-  display:flex;
-  gap:28px;
-  will-change:transform;
-  transition:transform 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+.stream-date {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  font-weight: 600;
+  margin-bottom: 4px;
 }
-
-/* 博客大卡片：主题同色卡片 + 景深缩放 */
-.blog-card{
-  flex-shrink:0;
-  width:clamp(320px, 70vw, 820px);
-  height:390px;
-  background:var(--blog-card-bg);
-  border-radius:30px;
-  border:var(--blog-card-border);
-  padding:40px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  user-select:none;
-  cursor:pointer;
-  opacity:0.35;
-  transform:scale(0.92);
-  color:var(--color-text-primary);
-  box-shadow:var(--blog-card-shadow);
-  transition:
-    transform 0.85s cubic-bezier(0.25, 1, 0.5, 1),
-    opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1),
-    background-color var(--duration-normal) var(--ease-default),
-    box-shadow 0.85s cubic-bezier(0.25, 1, 0.5, 1),
-    border-color var(--duration-normal) var(--ease-default);
+.stream-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.stream-desc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
 }
 
-/* 居中激活态 */
-.blog-card.active{
-  opacity:1;
-  transform:scale(1);
-  cursor:default;
-  box-shadow:var(--blog-card-active-shadow);
+/* 7. 联系与页脚 */
+.contact-section {
+  padding: 60px 0 80px;
+}
+.contact-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.c-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg-secondary);
+  border: var(--card-border);
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  box-shadow: var(--card-shadow);
+  transition: transform 200ms ease;
+}
+.c-pill:hover { transform: translateY(-2px); }
+.c-pill-label { color: var(--color-text-tertiary); font-size: 12px; }
+
+footer {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  border-top: 1px solid var(--header-border);
 }
 
-.blog-card-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 600ms var(--ease-apple), transform 600ms var(--ease-apple);
 }
-.blog-card-tag{
-  font-size:13px;
-  font-weight:700;
-  color:var(--color-accent);
-  letter-spacing:0.05em;
-  text-transform:uppercase;
-}
-.blog-card-date{
-  font-size:13px;
-  color:var(--color-text-tertiary);
-  font-weight:500;
+.reveal.in {
+  opacity: 1;
+  transform: none;
 }
 
-.blog-card-body{
-  margin:auto 0;
-}
-.blog-card-title{
-  font-family:var(--font-display);
-  font-size:30px;
-  font-weight:700;
-  line-height:1.25;
-  letter-spacing:-0.02em;
-  color:var(--color-text-primary);
-  margin-bottom:12px;
-}
-.blog-card-desc{
-  font-size:16px;
-  line-height:1.55;
-  color:var(--color-text-secondary);
-  max-width:660px;
-  display:-webkit-box;
-  -webkit-line-clamp:3;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.blog-card-bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.blog-card-link{
-  display:inline-flex;
-  align-items:center;
-  font-size:15px;
-  font-weight:600;
-  color:var(--color-accent);
-  text-decoration:none;
-  transition:transform 0.2s ease, opacity 0.2s ease;
-}
-.blog-card-link:hover{
-  opacity:0.8;
-  transform:translateX(3px);
-}
-.blog-card-link.disabled{
-  color:var(--color-text-tertiary);
-  font-weight:400;
-  cursor:default;
-}
-
-/* 自适应悬浮毛玻璃胶囊控制条 */
-.capsule-controls{
-  position:absolute;
-  bottom:16px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:9px 18px;
-  background:var(--blog-capsule-bg);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  border:var(--blog-capsule-border);
-  border-radius:9999px;
-  z-index:10;
-  box-shadow:0 16px 36px rgba(0, 0, 0, 0.2);
-  transition:background-color var(--duration-normal), border-color var(--duration-normal);
-}
-
-.indicator-dot{
-  width:8px;
-  height:8px;
-  border-radius:9999px;
-  background:var(--blog-dot-bg);
-  border:none;
-  padding:0;
-  cursor:pointer;
-  outline:none;
-  transition:width 0.5s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
-}
-.indicator-dot:hover{
-  opacity:0.8;
-}
-.indicator-dot.active{
-  width:28px;
-  background:var(--blog-dot-active-bg);
-}
-
-/* 时间线 + 项目卡片 */
-.tl{position:relative;max-width:900px;margin:0 auto}
-.tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(var(--color-accent),rgba(0,113,227,.12))}
-.tl-item{position:relative;padding-left:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:var(--space-element) var(--space-block);padding-bottom:var(--space-block)}
-.tl-item.solo{grid-template-columns:1fr}
-.tl-item:last-child{padding-bottom:0}
-.tl-dot{position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--color-accent);border:3px solid var(--dot-border);box-shadow:0 0 0 2px var(--color-accent);transition:border-color var(--duration-fast)}
-.tl-date{font-size:12px;color:var(--color-text-tertiary);margin-bottom:4px;letter-spacing:.02em}
-.tl-left h3{font-family:var(--font-display);font-size:24px;font-weight:600;margin-bottom:6px}
-.tl-left p{font-size:17px;line-height:1.47;color:var(--color-text-secondary)}
-.p-card{
-  display:block;
-  background:var(--color-bg-secondary);
-  border-radius:var(--radius-card);
-  padding:var(--space-element);
-  text-decoration:none;
-  color:inherit;
-  box-shadow:0 4px 20px var(--card-shadow);
-  transition:transform var(--duration-normal) var(--ease-default),box-shadow var(--duration-normal) var(--ease-default),background-color var(--duration-normal) var(--ease-default);
-}
-.p-card:hover{transform:scale(1.02);box-shadow:0 12px 40px var(--card-shadow)}
-.p-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-inline);margin-bottom:6px}
-.p-top h4{font-family:var(--font-display);font-size:21px;font-weight:600}
-.p-more{color:var(--color-accent);font-size:14px;white-space:nowrap}
-.p-desc{font-size:15px;line-height:1.47;color:var(--color-text-secondary)}
-.p-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--space-inline)}
-.tag{background:var(--color-bg-primary);color:var(--color-accent);font-size:12px;padding:4px 12px;border-radius:var(--radius-button);transition:background-color var(--duration-fast)}
-
-/* 联系卡片 */
-.contact-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-inline);max-width:840px;margin:0 auto}
-.c-item{
-  background:var(--color-bg-secondary);
-  border-radius:var(--radius-card);
-  padding:20px var(--space-element);
-  font-size:16px;
-  text-align:center;
-  overflow:hidden;
-  box-shadow:0 4px 20px var(--card-shadow);
-  transition:transform var(--duration-fast) var(--ease-default),background-color var(--duration-normal) var(--ease-default);
-}
-.c-item:hover{transform:translateY(-3px)}
-.c-item .c-label{display:block;font-size:12px;color:var(--color-text-tertiary);margin-bottom:6px}
-.c-item a{display:block;color:var(--color-text-primary);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.c-item a:hover{color:var(--color-accent)}
-.c-item span.c-val{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-footer{text-align:center;padding:var(--space-block) var(--space-element);background:var(--color-bg-secondary);color:var(--color-text-tertiary);font-size:12px;transition:background-color var(--duration-normal) var(--ease-default)}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity var(--duration-slow) var(--ease-default),transform var(--duration-slow) var(--ease-default)}
-.reveal.in{opacity:1;transform:none}
-
-@media(max-width:734px){
-  .hero-wrapper{padding:0 12px}
-  .hero{min-height:68vh;padding:var(--space-block) var(--space-element);border-radius:20px;margin:12px auto}
-  .hero h1{font-size:36px}
-  .hero-bg{background-position:center center;background-size:cover}
-  section{padding:var(--space-block) var(--space-element)}
-  .section-head h2{font-size:32px}
-  .tl-item{grid-template-columns:1fr}
-  .about-text{font-size:17px}
-
-  .blog-card{
-    height:350px;
-    padding:24px 20px;
-    border-radius:24px;
-  }
-  .blog-card-title{
-    font-size:22px;
-  }
-  .blog-card-desc{
-    font-size:14px;
-  }
-  .blog-viewport{
-    height:420px;
-  }
+@media (max-width: 768px) {
+  .notes-grid { grid-template-columns: 1fr; }
+  .proj-card { height: 350px; padding: 24px 20px; border-radius: 20px; }
+  .proj-title { font-size: 22px; }
+  .gallery-viewport { height: 420px; }
 }
 </style>
 </head>
 <body>
+
 <header>
   <span class="logo" id="siteName">我的个人网站</span>
   <nav>
     <a href="#aboutSec">简介</a>
-    <a href="#skillsSec" id="navSkills">技能</a>
-    <a href="#blogSec" id="navBlog">笔记</a>
-    <a href="#timelineSec" id="navTimeline">经历</a>
-    <a href="#contact">联系</a>
+    <a href="#showcaseSec">作品</a>
+    <a href="#notesSec">笔记</a>
+    <a href="#skillsSec">技能</a>
+    <a href="#timelineSec">经历</a>
+    <a href="#contactSec">联系</a>
   </nav>
 </header>
 
-<div class="hero-wrapper">
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-inner">
-      <h1 id="heroTitle"></h1>
-      <p id="heroSub"></p>
-      <div class="hero-actions" id="heroActions" style="display:none">
-        <a class="btn" id="resumeBtn" href="#" target="_blank">预览 / 下载简历</a>
-      </div>
+<!-- 1. Hero 剧场 -->
+<section class="hero-section">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <span class="hero-tag">Computer Science Student · Developer</span>
+    <h1 class="hero-title" id="heroTitle">你好，我是开发者</h1>
+    <p class="hero-desc" id="heroSub">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品。</p>
+    <div class="hero-actions">
+      <a class="btn" href="#showcaseSec">浏览作品展厅</a>
+      <a class="btn ghost" id="resumeBtn" href="#" target="_blank" style="display:none">查看简历</a>
     </div>
   </div>
-</div>
+</section>
 
-<section id="aboutSec">
-  <div class="section-head reveal"><h2>个人简介</h2><p id="aboutSub">保持好奇，专注创造价值</p></div>
-  <div class="about-card reveal">
-    <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
+<!-- 2. 个人简白 -->
+<section class="about-section" id="aboutSec">
+  <div class="container">
+    <div class="about-card reveal">
+      <p class="about-text" id="aboutText">热衷于在设计与工程的交叉点探索，专注构建体验优雅、实用高效的产品与技术实践。</p>
+    </div>
   </div>
 </section>
 
-<!-- 1. 技能与工具模块 -->
-<section id="skillsSec">
-  <div class="section-head reveal"><h2>技能与工具</h2><p>工欲善其事，必先利其器</p></div>
-  <div class="skills-grid" id="skillsGrid"></div>
-</section>
-
-<!-- 2. 技术与学习笔记模块（Apple 风格自适应居中画廊） -->
-<section id="blogSec">
-  <div class="blog-head-inner reveal">
-    <span class="badge-cat">Notes & Articles</span>
-    <h2>技术与学习笔记</h2>
-    <p>记录平时的技术探索、折腾技巧与踩坑日常</p>
+<!-- 3. 精选项目展厅（Apple 居中画廊） -->
+<section class="showcase-section" id="showcaseSec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-tag">Featured Works</div>
+      <h2 class="sec-title">精选项目展厅</h2>
+      <p class="sec-desc">从底层逻辑到现代交互，每个项目都是一段工程探索</p>
+    </div>
   </div>
-  <div class="blog-viewport">
-    <div class="blog-track" id="blogTrack"></div>
-    <nav class="capsule-controls" id="blogCapsuleControls" aria-label="技术笔记导航"></nav>
+  <div class="gallery-viewport">
+    <div class="gallery-track" id="galleryTrack"></div>
+    <nav class="capsule-controls" id="capsuleControls" aria-label="项目轮播导航"></nav>
   </div>
 </section>
 
-<!-- 3. 我的经历模块 -->
-<section id="timelineSec">
-  <div class="section-head reveal"><h2>我的经历</h2><p>每一个节点，都对应一个作品</p></div>
-  <div class="tl" id="tlBox"></div>
+<!-- 4. 技术与学习笔记（双列规整网格） -->
+<section class="notes-section" id="notesSec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-tag">Writing & Thoughts</div>
+      <h2 class="sec-title">技术与学习笔记</h2>
+      <p class="sec-desc">记录平时的技术探索、折腾技巧与踩坑日常</p>
+    </div>
+    <div class="notes-grid" id="notesGrid"></div>
+  </div>
 </section>
 
-<!-- 4. 联系方式 -->
-<section id="contact">
-  <div class="section-head reveal"><h2>联系我</h2><p>欢迎随时找我聊聊</p></div>
-  <div class="contact-box" id="contactBox"></div>
+<!-- 5. 技能与工具 Bento Grid -->
+<section class="skills-section" id="skillsSec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-tag">Toolkit</div>
+      <h2 class="sec-title">技能与工具</h2>
+      <p class="sec-desc">工欲善其事，必先利其器</p>
+    </div>
+    <div class="skills-grid" id="skillsGrid"></div>
+  </div>
 </section>
 
-<footer>© <span id="year"></span> · Powered by Cloudflare Pages</footer>
+<!-- 6. 学习足迹与经历（轻量化单列时间线） -->
+<section class="timeline-section" id="timelineSec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-tag">Milestones</div>
+      <h2 class="sec-title">成长轨迹</h2>
+      <p class="sec-desc">一步一个脚印的前行之路</p>
+    </div>
+    <div class="stream-wrap" id="timelineStream"></div>
+  </div>
+</section>
+
+<!-- 7. 联系我 -->
+<section class="contact-section" id="contactSec">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="sec-tag">Get in Touch</div>
+      <h2 class="sec-title">保持联系</h2>
+      <p class="sec-desc">欢迎随时交流技术与设计想法</p>
+    </div>
+    <div class="contact-pills" id="contactPills"></div>
+  </div>
+</section>
+
+<footer>© <span id="year"></span> · Designed with Apple Style</footer>
 
 <script>
-const $=id=>document.getElementById(id);
-function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-$("year").textContent=new Date().getFullYear();
+const $ = id => document.getElementById(id);
+function esc(s){ return (s == null ? "" : String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+$("year").textContent = new Date().getFullYear();
 
-// 本地兜底展示数据
+// 默认兜底项目卡片（若后台未绑定项目时展示）
+const DEFAULT_PROJECTS = [
+  {
+    id: "portfolio",
+    title: "个人作品集与后台管理系统",
+    summary: "基于原生现代 Web 标准构建，部署于 Cloudflare Pages 与 KV 边缘服务，支持动态内容鉴权更新与长图快照生成。",
+    tags: "HTML5, CSS3, JavaScript, Cloudflare KV",
+    date: "2026.09"
+  },
+  {
+    id: "c-algorithms",
+    title: "C 语言基础算法与内存管理练习",
+    summary: "系统实现函数模块化设计、输入缓冲区清洗与指针数组运算，涵盖快速排序、二分查找与链表基础。",
+    tags: "C, Algorithms, Memory Management",
+    date: "2026.08"
+  },
+  {
+    id: "gallery-component",
+    title: "Apple 减速刹车缓动居中画廊",
+    summary: "利用纯原生 CSS 与贝塞尔曲线精准计算视口绝对位移，实现无依赖的高性能卡片 Peek 景深交互与药丸指示器。",
+    tags: "JavaScript, Interaction Design",
+    date: "2026.07"
+  }
+];
+
+// 默认兜底笔记
 const DEFAULT_POSTS = [
   {
     tag: "#建站心得",
@@ -576,14 +706,7 @@ const DEFAULT_POSTS = [
     tag: "#前端动效",
     date: "2026.08",
     title: "纯原生实现：仿 Apple 官网居中卡片画廊与毛玻璃胶囊条",
-    summary: "深入拆解苹果官网的减速刹车缓动曲线与视口偏移计算逻辑。不依赖复杂第三方库，利用纯原生 CSS 与 JS 打造具备卡片边缘露出与药丸平滑拉伸的轮播交互体验。",
-    link: ""
-  },
-  {
-    tag: "#学习笔记",
-    date: "2026.07",
-    title: "大一新生自学 C 语言：从控制流到指针内存初探",
-    summary: "整理 C 语言核心语法的学习心得与基础算法练习。从标准输入输出缓冲区清洗、函数栈设计，到指针变量与数组内存布局，记录由浅入深夯实计算机底层素养的思考过程。",
+    summary: "深入拆解苹果官网的减速刹车缓动曲线与视口偏移计算逻辑。不依赖复杂第三方库，利用纯原生 CSS 与 JS 打造轮播交互体验。",
     link: ""
   }
 ];
@@ -593,172 +716,142 @@ fetch("/api/data?_t=" + Date.now(), { cache: "no-store" })
   .then(d => {
     const site = d.site || {};
     if(site.name){ document.title = site.name; $("siteName").textContent = site.name; }
-    $("heroTitle").textContent = site.heroTitle || "";
-    $("heroSub").textContent = site.heroSub || "";
+    if(site.heroTitle) $("heroTitle").textContent = site.heroTitle;
+    if(site.heroSub) $("heroSub").textContent = site.heroSub;
+    if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
 
-    // 简历按钮
     if(site.resumeUrl && site.resumeUrl.trim()){
       $("resumeBtn").href = site.resumeUrl.trim();
-      $("heroActions").style.display = "flex";
+      $("resumeBtn").style.display = "inline-flex";
     }
 
-    // 个人简介
-    if(site.about || site.bio) $("aboutText").textContent = site.about || site.bio;
-    if(site.aboutSub) $("aboutSub").textContent = site.aboutSub;
+    // 1. 渲染精选项目画廊
+    const rawProjects = (d.timeline || []).filter(t => t.project && t.project.title).map(t => {
+      return Object.assign({}, t.project, { date: t.date });
+    });
+    renderProjectGallery(rawProjects.length ? rawProjects : DEFAULT_PROJECTS);
 
-    // 技能卡片 (Bento Grid)
+    // 2. 渲染技术笔记（双列网格）
+    const rawPosts = Array.isArray(d.posts) ? d.posts.filter(p => p && (p.title || p.summary)) : [];
+    renderNotesGrid(rawPosts.length ? rawPosts : DEFAULT_POSTS);
+
+    // 3. 渲染技能卡片
     const skills = Array.isArray(d.skills) ? d.skills.filter(s => s.name || s.cat) : [];
-    if(!skills.length){
-      $("skillsSec").style.display = "none";
-      if($("navSkills")) $("navSkills").style.display = "none";
-    } else {
-      skills.forEach(s => {
-        const div = document.createElement("div");
-        div.className = "skill-card reveal";
-        div.innerHTML = 
-          (s.cat ? '<div class="skill-cat">' + esc(s.cat) + '</div>' : '') +
-          '<div class="skill-name">' + esc(s.name) + '</div>' +
-          (s.desc ? '<div class="skill-desc">' + esc(s.desc) + '</div>' : '');
-        $("skillsGrid").appendChild(div);
-      });
-    }
-
-    // 技术笔记：智能容错并按后台真实数据呈现
-    const rawPosts = Array.isArray(d.posts) ? d.posts : [];
-    let validPosts = rawPosts.filter(p => p && (
-      (p.title && String(p.title).trim()) || 
-      (p.summary && String(p.summary).trim()) || 
-      (p.tag && String(p.tag).trim())
-    ));
-    
-    renderBlogGallery(validPosts.length ? validPosts : DEFAULT_POSTS);
-
-    // 时间线与项目
-    const ts = (d.timeline || []).filter(t => t.title || t.date);
-    if(!ts.length){
-      $("timelineSec").style.display = "none";
-      if($("navTimeline")) $("navTimeline").style.display = "none";
-    }
-    ts.forEach(t => {
-      const p = t.project;
-      const hasP = p && (p.title || p.summary);
-      const item = document.createElement("div");
-      item.className = "tl-item reveal" + (hasP ? "" : " solo");
-      let right = "";
-      if(hasP){
-        const tags = (p.tags || "").split(/[,，]/).map(x => x.trim()).filter(Boolean)
-          .map(x => '<span class="tag">' + esc(x) + '</span>').join("");
-        right = '<a class="p-card" href="project.html?id=' + encodeURIComponent(p.id || "") + '">' +
-          '<div class="p-top"><h4>' + esc(p.title) + '</h4><span class="p-more">查看详情 ›</span></div>' +
-          '<p class="p-desc">' + esc(p.summary) + '</p>' +
-          (tags ? '<div class="p-tags">' + tags + '</div>' : '') + '</a>';
-      }
-      item.innerHTML = '<div class="tl-dot"></div>' +
-        '<div class="tl-left"><div class="tl-date">' + esc(t.date) + '</div><h3>' + esc(t.title) + '</h3>' + (t.desc ? '<p>' + esc(t.desc) + '</p>' : '') + '</div>' +
-        '<div class="tl-right">' + right + '</div>';
-      $("tlBox").appendChild(item);
+    const skillsGrid = $("skillsGrid");
+    skillsGrid.innerHTML = "";
+    skills.forEach(s => {
+      const div = document.createElement("div");
+      div.className = "skill-card reveal";
+      div.innerHTML = `
+        <div class="skill-cat">${esc(s.cat || "Skill")}</div>
+        <div class="skill-name">${esc(s.name)}</div>
+        <div class="skill-desc">${esc(s.desc || "")}</div>
+      `;
+      skillsGrid.appendChild(div);
     });
 
-    // 联系方式
-    const c = d.contact || {}; const items = [];
-    if(c.email) items.push(["邮箱", c.email, "mailto:" + c.email]);
-    if(c.phone) items.push(["电话", c.phone, "tel:" + c.phone]);
-    if(c.wechat) items.push(["微信", c.wechat, null]);
-    if(c.qq) items.push(["QQ", c.qq, null]);
-    
-    if(c.github){
-      let ghUrl = c.github.trim();
-      if(!ghUrl.startsWith("http")) ghUrl = "https://" + ghUrl;
-      let ghText = c.github.trim();
-      const match = ghText.match(/github\.com\/([^\/\s?#]+)/i);
-      ghText = (match && match[1]) ? ("@" + match[1]) : ghText.replace(/^https?:\/\//i, "");
-      items.push(["GitHub", ghText, ghUrl]);
-    }
-    
-    if(c.blog){
-      let bUrl = c.blog.trim();
-      if(!bUrl.startsWith("http")) bUrl = "https://" + bUrl;
-      items.push(["博客", c.blog.trim().replace(/^https?:\/\//i, ""), bUrl]);
-    }
-
-    if(!items.length) $("contact").style.display = "none";
-    items.forEach(it => {
-      const div = document.createElement("div"); div.className = "c-item reveal";
-      div.innerHTML = '<span class="c-label">' + it[0] + '</span>' + (it[2] ? '<a href="' + esc(it[2]) + '" target="_blank" title="' + esc(it[1]) + '">' + esc(it[1]) + '</a>' : '<span class="c-val">' + esc(it[1]) + '</span>');
-      $("contactBox").appendChild(div);
+    // 4. 渲染极简时间线足迹
+    const timeline = (d.timeline || []).filter(t => t.title || t.date);
+    const stream = $("timelineStream");
+    stream.innerHTML = "";
+    timeline.forEach(t => {
+      const div = document.createElement("div");
+      div.className = "stream-node reveal";
+      div.innerHTML = `
+        <div class="stream-dot"></div>
+        <div class="stream-date">${esc(t.date)}</div>
+        <div class="stream-title">${esc(t.title)}</div>
+        ${t.desc ? `<div class="stream-desc">${esc(t.desc)}</div>` : ""}
+      `;
+      stream.appendChild(div);
     });
 
+    // 5. 渲染联系方式
+    const c = d.contact || {};
+    const pills = $("contactPills");
+    pills.innerHTML = "";
+    const contactMap = [
+      ["邮箱", c.email, "mailto:" + c.email],
+      ["电话", c.phone, "tel:" + c.phone],
+      ["微信", c.wechat, null],
+      ["QQ", c.qq, null]
+    ];
+    if(c.github) contactMap.push(["GitHub", c.github.replace(/^https?:\/\//i, ""), c.github.startsWith("http") ? c.github : "https://" + c.github]);
+    if(c.blog) contactMap.push(["博客", c.blog.replace(/^https?:\/\//i, ""), c.blog.startsWith("http") ? c.blog : "https://" + c.blog]);
+
+    contactMap.filter(it => it[1]).forEach(it => {
+      const tag = it[2] ? "a" : "div";
+      const el = document.createElement(tag);
+      el.className = "c-pill reveal";
+      if(it[2]){ el.href = it[2]; el.target = "_blank"; }
+      el.innerHTML = `<span class="c-pill-label">${esc(it[0])}</span><span>${esc(it[1])}</span>`;
+      pills.appendChild(el);
+    });
+
+    // 滚动渐现监听
     const io = new IntersectionObserver(es => {
       es.forEach(e => {
         if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1 });
     document.querySelectorAll(".reveal").forEach(el => io.observe(el));
   })
-  .catch(e => {
-    console.error("API 数据加载失败，降级显示默认模板", e);
-    renderBlogGallery(DEFAULT_POSTS);
+  .catch(err => {
+    console.error(err);
+    renderProjectGallery(DEFAULT_PROJECTS);
+    renderNotesGrid(DEFAULT_POSTS);
   });
 
-// 渲染并驱动 Apple 画廊轮播
-function renderBlogGallery(posts){
-  const track = $("blogTrack");
-  const controls = $("blogCapsuleControls");
-  if(!track || !controls) return;
-
+// 渲染项目 Apple 画廊
+function renderProjectGallery(projects){
+  const track = $("galleryTrack");
+  const controls = $("capsuleControls");
   track.innerHTML = "";
   controls.innerHTML = "";
 
-  posts.forEach((p, idx) => {
-    const hasLink = p.link && p.link.trim();
+  projects.forEach((p, idx) => {
     const card = document.createElement("article");
-    card.className = "blog-card" + (idx === 0 ? " active" : "");
+    card.className = "proj-card" + (idx === 0 ? " active" : "");
 
-    const linkHtml = hasLink 
-      ? `<a class="blog-card-link" href="${esc(p.link.trim())}" target="_blank" onclick="event.stopPropagation()">阅读全文 ›</a>`
-      : `<span class="blog-card-link disabled">站内笔记</span>`;
-
-    // 智能标题容错：若后台标题留空，从简述前段提取，杜绝生硬的“未命名笔记”
-    let displayTitle = (p.title && p.title.trim()) || "";
-    let displaySummary = (p.summary && p.summary.trim()) || "";
-    if(!displayTitle && displaySummary){
-      displayTitle = displaySummary.slice(0, 24) + "...";
-    } else if(!displayTitle){
-      displayTitle = "技术与思考笔记";
-    }
+    const tags = (p.tags || "").split(/[,，]/).filter(Boolean).map(t => `<span class="tag-pill">${esc(t.trim())}</span>`).join("");
 
     card.innerHTML = `
-      <div class="blog-card-top">
-        <span class="blog-card-tag">${esc(p.tag || "#技术笔记")}</span>
-        <span class="blog-card-date">${esc(p.date || "")}</span>
+      <div class="proj-top">
+        <span class="proj-label">Project</span>
+        <span class="proj-date">${esc(p.date || "")}</span>
       </div>
-      <div class="blog-card-body">
-        <h3 class="blog-card-title">${esc(displayTitle)}</h3>
-        <p class="blog-card-desc">${esc(displaySummary || "暂无简要介绍，可随时在后台管理中补充。")}</p>
+      <div class="proj-main">
+        <h3 class="proj-title">${esc(p.title)}</h3>
+        <p class="proj-desc">${esc(p.summary || "暂无简介")}</p>
+        ${tags ? `<div class="proj-tags">${tags}</div>` : ""}
       </div>
-      <div class="blog-card-bottom">
-        ${linkHtml}
+      <div class="proj-bottom">
+        <a class="proj-btn" href="project.html?id=${encodeURIComponent(p.id || "")}" onclick="event.stopPropagation()">查看代码与项目详情 ›</a>
         <span style="font-size:12px;color:var(--color-text-tertiary);font-family:ui-monospace,sans-serif;">0${idx + 1}</span>
       </div>
     `;
     track.appendChild(card);
   });
 
-  const cards = Array.from(track.querySelectorAll(".blog-card"));
+  const cards = Array.from(track.querySelectorAll(".proj-card"));
   let currentIndex = 0;
   const CARD_GAP = 28;
 
-  // 动态创建指示器
-  cards.forEach((_, idx) => {
-    const dot = document.createElement("button");
-    dot.className = "indicator-dot" + (idx === 0 ? " active" : "");
-    dot.setAttribute("aria-label", `跳转至第 ${idx + 1} 篇笔记`);
-    dot.addEventListener("click", (e) => {
-      e.stopPropagation();
-      goToCard(idx);
+  if(cards.length <= 1){
+    controls.style.display = "none";
+  } else {
+    controls.style.display = "flex";
+    cards.forEach((_, idx) => {
+      const dot = document.createElement("button");
+      dot.className = "indicator-dot" + (idx === 0 ? " active" : "");
+      dot.setAttribute("aria-label", `跳转至作品 ${idx + 1}`);
+      dot.addEventListener("click", (e) => {
+        e.stopPropagation();
+        goToCard(idx);
+      });
+      controls.appendChild(dot);
     });
-    controls.appendChild(dot);
-  });
+  }
 
   const dots = Array.from(controls.querySelectorAll(".indicator-dot"));
 
@@ -766,13 +859,8 @@ function renderBlogGallery(posts){
     if(index < 0 || index >= cards.length) return;
     currentIndex = index;
 
-    const viewportWidth = (track.parentElement && track.parentElement.offsetWidth > 0) 
-      ? track.parentElement.offsetWidth 
-      : window.innerWidth;
-
-    const cardWidth = (cards[0] && cards[0].offsetWidth > 0) 
-      ? cards[0].offsetWidth 
-      : Math.min(820, Math.max(320, window.innerWidth * 0.7));
+    const viewportWidth = (track.parentElement && track.parentElement.offsetWidth > 0) ? track.parentElement.offsetWidth : window.innerWidth;
+    const cardWidth = (cards[0] && cards[0].offsetWidth > 0) ? cards[0].offsetWidth : Math.min(780, window.innerWidth * 0.7);
 
     const centerOffset = (viewportWidth - cardWidth) / 2;
     const moveDistance = index * (cardWidth + CARD_GAP);
@@ -784,7 +872,6 @@ function renderBlogGallery(posts){
     dots.forEach((d, i) => d.classList.toggle("active", i === index));
   }
 
-  // 点击露出的上一张/下一张卡片直接平滑对齐
   cards.forEach((card, idx) => {
     card.addEventListener("click", (e) => {
       if(e.target.tagName === 'A' || e.target.closest('a')) return;
@@ -794,18 +881,38 @@ function renderBlogGallery(posts){
 
   window.addEventListener("resize", () => goToCard(currentIndex));
 
-  // 键盘左右方向键支持
-  window.addEventListener("keydown", (e) => {
-    const rect = track.getBoundingClientRect();
-    if(rect.top < window.innerHeight && rect.bottom > 0){
-      if(e.key === "ArrowLeft") goToCard(Math.max(0, currentIndex - 1));
-      if(e.key === "ArrowRight") goToCard(Math.min(cards.length - 1, currentIndex + 1));
-    }
-  });
-
   requestAnimationFrame(() => goToCard(0));
   setTimeout(() => goToCard(0), 60);
   setTimeout(() => goToCard(0), 300);
+}
+
+// 渲染技术笔记双列网格
+function renderNotesGrid(posts){
+  const grid = $("notesGrid");
+  grid.innerHTML = "";
+  posts.forEach(p => {
+    const hasLink = p.link && p.link.trim();
+    const card = document.createElement(hasLink ? "a" : "div");
+    card.className = "note-card reveal";
+    if(hasLink){
+      card.href = p.link.trim();
+      card.target = "_blank";
+    }
+    card.innerHTML = `
+      <div>
+        <div class="note-top">
+          <span class="note-tag">${esc(p.tag || "#技术笔记")}</span>
+          <span class="note-date">${esc(p.date || "")}</span>
+        </div>
+        <h3 class="note-title">${esc(p.title || "未命名笔记")}</h3>
+        <p class="note-summary">${esc(p.summary || "暂无描述")}</p>
+      </div>
+      <div>
+        <span class="note-more">${hasLink ? "阅读全文 ›" : "站内笔记"}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
 }
 </script>
 </body>
